@@ -1,0 +1,112 @@
+{ config, lib, pkgs, ... }: {
+
+  imports = [
+    ./base.nix
+    ../modules/greetd.nix
+  ];
+
+  boot.kernelParams = [ "quiet" ];
+  boot.consoleLogLevel = 0;
+
+  fileSystems = {
+    "/" = {
+      device = "/dev/mapper/root";
+      encrypted = {
+        enable = true;
+        label = "root";
+        blkDev = "/dev/vg0/lv0";
+      };
+      fsType = "btrfs";
+      options = [ "subvol=@" ];
+    };
+    "/home" = {
+      inherit (config.fileSystems."/") device label;
+      fsType = "btrfs";
+      options = [ "subvol=@home" ];
+    };
+    "/nix" = {
+      inherit (config.fileSystems."/") device label;
+      fsType = "btrfs";
+      options = [ "subvol=@nix" ];
+    };
+    "/boot" = {
+      device = "/dev/disk/by-label/ESP";
+      fsType = "vfat";
+    };
+  };
+
+  boot.initrd.services.lvm.enable = true;
+
+  environment.noXlibs = false;
+
+  documentation.nixos.enable = true;
+
+  hardware.brillo.enable = true;
+
+  services.flatpak.enable = true;
+
+  services.greetd.enable = true;
+
+  hardware.opengl.enable = true;
+
+  xdg.portal.wlr.enable = true;
+  xdg.portal = {
+    enable = true;
+    config.common.default = "gtk";
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+  };
+
+  services.dbus.enable = true;
+  programs.dconf.enable = true;
+
+  networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = with pkgs; lib.mkForce [
+    networkmanager-iodine
+    networkmanager-openvpn
+  ];
+
+  networking.wireless.iwd.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";
+
+  hardware.bluetooth.enable = true;
+
+  services.printing.enable = true;
+
+  services.avahi.enable = true;
+  services.avahi.nssmdns4 = true;
+
+  systemd.network.wait-online.enable = false;
+
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+
+  networking.firewall = {
+    allowedTCPPorts = [ 8080 ];
+    allowedUDPPorts = [ 1900 5353 ];
+    allowedUDPPortRanges = [{ from = 32768; to = 61000; }];
+    rejectPackets = true;
+  };
+
+  services.logind = {
+    powerKey = "suspend";
+    powerKeyLongPress = "poweroff";
+    lidSwitchExternalPower = "lock";
+  };
+
+  security.pam.services.swaylock = {};
+
+  services.greetd.command = let
+    script = pkgs.writeScript "run-user-session" ''
+      exec $HOME/.xsession
+    '';
+  in "${script}";
+
+}

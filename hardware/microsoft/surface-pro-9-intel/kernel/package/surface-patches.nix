@@ -3,12 +3,12 @@ let
   linuxSurface = fetchFromGitHub {
     owner = "linux-surface";
     repo = "linux-surface";
-    rev = "b49ed6d04df91cd9e88f0f726535dd221dde67fa";
-    hash = "sha256-wGsSm8wCxfv+nXX2FCrxIOBQTAs5z+RnLscf/7PrTJs=";
+    rev = "3c1b47315d1e4f49b13903f07618310c65b16e64";
+    sha256 = "08zhvy76171zv35wwvwijcqpvxbn9vzlcprslsp33gbvc7gkff9j";
   };
 in map (pname: {
   name = "linux-surface-${pname}";
-  patch = (linuxSurface + "/patches/6.6/${pname}.patch");
+  patch = (linuxSurface + "/patches/6.7/${pname}.patch");
 }) [
   "0004-ipts"
   "0005-ithc"

@@ -3,10 +3,10 @@ let
   borePatches = fetchFromGitHub {
     owner = "firelzrd";
     repo = "bore-scheduler";
-    rev = "34cb409b3959a43eebbfbf2fa0f0e7836adfa713";
-    hash = "sha256-C8T1KInK25qeB7ODGINUkbbf0jzcsSpEynNKCz2CsoU=";
+    rev = "4b10b1abef71394ca2438801cc3e31ee9bfb6943";
+    sha256 = "1rqx47bhr20nzk7gfhdnfd0zhygfhswir8pxqs1k08x78sq1fjyl";
   };
 in [rec {
-  name = "0001-linux6.7.y-bore4.2.0";
-  patch = (borePatches + "/patches/linux-6.7-bore/${name}.patch");
+  name = "0001-linux6.7.y-bore4.5.0";
+  patch = (borePatches + "/patches/stable/linux-6.7-bore/${name}.patch");
 }]

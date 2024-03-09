@@ -19,6 +19,9 @@
 
   networking.interfaces.eth0.macAddress = "0e:a8:8e:d5:10:f0";
 
+  services.openssh.enable = true;
+  services.openssh.ports = [ 2273 ];
+
   time.timeZone = "America/Toronto";
 
   system.stateVersion = "24.05";

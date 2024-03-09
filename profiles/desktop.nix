@@ -16,21 +16,9 @@
         label = "root";
         blkDev = "/dev/vg0/lv0";
       };
-      fsType = "btrfs";
-      options = [ "subvol=@" ];
-    };
-    "/home" = {
-      inherit (config.fileSystems."/") device label;
-      fsType = "btrfs";
-      options = [ "subvol=@home" ];
-    };
-    "/nix" = {
-      inherit (config.fileSystems."/") device label;
-      fsType = "btrfs";
-      options = [ "subvol=@nix" ];
     };
     "/boot" = {
-      device = "/dev/disk/by-label/ESP";
+      label = "ESP";
       fsType = "vfat";
     };
   };

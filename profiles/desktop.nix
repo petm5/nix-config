@@ -2,7 +2,6 @@
 
   imports = [
     ./base.nix
-    ../modules/greetd.nix
   ];
 
   boot.kernelParams = [ "quiet" ];
@@ -18,7 +17,7 @@
       };
     };
     "/boot" = {
-      label = "ESP";
+      label = "SYSTEM";
       fsType = "vfat";
     };
   };

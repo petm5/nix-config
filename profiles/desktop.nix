@@ -79,7 +79,6 @@
     allowedTCPPorts = [ 8080 ];
     allowedUDPPorts = [ 1900 5353 ];
     allowedUDPPortRanges = [{ from = 32768; to = 61000; }];
-    rejectPackets = true;
   };
 
   services.logind = {

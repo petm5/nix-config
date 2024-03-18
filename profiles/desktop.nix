@@ -7,28 +7,13 @@
   boot.kernelParams = [ "quiet" ];
   boot.consoleLogLevel = 0;
 
-  fileSystems = {
-    "/" = {
-      device = "/dev/mapper/root";
-      encrypted = {
-        enable = true;
-        label = "root";
-        blkDev = "/dev/vg0/lv0";
-      };
-    };
-    "/boot" = {
-      label = "SYSTEM";
-      fsType = "vfat";
-    };
-  };
-
-  boot.initrd.services.lvm.enable = true;
-
   environment.noXlibs = false;
 
   documentation.nixos.enable = true;
 
   hardware.brillo.enable = true;
+
+  services.upower.enable = true;
 
   services.flatpak.enable = true;
 

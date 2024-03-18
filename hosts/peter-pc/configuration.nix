@@ -38,6 +38,23 @@
 
   security.tpm2.enable = true;
 
+  fileSystems = {
+    "/" = {
+      device = "/dev/mapper/root";
+      encrypted = {
+        enable = true;
+        label = "root";
+        blkDev = "/dev/vg0/lv0";
+      };
+    };
+    "/boot" = {
+      label = "SYSTEM";
+      fsType = "vfat";
+    };
+  };
+
+  boot.initrd.services.lvm.enable = true;
+
   system.stateVersion = "24.05";
 
 }

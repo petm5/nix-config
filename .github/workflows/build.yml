@@ -15,5 +15,5 @@ jobs:
       with:
         name: peter-marshall5
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix build
+    - run: nix build .#nixosConfigurations.peter-pc.config.system.build.toplevel
     - run: nix flake check

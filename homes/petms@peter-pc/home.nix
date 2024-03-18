@@ -7,7 +7,6 @@
     playerctl
     noto-fonts
     noto-fonts-color-emoji
-    terminus-nerdfont
     hack-font
     material-symbols
     deploy-rs
@@ -23,6 +22,9 @@
     extensions = [
       { id = "ghmbeldphafepmbegfdlkpapadhbakde"; }
       { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
+    ];
+    commandLineArgs = [
+      "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder"
     ];
   };
 

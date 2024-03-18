@@ -5,13 +5,10 @@
 , linuxManualConfig
 , ... }:
 
-let
-  surfacePatches = callPackage ./surface-patches.nix {};
-  borePatches = callPackage ./bore-patches.nix {};
-in linuxManualConfig {
+linuxManualConfig {
   inherit (baseKernel) src modDirVersion;
   version = "${baseKernel.version}-surface-custom";
   configfile = ./surface-6.7.config;
   allowImportFromDerivation = true;
-  kernelPatches = surfacePatches ++ borePatches;
+  kernelPatches = callPackage ./surface-patches.nix {};
 }

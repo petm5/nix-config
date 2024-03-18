@@ -95,4 +95,9 @@
     '';
   in "${script}";
 
+  services.chrony = {
+    enable = true;
+    enableRTCTrimming = true;
+  };
+
 }

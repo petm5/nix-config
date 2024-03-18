@@ -14,6 +14,19 @@
     pamixer
   ];
 
+  programs.chromium = {
+    enable = true;
+    package = pkgs.ungoogled-chromium;
+    extensions = [
+      { id = "ghmbeldphafepmbegfdlkpapadhbakde"; }
+      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
+    ];
+  };
+
+  home.sessionVariables = {
+    VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
+  };
+
   programs.foot = {
     enable = true;
     server.enable = true;
@@ -72,7 +85,6 @@
   programs.eww = {
     enable = true;
     configDir = ./dotfiles/eww;
-    package = pkgs.eww-wayland;
   };
 
   programs.waybar = {

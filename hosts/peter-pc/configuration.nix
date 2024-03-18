@@ -1,4 +1,4 @@
-{
+{ config, lib, pkgs, ... }: {
 
   imports = [
     ../../profiles/desktop.nix

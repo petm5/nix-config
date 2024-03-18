@@ -98,6 +98,9 @@
   services.chrony = {
     enable = true;
     enableRTCTrimming = true;
+    extraConfig = ''
+      makestep 0.1 10
+    '';
   };
 
 }

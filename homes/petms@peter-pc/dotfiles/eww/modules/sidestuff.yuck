@@ -8,9 +8,9 @@
   )
 )
 
-(defwidget state_icon [condition text tooltip microphone]
+(defwidget state_icon [condition text tooltip]
   (label 
-    :class {microphone ? "indicator-microphone-icon" : "indicator-icon"} 
+    :class {"indicator icon"} 
     :visible {condition} 
     :valign "center" 
     :tooltip {tooltip}
@@ -21,7 +21,7 @@
 (defwidget network_icon []
   (state_icon 
     :condition true
-    :text {network.essid == "lo" ? "󰤭 " : network.signal == "" ? "󰤩 " : network.signal < 25 ? "󰤟 " : network.signal < 50 ? "󰤢 " : network.signal < 75 ? "󰤥 " : "󰤨 "}
+    :text {network.essid == "lo" ? "" : network.signal == "" ? "" : network.signal < 25 ? "" : network.signal < 50 ? "" : network.signal < 75 ? "" : ""}
     :tooltip "Network signal: ${network.signal + "%"}"
     :microphone false
   )
@@ -39,7 +39,7 @@
 (defwidget volume_icon []
   (state_icon
     :condition true
-    :text {volume == "muted" ? "󰸈" : volume < 25 ? "" : volume < 35 ? "" : volume < 65 ? "󰕾" : ""}
+    :text {volume == "muted" ? "" : volume < 30 ? "" : volume < 60 ? "" : ""}
     :tooltip "Volume: ${volume == "muted" ? "Muted" : "${volume}"}${volume == "muted" ? "" : "%" }"
     :microphone false
   )

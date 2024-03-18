@@ -5,8 +5,11 @@
   home.packages = with pkgs; [
     swaybg
     playerctl
-    nerdfonts
+    noto-fonts
+    noto-fonts-color-emoji
+    terminus-nerdfont
     hack-font
+    material-symbols
     deploy-rs
     socat
     jq
@@ -36,7 +39,7 @@
 
         shell = "nu";
 
-        include = "${pkgs.foot.themes}/share/foot/themes/onedark";
+        include = "${pkgs.foot.themes}/share/foot/themes/nightfly";
 
         font = "Hack:size=11";
         dpi-aware = "no";
@@ -87,66 +90,6 @@
     configDir = ./dotfiles/eww;
   };
 
-  programs.waybar = {
-    enable = true;
-    settings = {
-      mainBar = {
-        layer = "top";
-        position = "bottom";
-        height = 30;
-        modules-left = [ "hyprland/workspaces" ];
-        modules-right = [ "wireplumber" "mpd" "battery" "clock" ];
-        battery = {
-          format = "{icon} ";
-          format-icons = [ "" "" "" "" "" ];
-        };
-        mpd = {
-          format = "{stateIcon}";
-          format-stopped = "󰓛";
-          state-icons = {
-            paused = "󰐊";
-            playing = "󰏤";
-          };
-        };
-        wireplumber = {
-          format = "{icon}";
-          format-icons = [ "󰕿" "󰖀" "󰕾" ];
-          format-muted = "󰖁";
-        };
-        clock = {
-          format = "{:%I:%M %p}";
-        };
-      };
-    };
-    style = ''
-      * {
-        border: none;
-        border-radius: 0;
-        color: white;
-        font-family: DejaVu Nerd Font;
-      }
-      window {
-        background: linear-gradient(transparent, rgba(0,0,0,0.00078125), rgba(0,0,0,0.003125), rgba(0,0,0,0.00703125), rgba(0,0,0,0.0125), rgba(0,0,0,0.01953125), rgba(0,0,0,0.028125), rgba(0,0,0,0.03828125), rgba(0,0,0,0.05), rgba(0,0,0,0.06328125), rgba(0,0,0,0.078125), rgba(0,0,0,0.09453125000000001), rgba(0,0,0,0.1125), rgba(0,0,0,0.13203125000000002), rgba(0,0,0,0.153125), rgba(0,0,0,0.2));
-      }
-      tooltip {
-        background: #292e2e;
-      }
-      box > * > * {
-        padding: 0 6px;
-      }
-      #workspaces {
-        padding: 0;
-      }
-      #workspaces button {
-        padding: 0 4px;
-        color: white;
-      }
-      #clock {
-        margin-right: 4px;
-      }
-    '';
-  };
-
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
@@ -159,9 +102,9 @@
   services.mako = {
     enable = true;
     textColor = "#ffffff";
-    borderColor = "#5CCCCD";
+    borderColor = "#446270";
     backgroundColor = "#292E2E";
-    borderSize = 2;
+    borderSize = 1;
     borderRadius = 3;
     width = 400;
     height = 200;

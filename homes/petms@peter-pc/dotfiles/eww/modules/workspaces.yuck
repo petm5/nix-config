@@ -8,7 +8,10 @@
       (button 
         :class "workspace ${hyprland.active == workspace.id ? "current" : ""}"
         :onclick "hyprctl dispatch workspace ${workspace.id}"
-        "${workspace.id}"
+        (label
+          :xalign 0.5
+          :text "${workspace.id}"
+        )
       )
     )
   )

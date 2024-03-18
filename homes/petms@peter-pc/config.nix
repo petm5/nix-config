@@ -68,7 +68,8 @@
   };
   exec-once = [
       "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-      "waybar"
+      "eww daemon"
+      "eww open bar"
       "swaybg -i ~/.wallpaper"
     ];
   monitor = [

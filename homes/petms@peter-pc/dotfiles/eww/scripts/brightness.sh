@@ -2,22 +2,20 @@
 per=$(brightnessctl | awk '/Current/ {print $4}' | tr -d '()%')
 
 icon() {
-  if [ "$per" -gt "95" ]; then
-    icon="󰃠"
-  elif [ "$per" -gt "75" ]; then
-    icon="󰃟"
-  elif [ "$per" -gt "60" ]; then
-    icon="󰃞"
+  if [ "$per" -gt "65" ]; then
+    icon=""
+  elif [ "$per" -gt "50" ]; then
+    icon=""
   elif [ "$per" -gt "30" ]; then
-    icon="󰃝"
+    icon=""
+  elif [ "$per" -gt "18" ]; then
+    icon=""
   elif [ "$per" -gt "10" ]; then
-    icon="󰃜"
-  elif [ "$per" -gt "4" ]; then
-    icon="󰃛"
+    icon=""
   elif [ "$per" -gt "1" ]; then
-    icon="󰃚"
+    icon=""
   else
-    icon="󰃚"
+    icon=""
   fi
   echo "$icon"
 }

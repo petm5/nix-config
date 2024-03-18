@@ -1,5 +1,3 @@
-; Based on https://github.com/gasech/hyprland-dots
-
 (include "variables.yuck")
 (include "windows.yuck")
 

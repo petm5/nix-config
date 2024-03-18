@@ -3,7 +3,7 @@
   bind =
     [
       "$mod, Return, exec, foot"
-      "$mod, C, exec, flatpak run com.google.Chrome"
+      "$mod, C, exec, chromium"
       ", Print, exec, grimblast copy area"
       "$mod, Q, killactive,"
       "$mod, F, fullscreen,"

@@ -21,8 +21,13 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "zed_onedark";
+      theme = "ayu_mirage";
       editor.true-color = true;
+      editor.soft-wrap = {
+        enable = true;
+        max-wrap = 25;
+        max-indent-retain = 20;
+      };
     };
   };
 

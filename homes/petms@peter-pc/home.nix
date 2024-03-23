@@ -14,6 +14,7 @@
     jq
     brightnessctl
     pamixer
+    gnome.simple-scan
   ];
 
   programs.chromium = {

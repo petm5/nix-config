@@ -8,7 +8,7 @@
   
   users.users.petms = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" ];
+    extraGroups = [ "wheel" "video" "scanner" "lp" ];
   };
 
   time.timeZone = "America/Toronto";

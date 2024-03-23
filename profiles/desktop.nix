@@ -45,6 +45,10 @@
   hardware.bluetooth.enable = true;
 
   services.printing.enable = true;
+  hardware.sane.enable = true;
+  nixpkgs.config.allowUnfree = true;
+  hardware.sane.extraBackends = [ pkgs.hplipWithPlugin ];
+  services.ipp-usb.enable = true;
 
   services.avahi.enable = true;
   services.avahi.nssmdns4 = true;

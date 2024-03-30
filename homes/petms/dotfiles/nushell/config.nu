@@ -146,7 +146,7 @@ $env.config = {
     show_banner: false # true or false to enable or disable the welcome banner at startup
 
     ls: {
-        use_ls_colors: true # use the LS_COLORS environment variable to colorize output
+        use_ls_colors: false # use the LS_COLORS environment variable to colorize output
         clickable_links: true # enable or disable clickable links. Your terminal has to support links.
     }
 
@@ -225,7 +225,7 @@ $env.config = {
         vi_normal: underscore # block, underscore, line, blink_block, blink_underscore, blink_line, inherit to skip setting cursor shape (underscore is the default)
     }
 
-    color_config: $dark_theme # if you want a more interesting theme, you can replace the empty record with `$dark_theme`, `$light_theme` or another custom record
+    color_config: $light_theme # if you want a more interesting theme, you can replace the empty record with `$dark_theme`, `$light_theme` or another custom record
     use_grid_icons: true
     footer_mode: "25" # always, never, number_of_rows, auto
     float_precision: 2 # the precision for displaying floats in tables

@@ -57,12 +57,13 @@
     "col.shadow" = "0x10333333";
     blur.enabled = false;
     blur.xray = true;
-    blur.size = 8;
+    blur.size = 16;
+    blur.passes = 2;
   };
   general = {
-    gaps_in = 9;
-    gaps_out = 20;
-    border_size = 1;
+    gaps_in = 14;
+    gaps_out = 32;
+    border_size = 0;
     "col.active_border" = "0xff446270";
     "col.inactive_border" = "0xff334759";
   };
@@ -84,7 +85,7 @@
     natural_scroll = true;
   }];
   dwindle = {
-    no_gaps_when_only = 1;
+    no_gaps_when_only = 0;
   };
   animation = [
       "workspaces,1,3,default,slidefade 10%"

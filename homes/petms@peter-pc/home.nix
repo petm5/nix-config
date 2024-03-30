@@ -38,25 +38,44 @@
     settings = {
       main = {
         term = "xterm-256color";
-
         shell = "nu";
-
-        include = "${pkgs.foot.themes}/share/foot/themes/nightfly";
-
-        font = "Hack:size=11";
-        dpi-aware = "no";
-
-        line-height = "13";
-
+        font = "Hack:size=6.7";
+        dpi-aware = "yes";
+        line-height = "8.8";
         initial-window-size-pixels = "960x640";
-
         pad = "3x3";
+        # include = "${pkgs.foot.themes}/share/foot/themes/material-design";
       };
-
       mouse = {
         hide-when-typing = "yes";
       };
+      colors = {
+        foreground = "212121";
+        background = "ffffff";
+        regular0 = "4a4b4e";
+        regular1 = "a32a3a";
+        regular2 = "206620";
+        regular3 = "745300";
+        regular4 = "4b529a";
+        regular5 = "8d377e";
+        regular6 = "086784";
+        regular7 = "dee2e0";
+        bright0 = "676364";
+        bright1 = "a64822";
+        bright2 = "187408";
+        bright3 = "8b590a";
+        bright4 = "5c59b2";
+        bright5 = "8e45a8";
+        bright6 = "3f649c";
+        bright7 = "eff0f2";
+        # alpha = 0.74;
+      };
     };
+  };
+
+  programs.helix.settings = lib.mkForce {
+    theme = "github_light";
+    editor.true-color = true;
   };
 
   programs.fuzzel = {

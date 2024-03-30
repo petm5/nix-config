@@ -77,13 +77,12 @@
     "eDP-1,2880x1920@120,1920x0,2,bitdepth,10"
     "DP-3,1920x1080@75,0x0,1"
   ];
-  input = {
-    accel_profile = "custom 10 0 9 36 81 144 225";
+  device = [{
+    name = "microsoft-surface-045e:09af-touchpad";
+    accel_profile = "custom 10 0 9 36 81 144";
     scroll_points = "0.2144477506 0.000 0.026 0.051 0.090 0.128 0.167 0.209 0.267 0.326 0.384 0.443 0.501 0.560 0.619 0.677 0.736 0.794 0.853 0.911 1.032";
-    touchpad = {
-      natural_scroll = true;
-    };
-  }; 
+    natural_scroll = true;
+  }];
   dwindle = {
     no_gaps_when_only = 1;
   };

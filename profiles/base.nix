@@ -2,7 +2,6 @@
 
   imports = [
     (modulesPath + "/profiles/minimal.nix")
-    ../modules
   ];
 
   boot.initrd.systemd.enable = true;

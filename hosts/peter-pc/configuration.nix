@@ -15,11 +15,6 @@
 
   console.keyMap = "us";
 
-  services.xserver.displayManager.autoLogin = {
-    enable = true;
-    user = "petms";
-  };
-
   networking.wireless.iwd.settings = {
     General = {
       Country = "CA";

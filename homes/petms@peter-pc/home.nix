@@ -35,7 +35,6 @@
 
   programs.foot = {
     enable = true;
-    server.enable = true;
     settings = {
       main = {
         term = "xterm-256color";
@@ -99,9 +98,6 @@
     settings = import ./config.nix;
   };
 
-  xsession.enable = true;
-  xsession.windowManager.command = "${pkgs.hyprland}/bin/Hyprland >/dev/null 2>/dev/null";
-
   services.mako = {
     enable = true;
     textColor = "#ffffff";
@@ -150,7 +146,7 @@
     x11.enable = true;
     package = pkgs.numix-cursor-theme;
     name = "Numix-Cursor";
-    size = 48;
+    size = 24;
   };
 
   fonts.fontconfig.enable = true;

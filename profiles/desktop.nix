@@ -17,7 +17,18 @@
 
   services.flatpak.enable = true;
 
-  services.greetd.enable = true;
+  services.greetd = {
+    enable = true;
+    settings = {
+      initial_session.command = "Hyprland";
+      initial_session.user = (builtins.elemAt (builtins.filter (u: u.isNormalUser) (builtins.attrValues config.users.users)) 0).name;
+      default_session.command = "${config.services.greetd.package}/bin/agreety --cmd Hyprland";
+    };
+  };
+
+  environment.etc."greetd/environments".text = ''
+    Hyprland
+  '';
 
   hardware.opengl.enable = true;
 
@@ -55,8 +66,7 @@
 
   systemd.network.wait-online.enable = false;
 
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  sound.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -78,17 +88,13 @@
 
   security.pam.services.swaylock = {};
 
-  services.greetd.command = let
-    script = pkgs.writeScript "run-user-session" ''
-      exec $HOME/.xsession
-    '';
-  in "${script}";
-
   services.chrony = {
     enable = true;
     enableRTCTrimming = true;
     extraConfig = ''
       makestep 0.1 10
+      leapsecmode ignore
+      rtconutc
     '';
   };
 

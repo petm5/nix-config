@@ -88,14 +88,6 @@
 
   security.pam.services.swaylock = {};
 
-  services.chrony = {
-    enable = true;
-    enableRTCTrimming = true;
-    extraConfig = ''
-      makestep 0.1 10
-      leapsecmode ignore
-      rtconutc
-    '';
-  };
+  services.timesyncd.enable = true;
 
 }

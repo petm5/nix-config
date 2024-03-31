@@ -22,16 +22,20 @@
                   }]
                 }
                 capture.props = {
+                  node.name = "audio_effect.sp9-convolver"
                   media.class = "Audio/Sink"
-                  node.virtual = "false"
-                  priority.session = 2500
+                  node.virtual = false
+                  priority.session = 10000
                   device.api = "dsp"
+                  audio.channels = 2
                   audio.position = ["FL", "FR"]
+                  state.default-channel-volume = 0.343
                 }
                 playback.props = {
                   node.name = "effect_output.sp9-convolver"
                   target.object = "alsa_output.pci-0000_00_1f.3.analog-stereo"
-                  node.passive = "true"
+                  node.passive = true
+                  audio.channels = 2
                   audio.position = ["FL", "FR"]
                 }
               }

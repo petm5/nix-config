@@ -68,14 +68,9 @@
         bright5 = "8e45a8";
         bright6 = "3f649c";
         bright7 = "eff0f2";
-        # alpha = 0.74;
+        alpha = 0.75;
       };
     };
-  };
-
-  programs.helix.settings = lib.mkForce {
-    theme = "github_light";
-    editor.true-color = true;
   };
 
   programs.fuzzel = {

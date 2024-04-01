@@ -55,14 +55,14 @@
     shadow_ignore_window = true;
     shadow_render_power = 2;
     "col.shadow" = "0x10333333";
-    blur.enabled = false;
+    blur.enabled = true;
     blur.xray = true;
     blur.size = 16;
     blur.passes = 2;
   };
   general = {
-    gaps_in = 14;
-    gaps_out = 32;
+    gaps_in = 6;
+    gaps_out = 12;
     border_size = 0;
     "col.active_border" = "0xff446270";
     "col.inactive_border" = "0xff334759";
@@ -88,8 +88,8 @@
     no_gaps_when_only = 0;
   };
   animation = [
-      "workspaces,1,3,default,slidefade 10%"
-      "windows,1,4,default,popin"
+      "workspaces,1,3,default,fade"
+      "windows,1,4,default,popin 90%"
       "fade,1,4,default"
     ];
   windowrule = [];

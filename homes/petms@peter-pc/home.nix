@@ -39,36 +39,18 @@
       main = {
         term = "xterm-256color";
         shell = "nu";
-        font = "Hack:size=6.7";
-        dpi-aware = "yes";
-        line-height = "8.8";
+        font = "Hack:size=10";
+        dpi-aware = "no";
+        line-height = "11.8";
         initial-window-size-pixels = "960x640";
         pad = "3x3";
-        # include = "${pkgs.foot.themes}/share/foot/themes/material-design";
+        include = "${pkgs.foot.themes}/share/foot/themes/material-design";
       };
       mouse = {
         hide-when-typing = "yes";
       };
       colors = {
-        foreground = "212121";
-        background = "ffffff";
-        regular0 = "4a4b4e";
-        regular1 = "a32a3a";
-        regular2 = "206620";
-        regular3 = "745300";
-        regular4 = "4b529a";
-        regular5 = "8d377e";
-        regular6 = "086784";
-        regular7 = "dee2e0";
-        bright0 = "676364";
-        bright1 = "a64822";
-        bright2 = "187408";
-        bright3 = "8b590a";
-        bright4 = "5c59b2";
-        bright5 = "8e45a8";
-        bright6 = "3f649c";
-        bright7 = "eff0f2";
-        alpha = 0.75;
+        alpha = 0.95;
       };
     };
   };
@@ -169,12 +151,12 @@
     enable = true;
     theme = {
       package = pkgs.libsForQt5.breeze-gtk;
-      name = "Breeze";
+      name = "Breeze-Dark";
     };
 
     iconTheme = {
       package = pkgs.gnome.adwaita-icon-theme;
-      name = "Adwaita";
+      name = "Adwaita-dark";
     };
 
     font = {
@@ -182,6 +164,14 @@
       size = 11;
     };
   };
+
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
+
+  qt.platformTheme = "gtk";
 
   services.mpd.enable = true;
   xdg.userDirs.enable = true;

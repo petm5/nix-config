@@ -57,8 +57,9 @@
     "col.shadow" = "0x10333333";
     blur.enabled = true;
     blur.xray = true;
-    blur.size = 16;
+    blur.size = 32;
     blur.passes = 2;
+    blur.noise = 0.16;
   };
   general = {
     gaps_in = 6;
@@ -71,12 +72,12 @@
       "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       "eww daemon"
       "eww open bar"
-      "swaybg -i ~/.wallpaper"
+      "swaybg -i ~/.wallpaper -m fill"
       "hyprctl setcursor 'Numix-Cursor' 24"
     ];
   monitor = [
-    "eDP-1,2880x1920@120,1920x0,2,bitdepth,10"
-    "DP-3,1920x1080@75,0x0,1"
+    "eDP-1,2880x1920@120,1920x0,2,bitdepth,8"
+    "DP-2,highres,0x0,auto"
   ];
   device = [{
     name = "microsoft-surface-045e:09af-touchpad";

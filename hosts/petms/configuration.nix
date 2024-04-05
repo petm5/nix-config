@@ -24,6 +24,22 @@
 
   time.timeZone = "America/Toronto";
 
+  fileSystems = {
+    "/" = {
+      label = "nixos";
+      fsType = "btrfs";
+      options = [ "subvol=@" ];
+    };
+    "/efi" = {
+      label = "ESP";
+      fsType = "vfat";
+    };
+  };
+
+  boot.loader.grub.enable = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   system.stateVersion = "24.05";
 
 }

@@ -35,6 +35,8 @@
 
   fileSystems = {
     "/" = {
+      fsType = "btrfs";
+      options = [ "subvol=@" ];
       device = "/dev/mapper/root";
       encrypted = {
         enable = true;
@@ -45,6 +47,16 @@
     "/boot" = {
       label = "SYSTEM";
       fsType = "vfat";
+    };
+    "/home" = {
+      inherit (config.fileSystems."/") device label;
+      fsType = "btrfs";
+      options = [ "subvol=@home" ];
+    };
+    "/nix" = {
+      inherit (config.fileSystems."/") device label;
+      fsType = "btrfs";
+      options = [ "subvol=@nix" ];
     };
   };
 
@@ -57,6 +69,10 @@
       cp "${./monitor-edid-mod.bin}" $out/lib/firmware/edid/monitor-edid.bin
     ''
   ) ];
+
+  boot.loader.grub.enable = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   system.stateVersion = "24.05";
 

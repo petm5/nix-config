@@ -15,6 +15,7 @@
     brightnessctl
     pamixer
     gnome.simple-scan
+    grimblast
   ];
 
   programs.chromium = {

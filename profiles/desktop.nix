@@ -11,6 +11,10 @@
 
   documentation.nixos.enable = true;
 
+  fonts.fontconfig.enable = true;
+  fonts.fontconfig.subpixel.rgba = "rgb";
+  fonts.fontconfig.hinting.style = "slight";
+
   hardware.brillo.enable = true;
 
   services.upower.enable = true;

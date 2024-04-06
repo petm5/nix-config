@@ -1,0 +1,127 @@
+From 186db51d54bcbd4d5096bea1e4396966c2dad001 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Mon, 11 Mar 2024 15:15:19 +0100
+Subject: [PATCH 15/21] libcamera: debayer_cpu: Add BGR888 output support
+
+BGR888 is RGB888 with the red and blue pixels swapped, adjust
+the debayering to swap the red and blue pixels in the bayer pattern
+to add support for writing formats::BGR888.
+
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # sc8280xp Lenovo x13s
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Milan Zamazal <mzamazal@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Stefan Klug <stefan.klug@ideasonboard.com>
+---
+ src/libcamera/software_isp/debayer_cpu.cpp | 42 +++++++++++++++++++---
+ src/libcamera/software_isp/debayer_cpu.h   |  1 +
+ 2 files changed, 38 insertions(+), 5 deletions(-)
+
+diff --git a/src/libcamera/software_isp/debayer_cpu.cpp b/src/libcamera/software_isp/debayer_cpu.cpp
+index eb1c2718..a1692693 100644
+--- a/src/libcamera/software_isp/debayer_cpu.cpp
++++ b/src/libcamera/software_isp/debayer_cpu.cpp
+@@ -268,7 +268,7 @@ int DebayerCpu::getInputConfig(PixelFormat inputFormat, DebayerInputConfig &conf
+ 		config.bpp = (bayerFormat.bitDepth + 7) & ~7;
+ 		config.patternSize.width = 2;
+ 		config.patternSize.height = 2;
+-		config.outputFormats = std::vector<PixelFormat>({ formats::RGB888 });
++		config.outputFormats = std::vector<PixelFormat>({ formats::RGB888, formats::BGR888 });
+ 		return 0;
+ 	}
+ 
+@@ -278,7 +278,7 @@ int DebayerCpu::getInputConfig(PixelFormat inputFormat, DebayerInputConfig &conf
+ 		config.bpp = 10;
+ 		config.patternSize.width = 4; /* 5 bytes per *4* pixels */
+ 		config.patternSize.height = 2;
+-		config.outputFormats = std::vector<PixelFormat>({ formats::RGB888 });
++		config.outputFormats = std::vector<PixelFormat>({ formats::RGB888, formats::BGR888 });
+ 		return 0;
+ 	}
+ 
+@@ -289,7 +289,7 @@ int DebayerCpu::getInputConfig(PixelFormat inputFormat, DebayerInputConfig &conf
+ 
+ int DebayerCpu::getOutputConfig(PixelFormat outputFormat, DebayerOutputConfig &config)
+ {
+-	if (outputFormat == formats::RGB888) {
++	if (outputFormat == formats::RGB888 || outputFormat == formats::BGR888) {
+ 		config.bpp = 24;
+ 		return 0;
+ 	}
+@@ -325,13 +325,41 @@ int DebayerCpu::setupStandardBayerOrder(BayerFormat::Order order)
+ 	return 0;
+ }
+ 
+-/* TODO: this ignores outputFormat since there is only 1 supported outputFormat for now */
+-int DebayerCpu::setDebayerFunctions(PixelFormat inputFormat, [[maybe_unused]] PixelFormat outputFormat)
++int DebayerCpu::setDebayerFunctions(PixelFormat inputFormat, PixelFormat outputFormat)
+ {
+ 	BayerFormat bayerFormat =
+ 		BayerFormat::fromPixelFormat(inputFormat);
+ 
+ 	xShift_ = 0;
++	swapRedBlueGains_ = false;
++
++	switch (outputFormat) {
++	case formats::RGB888:
++		break;
++	case formats::BGR888:
++		/* Swap R and B in bayer order to generate BGR888 instead of RGB888 */
++		swapRedBlueGains_ = true;
++
++		switch (bayerFormat.order) {
++		case BayerFormat::BGGR:
++			bayerFormat.order = BayerFormat::RGGB;
++			break;
++		case BayerFormat::GBRG:
++			bayerFormat.order = BayerFormat::GRBG;
++			break;
++		case BayerFormat::GRBG:
++			bayerFormat.order = BayerFormat::GBRG;
++			break;
++		case BayerFormat::RGGB:
++			bayerFormat.order = BayerFormat::BGGR;
++			break;
++		default:
++			goto invalid_fmt;
++		}
++		break;
++	default:
++		goto invalid_fmt;
++	}
+ 
+ 	if ((bayerFormat.bitDepth == 8 || bayerFormat.bitDepth == 10 || bayerFormat.bitDepth == 12) &&
+ 	    bayerFormat.packing == BayerFormat::Packing::None &&
+@@ -378,6 +406,7 @@ int DebayerCpu::setDebayerFunctions(PixelFormat inputFormat, [[maybe_unused]] Pi
+ 		}
+ 	}
+ 
++invalid_fmt:
+ 	LOG(Debayer, Error) << "Unsupported input output format combination";
+ 	return -EINVAL;
+ }
+@@ -661,6 +690,9 @@ void DebayerCpu::process(FrameBuffer *input, FrameBuffer *output, DebayerParams
+ 		gamma_correction_ = params.gamma;
+ 	}
+ 
++	if (swapRedBlueGains_)
++		std::swap(params.gainR, params.gainB);
++
+ 	for (unsigned int i = 0; i < kRGBLookupSize; i++) {
+ 		constexpr unsigned int div =
+ 			kRGBLookupSize * DebayerParams::kGain10 / kGammaLookupSize;
+diff --git a/src/libcamera/software_isp/debayer_cpu.h b/src/libcamera/software_isp/debayer_cpu.h
+index fd1fa180..5f44fc65 100644
+--- a/src/libcamera/software_isp/debayer_cpu.h
++++ b/src/libcamera/software_isp/debayer_cpu.h
+@@ -145,6 +145,7 @@ private:
+ 	unsigned int lineBufferIndex_;
+ 	unsigned int xShift_; /* Offset of 0/1 applied to window_.x */
+ 	bool enableInputMemcpy_;
++	bool swapRedBlueGains_;
+ 	float gamma_correction_;
+ 	unsigned int measuredFrames_;
+ 	int64_t frameProcessTime_;
+-- 
+2.43.2
+

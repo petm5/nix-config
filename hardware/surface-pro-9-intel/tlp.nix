@@ -1,12 +1,5 @@
 {
 
-  boot.kernelParams = [
-    "workqueue.power_efficient=1"
-    "i915.enable_psr=2"
-    "i915.enable_psr2_sel_fetch=1"
-    "i915.enable_fbc=1"
-  ];
-
   services.power-profiles-daemon.enable = false;
 
   services.tlp.enable = true;

@@ -1,0 +1,3 @@
+[submodule "ipu6-softisp"]
+	path = ipu6-softisp
+	url = https://code.tvl.fyi/depot.git:/users/flokli/ipu6-softisp.git

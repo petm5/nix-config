@@ -1,0 +1,523 @@
+From 4259b01930333c6666a185d923e6e68ec915a4fd Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Mon, 11 Mar 2024 15:15:10 +0100
+Subject: [PATCH 06/21] libcamera: software_isp: Add SwStatsCpu class
+
+Add a CPU based SwStats implementation for SoftwareISP / SoftIPA use.
+
+This implementation offers a configure function + functions to gather
+statistics on a line by line basis. This allows CPU based software
+debayering to call into interlace debayering and statistics gathering
+on a line by line bases while the input data is still hot in the cache.
+
+This implementation also allows specifying a window over which to gather
+statistics instead of processing the whole frame.
+
+Doxygen documentation by Dennis Bonke.
+
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # sc8280xp Lenovo x13s
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Milan Zamazal <mzamazal@redhat.com>
+Co-developed-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+Co-developed-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Co-developed-by: Dennis Bonke <admin@dennisbonke.com>
+Signed-off-by: Dennis Bonke <admin@dennisbonke.com>
+Co-developed-by: Marttico <g.martti@gmail.com>
+Signed-off-by: Marttico <g.martti@gmail.com>
+Co-developed-by: Toon Langendam <t.langendam@gmail.com>
+Signed-off-by: Toon Langendam <t.langendam@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ include/libcamera/internal/meson.build        |   1 +
+ .../internal/software_isp/meson.build         |   5 +
+ .../internal/software_isp/swisp_stats.h       |  38 ++++
+ src/libcamera/meson.build                     |   1 +
+ src/libcamera/software_isp/meson.build        |  12 +
+ src/libcamera/software_isp/swstats_cpu.cpp    | 208 ++++++++++++++++++
+ src/libcamera/software_isp/swstats_cpu.h      | 159 +++++++++++++
+ 7 files changed, 424 insertions(+)
+ create mode 100644 include/libcamera/internal/software_isp/meson.build
+ create mode 100644 include/libcamera/internal/software_isp/swisp_stats.h
+ create mode 100644 src/libcamera/software_isp/meson.build
+ create mode 100644 src/libcamera/software_isp/swstats_cpu.cpp
+ create mode 100644 src/libcamera/software_isp/swstats_cpu.h
+
+diff --git a/include/libcamera/internal/meson.build b/include/libcamera/internal/meson.build
+index 5807dfd9..160fdc37 100644
+--- a/include/libcamera/internal/meson.build
++++ b/include/libcamera/internal/meson.build
+@@ -50,3 +50,4 @@ libcamera_internal_headers = files([
+ ])
+ 
+ subdir('converter')
++subdir('software_isp')
+diff --git a/include/libcamera/internal/software_isp/meson.build b/include/libcamera/internal/software_isp/meson.build
+new file mode 100644
+index 00000000..66c9c3fb
+--- /dev/null
++++ b/include/libcamera/internal/software_isp/meson.build
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: CC0-1.0
++
++libcamera_internal_headers += files([
++    'swisp_stats.h',
++])
+diff --git a/include/libcamera/internal/software_isp/swisp_stats.h b/include/libcamera/internal/software_isp/swisp_stats.h
+new file mode 100644
+index 00000000..afe42c9a
+--- /dev/null
++++ b/include/libcamera/internal/software_isp/swisp_stats.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: LGPL-2.1-or-later */
++/*
++ * Copyright (C) 2023, Linaro Ltd
++ *
++ * swisp_stats.h - Statistics data format used by the software ISP and software IPA
++ */
++
++#pragma once
++
++namespace libcamera {
++
++/**
++ * \brief Struct that holds the statistics for the Software ISP.
++ */
++struct SwIspStats {
++	/**
++	 * \brief Holds the sum of all sampled red pixels.
++	 */
++	unsigned long sumR_;
++	/**
++	 * \brief Holds the sum of all sampled green pixels.
++	 */
++	unsigned long sumG_;
++	/**
++	 * \brief Holds the sum of all sampled blue pixels.
++	 */
++	unsigned long sumB_;
++	/**
++	 * \brief Number of bins in the yHistogram.
++	 */
++	static constexpr unsigned int kYHistogramSize = 16;
++	/**
++	 * \brief A histogram of luminance values.
++	 */
++	std::array<unsigned int, kYHistogramSize> yHistogram;
++};
++
++} /* namespace libcamera */
+diff --git a/src/libcamera/meson.build b/src/libcamera/meson.build
+index 94a95ae3..91e4cc60 100644
+--- a/src/libcamera/meson.build
++++ b/src/libcamera/meson.build
+@@ -71,6 +71,7 @@ subdir('converter')
+ subdir('ipa')
+ subdir('pipeline')
+ subdir('proxy')
++subdir('software_isp')
+ 
+ null_dep = dependency('', required : false)
+ 
+diff --git a/src/libcamera/software_isp/meson.build b/src/libcamera/software_isp/meson.build
+new file mode 100644
+index 00000000..fcfff74a
+--- /dev/null
++++ b/src/libcamera/software_isp/meson.build
+@@ -0,0 +1,12 @@
++# SPDX-License-Identifier: CC0-1.0
++
++softisp_enabled = pipelines.contains('simple')
++summary({'SoftISP support' : softisp_enabled}, section : 'Configuration')
++
++if not (softisp_enabled)
++    subdir_done()
++endif
++
++libcamera_sources += files([
++    'swstats_cpu.cpp',
++])
+diff --git a/src/libcamera/software_isp/swstats_cpu.cpp b/src/libcamera/software_isp/swstats_cpu.cpp
+new file mode 100644
+index 00000000..448d0e4c
+--- /dev/null
++++ b/src/libcamera/software_isp/swstats_cpu.cpp
+@@ -0,0 +1,208 @@
++/* SPDX-License-Identifier: LGPL-2.1-or-later */
++/*
++ * Copyright (C) 2023, Linaro Ltd
++ * Copyright (C) 2023, Red Hat Inc.
++ *
++ * Authors:
++ * Hans de Goede <hdegoede@redhat.com>
++ *
++ * swstats_cpu.cpp - CPU based software statistics implementation
++ */
++
++#include "swstats_cpu.h"
++
++#include <libcamera/base/log.h>
++
++#include <libcamera/stream.h>
++
++#include "libcamera/internal/bayer_format.h"
++
++namespace libcamera {
++
++/**
++ * \class SwStatsCpu
++ * \brief Class for gathering statistics on the CPU
++ *
++ * CPU based software ISP statistics implementation.
++ *
++ * This class offers a configure function + functions to gather statistics
++ * on a line by line basis. This allows CPU based software debayering to
++ * interlace debayering and statistics gathering on a line by line basis
++ * while the input data is still hot in the cache.
++ *
++ * It is also possible to specify a window over which to gather
++ * statistics instead of processing the whole frame.
++ */
++
++LOG_DEFINE_CATEGORY(SwStatsCpu)
++
++SwStatsCpu::SwStatsCpu()
++{
++	sharedStats_ = SharedMemObject<SwIspStats>("softIsp_stats");
++	if (!sharedStats_.fd().isValid())
++		LOG(SwStatsCpu, Error)
++			<< "Failed to create shared memory for statistics";
++}
++
++static const unsigned int kRedYMul = 77; /* 0.299 * 256 */
++static const unsigned int kGreenYMul = 150; /* 0.587 * 256 */
++static const unsigned int kBlueYMul = 29; /* 0.114 * 256 */
++
++#define SWSTATS_START_LINE_STATS(pixel_t) \
++	pixel_t r, g, g2, b;              \
++	unsigned int yVal;                \
++                                          \
++	unsigned int sumR = 0;            \
++	unsigned int sumG = 0;            \
++	unsigned int sumB = 0;
++
++#define SWSTATS_ACCUMULATE_LINE_STATS(div) \
++	sumR += r;                         \
++	sumG += g;                         \
++	sumB += b;                         \
++                                           \
++	yVal = r * kRedYMul;               \
++	yVal += g * kGreenYMul;            \
++	yVal += b * kBlueYMul;             \
++	stats_.yHistogram[yVal * SwIspStats::kYHistogramSize / (256 * 256 * (div))]++;
++
++#define SWSTATS_FINISH_LINE_STATS() \
++	stats_.sumR_ += sumR;       \
++	stats_.sumG_ += sumG;       \
++	stats_.sumB_ += sumB;
++
++void SwStatsCpu::statsBGGR10PLine0(const uint8_t *src[])
++{
++	const uint8_t *src0 = src[1] + window_.x * 5 / 4;
++	const uint8_t *src1 = src[2] + window_.x * 5 / 4;
++	const int widthInBytes = window_.width * 5 / 4;
++
++	if (swapLines_)
++		std::swap(src0, src1);
++
++	SWSTATS_START_LINE_STATS(uint8_t)
++
++	/* x += 5 sample every other 2x2 block */
++	for (int x = 0; x < widthInBytes; x += 5) {
++		/* BGGR */
++		b = src0[x];
++		g = src0[x + 1];
++		g2 = src1[x];
++		r = src1[x + 1];
++		g = (g + g2) / 2;
++		/* Data is already 8 bits, divide by 1 */
++		SWSTATS_ACCUMULATE_LINE_STATS(1)
++	}
++
++	SWSTATS_FINISH_LINE_STATS()
++}
++
++void SwStatsCpu::statsGBRG10PLine0(const uint8_t *src[])
++{
++	const uint8_t *src0 = src[1] + window_.x * 5 / 4;
++	const uint8_t *src1 = src[2] + window_.x * 5 / 4;
++	const int widthInBytes = window_.width * 5 / 4;
++
++	if (swapLines_)
++		std::swap(src0, src1);
++
++	SWSTATS_START_LINE_STATS(uint8_t)
++
++	/* x += 5 sample every other 2x2 block */
++	for (int x = 0; x < widthInBytes; x += 5) {
++		/* GBRG */
++		g = src0[x];
++		b = src0[x + 1];
++		r = src1[x];
++		g2 = src1[x + 1];
++		g = (g + g2) / 2;
++		/* Data is already 8 bits, divide by 1 */
++		SWSTATS_ACCUMULATE_LINE_STATS(1)
++	}
++
++	SWSTATS_FINISH_LINE_STATS()
++}
++
++/**
++ * \brief Reset state to start statistics gathering for a new frame.
++ *
++ * This may only be called after a successful setWindow() call.
++ */
++void SwStatsCpu::startFrame(void)
++{
++	stats_.sumR_ = 0;
++	stats_.sumB_ = 0;
++	stats_.sumG_ = 0;
++	stats_.yHistogram.fill(0);
++}
++
++/**
++ * \brief Finish statistics calculation for the current frame.
++ *
++ * This may only be called after a successful setWindow() call.
++ */
++void SwStatsCpu::finishFrame(void)
++{
++	*sharedStats_ = stats_;
++	statsReady.emit(0);
++}
++
++/**
++ * \brief Configure the statistics object for the passed in input format.
++ * \param[in] inputCfg The input format
++ *
++ * \return 0 on success, a negative errno value on failure
++ */
++int SwStatsCpu::configure(const StreamConfiguration &inputCfg)
++{
++	BayerFormat bayerFormat =
++		BayerFormat::fromPixelFormat(inputCfg.pixelFormat);
++
++	if (bayerFormat.bitDepth == 10 &&
++	    bayerFormat.packing == BayerFormat::Packing::CSI2) {
++		patternSize_.height = 2;
++		patternSize_.width = 4; /* 5 bytes per *4* pixels */
++		/* Skip every 3th and 4th line, sample every other 2x2 block */
++		ySkipMask_ = 0x02;
++		xShift_ = 0;
++
++		switch (bayerFormat.order) {
++		case BayerFormat::BGGR:
++		case BayerFormat::GRBG:
++			stats0_ = &SwStatsCpu::statsBGGR10PLine0;
++			swapLines_ = bayerFormat.order == BayerFormat::GRBG;
++			return 0;
++		case BayerFormat::GBRG:
++		case BayerFormat::RGGB:
++			stats0_ = &SwStatsCpu::statsGBRG10PLine0;
++			swapLines_ = bayerFormat.order == BayerFormat::RGGB;
++			return 0;
++		default:
++			break;
++		}
++	}
++
++	LOG(SwStatsCpu, Info)
++		<< "Unsupported input format " << inputCfg.pixelFormat.toString();
++	return -EINVAL;
++}
++
++/**
++ * \brief Specify window coordinates over which to gather statistics.
++ * \param[in] window The window object.
++ */
++void SwStatsCpu::setWindow(Rectangle window)
++{
++	window_ = window;
++
++	window_.x &= ~(patternSize_.width - 1);
++	window_.x += xShift_;
++	window_.y &= ~(patternSize_.height - 1);
++
++	/* width_ - xShift_ to make sure the window fits */
++	window_.width -= xShift_;
++	window_.width &= ~(patternSize_.width - 1);
++	window_.height &= ~(patternSize_.height - 1);
++}
++
++} /* namespace libcamera */
+diff --git a/src/libcamera/software_isp/swstats_cpu.h b/src/libcamera/software_isp/swstats_cpu.h
+new file mode 100644
+index 00000000..0ac9ae71
+--- /dev/null
++++ b/src/libcamera/software_isp/swstats_cpu.h
+@@ -0,0 +1,159 @@
++/* SPDX-License-Identifier: LGPL-2.1-or-later */
++/*
++ * Copyright (C) 2023, Linaro Ltd
++ * Copyright (C) 2023, Red Hat Inc.
++ *
++ * Authors:
++ * Hans de Goede <hdegoede@redhat.com>
++ *
++ * swstats_cpu.h - CPU based software statistics implementation
++ */
++
++#pragma once
++
++#include <stdint.h>
++
++#include <libcamera/base/signal.h>
++
++#include <libcamera/geometry.h>
++
++#include "libcamera/internal/shared_mem_object.h"
++#include "libcamera/internal/software_isp/swisp_stats.h"
++
++namespace libcamera {
++
++class PixelFormat;
++struct StreamConfiguration;
++
++class SwStatsCpu
++{
++public:
++	SwStatsCpu();
++	~SwStatsCpu() = default;
++
++	/**
++	 * \brief Gets whether the statistics object is valid.
++	 *
++	 * \return true if it's valid, false otherwise
++	 */
++	bool isValid() const { return sharedStats_.fd().isValid(); }
++
++	/**
++	 * \brief Get the file descriptor for the statistics.
++	 *
++	 * \return the file descriptor
++	 */
++	const SharedFD &getStatsFD() { return sharedStats_.fd(); }
++
++	/**
++	 * \brief Get the pattern size.
++	 *
++	 * For some input-formats, e.g. Bayer data, processing is done multiple lines
++	 * and/or columns at a time. Get width and height at which the (bayer) pattern
++	 * repeats. Window values are rounded down to a multiple of this and the height
++	 * also indicates if processLine2() should be called or not.
++	 * This may only be called after a successful configure() call.
++	 *
++	 * \return the pattern size
++	 */
++	const Size &patternSize() { return patternSize_; }
++
++	int configure(const StreamConfiguration &inputCfg);
++	void setWindow(Rectangle window);
++	void startFrame();
++	void finishFrame();
++
++	/**
++	 * \brief Process line 0.
++	 * \param[in] y The y coordinate.
++	 * \param[in] src The input data.
++	 *
++	 * This function processes line 0 for input formats with patternSize height == 1.
++	 * It'll process line 0 and 1 for input formats with patternSize height >= 2.
++	 * This function may only be called after a successful setWindow() call.
++	 */
++	void processLine0(unsigned int y, const uint8_t *src[])
++	{
++		if ((y & ySkipMask_) || y < (unsigned int)window_.y ||
++		    y >= (window_.y + window_.height))
++			return;
++
++		(this->*stats0_)(src);
++	}
++
++	/**
++	 * \brief Process line 2 and 3.
++	 * \param[in] y The y coordinate.
++	 * \param[in] src The input data.
++	 *
++	 * This function processes line 2 and 3 for input formats with patternSize height == 4.
++	 * This function may only be called after a successful setWindow() call.
++	 */
++	void processLine2(unsigned int y, const uint8_t *src[])
++	{
++		if ((y & ySkipMask_) || y < (unsigned int)window_.y ||
++		    y >= (window_.y + window_.height))
++			return;
++
++		(this->*stats2_)(src);
++	}
++
++	/**
++	 * \brief Signals that the statistics are ready.
++	 *
++	 * The int parameter isn't actually used.
++	 */
++	Signal<int> statsReady;
++
++private:
++	/**
++	 * \brief Called when there is data to get statistics from.
++	 * \param[in] src The input data
++	 *
++	 * These functions take an array of (patternSize_.height + 1) src
++	 * pointers each pointing to a line in the source image. The middle
++	 * element of the array will point to the actual line being processed.
++	 * Earlier element(s) will point to the previous line(s) and later
++	 * element(s) to the next line(s).
++	 *
++	 * See the documentation of DebayerCpu::debayerFn for more details.
++	 */
++	using statsProcessFn = void (SwStatsCpu::*)(const uint8_t *src[]);
++
++	void statsBGGR10PLine0(const uint8_t *src[]);
++	void statsGBRG10PLine0(const uint8_t *src[]);
++
++	/* Variables set by configure(), used every line */
++	statsProcessFn stats0_;
++	statsProcessFn stats2_;
++	bool swapLines_;
++
++	/**
++	 * \brief Skip lines where this bitmask is set in y.
++	 */
++	unsigned int ySkipMask_;
++
++	/**
++	 * \brief Statistics window, set by setWindow(), used ever line.
++	 */
++	Rectangle window_;
++
++	/**
++	 * \brief The size of the bayer pattern.
++	 *
++	 * Valid sizes are: 2x2, 4x2 or 4x4.
++	 */
++	Size patternSize_;
++
++	/**
++	 * \brief The offset of x, applied to window_.x for bayer variants.
++	 *
++	 * This can either be 0 or 1.
++	 */
++	unsigned int xShift_;
++
++	SharedMemObject<SwIspStats> sharedStats_;
++	SwIspStats stats_;
++};
++
++} /* namespace libcamera */
+-- 
+2.43.2
+

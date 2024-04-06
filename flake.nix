@@ -44,9 +44,7 @@
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
         ./hosts/peter-pc/configuration.nix
-        ./hardware/microsoft/surface-pro-9-intel
         lanzaboote.nixosModules.lanzaboote
-        ./profiles/secure-boot.nix
       ];
     };
 
@@ -61,7 +59,7 @@
 
     devShells.x86_64-linux.surface-kernel = let
      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    in (pkgs.callPackage ./hardware/microsoft/surface-pro-9-intel/kernel/package {
+    in (pkgs.callPackage ./pkgs/linux-surface {
       baseKernel = pkgs.linux_latest;
     }).overrideAttrs (o: {nativeBuildInputs=o.nativeBuildInputs ++ (with pkgs; [ pkg-config ncurses ]);});
   };

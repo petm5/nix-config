@@ -2,6 +2,9 @@
 
   imports = [
     ../../profiles/desktop.nix
+    ./hardware-configuration.nix
+    ../../hardware/surface-pro-9-intel
+    ../../profiles/secure-boot.nix
   ];
 
   networking.hostName = "peter-pc";
@@ -33,42 +36,7 @@
 
   security.tpm2.enable = true;
 
-  fileSystems = {
-    "/" = {
-      fsType = "btrfs";
-      options = [ "subvol=@" ];
-      device = "/dev/mapper/root";
-      encrypted = {
-        enable = true;
-        label = "root";
-        blkDev = "/dev/vg0/lv0";
-      };
-    };
-    "/boot" = {
-      label = "SYSTEM";
-      fsType = "vfat";
-    };
-    "/home" = {
-      inherit (config.fileSystems."/") device label;
-      fsType = "btrfs";
-      options = [ "subvol=@home" ];
-    };
-    "/nix" = {
-      inherit (config.fileSystems."/") device label;
-      fsType = "btrfs";
-      options = [ "subvol=@nix" ];
-    };
-  };
-
   boot.initrd.services.lvm.enable = true;
-
-  boot.kernelParams = [ "drm.edid_firmware=DP-2:edid/monitor-edid.bin" ];
-
-  hardware.firmware = [ (pkgs.runCommandNoCC "firmware-custom-edid" {} ''
-      mkdir -p $out/lib/firmware/edid/
-      cp "${./monitor-edid-mod.bin}" $out/lib/firmware/edid/monitor-edid.bin
-    ''
-  ) ];
 
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;

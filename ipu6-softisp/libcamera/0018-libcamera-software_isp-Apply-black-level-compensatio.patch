@@ -1,0 +1,396 @@
+From bb608d177135d74e3c98b8a61fb459ebe254bca5 Mon Sep 17 00:00:00 2001
+From: Milan Zamazal <mzamazal@redhat.com>
+Date: Mon, 11 Mar 2024 15:15:21 +0100
+Subject: [PATCH 18/21] libcamera: software_isp: Apply black level compensation
+
+Black may not be represented as 0 pixel value for given hardware, it may be
+higher.  If this is not compensated then various problems may occur such as low
+contrast or suboptimal exposure.
+
+The black pixel value can be either retrieved from a tuning file for the given
+hardware, or automatically on fly.  The former is the right and correct method,
+while the latter can be used when a tuning file is not available for the given
+hardware.  Since there is currently no support for tuning files in software ISP,
+the automatic, hardware independent way, is always used.  Support for tuning
+files should be added in future but it will require more work than this patch.
+
+The patch looks at the image histogram and assumes that black starts when pixel
+values start occurring on the left.  A certain amount of the darkest pixels is
+ignored; it doesn't matter whether they represent various kinds of noise or are
+real, they are better to omit in any case to make the image looking better.  It
+also doesn't matter whether the darkest pixels occur around the supposed black
+level or are spread between 0 and the black level, the difference is not
+important.
+
+An arbitrary threshold of 2% darkest pixels is applied; there is no magic about
+that value.
+
+The patch assumes that the black values for different colors are the same and
+doesn't attempt any other non-primitive enhancements.  It cannot completely
+replace tuning files and simplicity, while providing visible benefit, is its
+goal.  Anything more sophisticated is left for future patches.
+
+A possible cheap enhancement, if needed, could be setting exposure + gain to
+minimum values temporarily, before setting the black level.  In theory, the
+black level should be fixed but it may not be reached in all images.  For this
+reason, the patch updates black level only if the observed value is lower than
+the current one; it should be never increased.
+
+The purpose of the patch is to compensate for hardware properties.  General
+image contrast enhancements are out of scope of this patch.
+
+Stats are still gathered as an uncorrected histogram, to avoid any confusion and
+to represent the raw image data.  Exposure must be determined after the black
+level correction -- it has no influence on the sub-black area and must be
+correct after applying the black level correction.  The granularity of the
+histogram is increased from 16 to 64 to provide a better precision (there is no
+theory behind either of those numbers).
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Milan Zamazal <mzamazal@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ .../internal/software_isp/debayer_params.h    |  4 +
+ .../internal/software_isp/swisp_stats.h       | 10 ++-
+ src/ipa/simple/black_level.cpp                | 86 +++++++++++++++++++
+ src/ipa/simple/black_level.h                  | 28 ++++++
+ src/ipa/simple/meson.build                    |  7 +-
+ src/ipa/simple/soft_simple.cpp                | 28 ++++--
+ src/libcamera/software_isp/debayer_cpu.cpp    | 13 ++-
+ src/libcamera/software_isp/debayer_cpu.h      |  1 +
+ src/libcamera/software_isp/software_isp.cpp   |  2 +-
+ 9 files changed, 162 insertions(+), 17 deletions(-)
+ create mode 100644 src/ipa/simple/black_level.cpp
+ create mode 100644 src/ipa/simple/black_level.h
+
+diff --git a/include/libcamera/internal/software_isp/debayer_params.h b/include/libcamera/internal/software_isp/debayer_params.h
+index 98965fa1..5e38e08b 100644
+--- a/include/libcamera/internal/software_isp/debayer_params.h
++++ b/include/libcamera/internal/software_isp/debayer_params.h
+@@ -43,6 +43,10 @@ struct DebayerParams {
+ 	 * \brief Gamma correction, 1.0 is no correction
+ 	 */
+ 	float gamma;
++	/**
++	 * \brief Level of the black point, 0..255, 0 is no correction.
++	 */
++	unsigned int blackLevel;
+ };
+ 
+ } /* namespace libcamera */
+diff --git a/include/libcamera/internal/software_isp/swisp_stats.h b/include/libcamera/internal/software_isp/swisp_stats.h
+index afe42c9a..25cd5abd 100644
+--- a/include/libcamera/internal/software_isp/swisp_stats.h
++++ b/include/libcamera/internal/software_isp/swisp_stats.h
+@@ -7,6 +7,8 @@
+ 
+ #pragma once
+ 
++#include <array>
++
+ namespace libcamera {
+ 
+ /**
+@@ -28,11 +30,15 @@ struct SwIspStats {
+ 	/**
+ 	 * \brief Number of bins in the yHistogram.
+ 	 */
+-	static constexpr unsigned int kYHistogramSize = 16;
++	static constexpr unsigned int kYHistogramSize = 64;
++	/**
++	 * \brief Type of the histogram.
++	 */
++	using histogram = std::array<unsigned int, kYHistogramSize>;
+ 	/**
+ 	 * \brief A histogram of luminance values.
+ 	 */
+-	std::array<unsigned int, kYHistogramSize> yHistogram;
++	histogram yHistogram;
+ };
+ 
+ } /* namespace libcamera */
+diff --git a/src/ipa/simple/black_level.cpp b/src/ipa/simple/black_level.cpp
+new file mode 100644
+index 00000000..8d52201b
+--- /dev/null
++++ b/src/ipa/simple/black_level.cpp
+@@ -0,0 +1,86 @@
++/* SPDX-License-Identifier: LGPL-2.1-or-later */
++/*
++ * Copyright (C) 2024, Red Hat Inc.
++ *
++ * black_level.cpp - black level handling
++ */
++
++#include "black_level.h"
++
++#include <numeric>
++
++#include <libcamera/base/log.h>
++
++namespace libcamera {
++
++LOG_DEFINE_CATEGORY(IPASoftBL)
++
++/**
++ * \class BlackLevel
++ * \brief Object providing black point level for software ISP
++ *
++ * Black level can be provided in hardware tuning files or, if no tuning file is
++ * available for the given hardware, guessed automatically, with less accuracy.
++ * As tuning files are not yet implemented for software ISP, BlackLevel
++ * currently provides only guessed black levels.
++ *
++ * This class serves for tracking black level as a property of the underlying
++ * hardware, not as means of enhancing a particular scene or image.
++ *
++ * The class is supposed to be instantiated for the given camera stream.
++ * The black level can be retrieved using BlackLevel::get() method. It is
++ * initially 0 and may change when updated using BlackLevel::update() method.
++ */
++
++BlackLevel::BlackLevel()
++	: blackLevel_(255), blackLevelSet_(false)
++{
++}
++
++/**
++ * \brief Return the current black level
++ *
++ * \return The black level, in the range from 0 (minimum) to 255 (maximum).
++ * If the black level couldn't be determined yet, return 0.
++ */
++unsigned int BlackLevel::get() const
++{
++	return blackLevelSet_ ? blackLevel_ : 0;
++}
++
++/**
++ * \brief Update black level from the provided histogram
++ * \param[in] yHistogram The histogram to be used for updating black level
++ *
++ * The black level is property of the given hardware, not image. It is updated
++ * only if it has not been yet set or if it is lower than the lowest value seen
++ * so far.
++ */
++void BlackLevel::update(SwIspStats::histogram &yHistogram)
++{
++	// The constant is selected to be "good enough", not overly conservative or
++	// aggressive. There is no magic about the given value.
++	constexpr float ignoredPercentage_ = 0.02;
++	const unsigned int total =
++		std::accumulate(begin(yHistogram), end(yHistogram), 0);
++	const unsigned int pixelThreshold = ignoredPercentage_ * total;
++	const unsigned int currentBlackIdx =
++		blackLevel_ / (256 / SwIspStats::kYHistogramSize);
++
++	for (unsigned int i = 0, seen = 0;
++	     i < currentBlackIdx && i < SwIspStats::kYHistogramSize;
++	     i++) {
++		seen += yHistogram[i];
++		if (seen >= pixelThreshold) {
++			blackLevel_ = i * (256 / SwIspStats::kYHistogramSize);
++			blackLevelSet_ = true;
++			LOG(IPASoftBL, Debug)
++				<< "Auto-set black level: "
++				<< i << "/" << SwIspStats::kYHistogramSize
++				<< " (" << 100 * (seen - yHistogram[i]) / total << "% below, "
++				<< 100 * seen / total << "% at or below)";
++			break;
++		}
++	};
++}
++} // namespace libcamera
+diff --git a/src/ipa/simple/black_level.h b/src/ipa/simple/black_level.h
+new file mode 100644
+index 00000000..b3785db0
+--- /dev/null
++++ b/src/ipa/simple/black_level.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: LGPL-2.1-or-later */
++/*
++ * Copyright (C) 2024, Red Hat Inc.
++ *
++ * black_level.h - black level handling
++ */
++
++#pragma once
++
++#include <array>
++
++#include "libcamera/internal/software_isp/swisp_stats.h"
++
++namespace libcamera {
++
++class BlackLevel
++{
++public:
++	BlackLevel();
++	unsigned int get() const;
++	void update(std::array<unsigned int, SwIspStats::kYHistogramSize> &yHistogram);
++
++private:
++	unsigned int blackLevel_;
++	bool blackLevelSet_;
++};
++
++} // namespace libcamera
+diff --git a/src/ipa/simple/meson.build b/src/ipa/simple/meson.build
+index 3e863db7..44b5f1d7 100644
+--- a/src/ipa/simple/meson.build
++++ b/src/ipa/simple/meson.build
+@@ -2,8 +2,13 @@
+ 
+ ipa_name = 'ipa_soft_simple'
+ 
++soft_simple_sources = files([
++    'soft_simple.cpp',
++    'black_level.cpp',
++])
++
+ mod = shared_module(ipa_name,
+-                    ['soft_simple.cpp', libcamera_generated_ipa_headers],
++                    [soft_simple_sources, libcamera_generated_ipa_headers],
+                     name_prefix : '',
+                     include_directories : [ipa_includes, libipa_includes],
+                     dependencies : libcamera_private,
+diff --git a/src/ipa/simple/soft_simple.cpp b/src/ipa/simple/soft_simple.cpp
+index 312df4ba..ac027568 100644
+--- a/src/ipa/simple/soft_simple.cpp
++++ b/src/ipa/simple/soft_simple.cpp
+@@ -22,6 +22,8 @@
+ #include "libcamera/internal/software_isp/debayer_params.h"
+ #include "libcamera/internal/software_isp/swisp_stats.h"
+ 
++#include "black_level.h"
++
+ namespace libcamera {
+ 
+ LOG_DEFINE_CATEGORY(IPASoft)
+@@ -33,7 +35,8 @@ class IPASoftSimple : public ipa::soft::IPASoftInterface
+ public:
+ 	IPASoftSimple()
+ 		: params_(static_cast<DebayerParams *>(MAP_FAILED)),
+-		  stats_(static_cast<SwIspStats *>(MAP_FAILED)), ignore_updates_(0)
++		  stats_(static_cast<SwIspStats *>(MAP_FAILED)),
++		  blackLevel_(BlackLevel()), ignore_updates_(0)
+ 	{
+ 	}
+ 
+@@ -63,6 +66,7 @@ private:
+ 	SharedFD fdParams_;
+ 	DebayerParams *params_;
+ 	SwIspStats *stats_;
++	BlackLevel blackLevel_;
+ 
+ 	int32_t exposure_min_, exposure_max_;
+ 	int32_t again_min_, again_max_;
+@@ -196,6 +200,10 @@ void IPASoftSimple::processStats(const ControlList &sensorControls)
+ 	params_->gainG = 256;
+ 	params_->gamma = 0.5;
+ 
++	if (ignore_updates_ > 0)
++		blackLevel_.update(stats_->yHistogram);
++	params_->blackLevel = blackLevel_.get();
++
+ 	setIspParams.emit(0);
+ 
+ 	/*
+@@ -211,18 +219,19 @@ void IPASoftSimple::processStats(const ControlList &sensorControls)
+ 	 * Calculate Mean Sample Value (MSV) according to formula from:
+ 	 * https://www.araa.asn.au/acra/acra2007/papers/paper84final.pdf
+ 	 */
+-	constexpr unsigned int yHistValsPerBin =
+-		SwIspStats::kYHistogramSize / kExposureBinsCount;
+-	constexpr unsigned int yHistValsPerBinMod =
+-		SwIspStats::kYHistogramSize /
+-		(SwIspStats::kYHistogramSize % kExposureBinsCount + 1);
++	const unsigned int blackLevelHistIdx =
++		params_->blackLevel / (256 / SwIspStats::kYHistogramSize);
++	const unsigned int histogramSize = SwIspStats::kYHistogramSize - blackLevelHistIdx;
++	const unsigned int yHistValsPerBin = histogramSize / kExposureBinsCount;
++	const unsigned int yHistValsPerBinMod =
++		histogramSize / (histogramSize % kExposureBinsCount + 1);
+ 	int ExposureBins[kExposureBinsCount] = {};
+ 	unsigned int denom = 0;
+ 	unsigned int num = 0;
+ 
+-	for (unsigned int i = 0; i < SwIspStats::kYHistogramSize; i++) {
++	for (unsigned int i = 0; i < histogramSize; i++) {
+ 		unsigned int idx = (i - (i / yHistValsPerBinMod)) / yHistValsPerBin;
+-		ExposureBins[idx] += stats_->yHistogram[i];
++		ExposureBins[idx] += stats_->yHistogram[blackLevelHistIdx + i];
+ 	}
+ 
+ 	for (unsigned int i = 0; i < kExposureBinsCount; i++) {
+@@ -256,7 +265,8 @@ void IPASoftSimple::processStats(const ControlList &sensorControls)
+ 
+ 	LOG(IPASoft, Debug) << "exposureMSV " << exposureMSV
+ 			    << " exp " << exposure_ << " again " << again_
+-			    << " gain R/B " << params_->gainR << "/" << params_->gainB;
++			    << " gain R/B " << params_->gainR << "/" << params_->gainB
++			    << " black level " << params_->blackLevel;
+ }
+ 
+ void IPASoftSimple::updateExposure(double exposureMSV)
+diff --git a/src/libcamera/software_isp/debayer_cpu.cpp b/src/libcamera/software_isp/debayer_cpu.cpp
+index a1692693..3be3cdfe 100644
+--- a/src/libcamera/software_isp/debayer_cpu.cpp
++++ b/src/libcamera/software_isp/debayer_cpu.cpp
+@@ -35,7 +35,7 @@ namespace libcamera {
+  * \param[in] stats Pointer to the stats object to use.
+  */
+ DebayerCpu::DebayerCpu(std::unique_ptr<SwStatsCpu> stats)
+-	: stats_(std::move(stats)), gamma_correction_(1.0)
++	: stats_(std::move(stats)), gamma_correction_(1.0), blackLevel_(0)
+ {
+ #ifdef __x86_64__
+ 	enableInputMemcpy_ = false;
+@@ -683,11 +683,16 @@ void DebayerCpu::process(FrameBuffer *input, FrameBuffer *output, DebayerParams
+ 	}
+ 
+ 	/* Apply DebayerParams */
+-	if (params.gamma != gamma_correction_) {
+-		for (unsigned int i = 0; i < kGammaLookupSize; i++)
+-			gamma_[i] = UINT8_MAX * powf(i / (kGammaLookupSize - 1.0), params.gamma);
++	if (params.gamma != gamma_correction_ || params.blackLevel != blackLevel_) {
++		const unsigned int blackIndex =
++			params.blackLevel * kGammaLookupSize / 256;
++		std::fill(gamma_.begin(), gamma_.begin() + blackIndex, 0);
++		const float divisor = kGammaLookupSize - blackIndex - 1.0;
++		for (unsigned int i = blackIndex; i < kGammaLookupSize; i++)
++			gamma_[i] = UINT8_MAX * powf((i - blackIndex) / divisor, params.gamma);
+ 
+ 		gamma_correction_ = params.gamma;
++		blackLevel_ = params.blackLevel;
+ 	}
+ 
+ 	if (swapRedBlueGains_)
+diff --git a/src/libcamera/software_isp/debayer_cpu.h b/src/libcamera/software_isp/debayer_cpu.h
+index 5f44fc65..ea02f909 100644
+--- a/src/libcamera/software_isp/debayer_cpu.h
++++ b/src/libcamera/software_isp/debayer_cpu.h
+@@ -147,6 +147,7 @@ private:
+ 	bool enableInputMemcpy_;
+ 	bool swapRedBlueGains_;
+ 	float gamma_correction_;
++	unsigned int blackLevel_;
+ 	unsigned int measuredFrames_;
+ 	int64_t frameProcessTime_;
+ 	/* Skip 30 frames for things to stabilize then measure 30 frames */
+diff --git a/src/libcamera/software_isp/software_isp.cpp b/src/libcamera/software_isp/software_isp.cpp
+index 388b4496..9b49be41 100644
+--- a/src/libcamera/software_isp/software_isp.cpp
++++ b/src/libcamera/software_isp/software_isp.cpp
+@@ -64,7 +64,7 @@ LOG_DEFINE_CATEGORY(SoftwareIsp)
+  */
+ SoftwareIsp::SoftwareIsp(PipelineHandler *pipe, const ControlInfoMap &sensorControls)
+ 	: debayer_(nullptr),
+-	  debayerParams_{ DebayerParams::kGain10, DebayerParams::kGain10, DebayerParams::kGain10, 0.5f },
++	  debayerParams_{ DebayerParams::kGain10, DebayerParams::kGain10, DebayerParams::kGain10, 0.5f, 0 },
+ 	  dmaHeap_(DmaHeap::DmaHeapFlag::Cma | DmaHeap::DmaHeapFlag::System)
+ {
+ 	if (!dmaHeap_.isValid()) {
+-- 
+2.43.2
+

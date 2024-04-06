@@ -1,0 +1,82 @@
+From d86746fc1739f678e4bafe43f5047cba9b6b053e Mon Sep 17 00:00:00 2001
+From: Andrey Konovalov <andrey.konovalov@linaro.org>
+Date: Mon, 11 Mar 2024 15:15:05 +0100
+Subject: [PATCH 01/21] libcamera: pipeline: simple: fix size adjustment in
+ validate()
+
+SimpleCameraConfiguration::validate() adjusts the configuration of its
+streams (if the size is not in the outputSizes) to the captureSize. But
+the captureSize itself can be not in the outputSizes, and then the
+adjusted configuration won't be valid resulting in camera configuration
+failure.
+
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # sc8280xp Lenovo x13s
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Milan Zamazal <mzamazal@redhat.com>
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ src/libcamera/pipeline/simple/simple.cpp | 37 ++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 2 deletions(-)
+
+diff --git a/src/libcamera/pipeline/simple/simple.cpp b/src/libcamera/pipeline/simple/simple.cpp
+index 911051b2..a84f6760 100644
+--- a/src/libcamera/pipeline/simple/simple.cpp
++++ b/src/libcamera/pipeline/simple/simple.cpp
+@@ -881,6 +881,30 @@ SimpleCameraConfiguration::SimpleCameraConfiguration(Camera *camera,
+ {
+ }
+ 
++namespace {
++
++static Size adjustSize(const Size &requestedSize, const SizeRange &supportedSizes)
++{
++	ASSERT(supportedSizes.min <= supportedSizes.max);
++
++	if (supportedSizes.min == supportedSizes.max)
++		return supportedSizes.max;
++
++	unsigned int hStep = supportedSizes.hStep;
++	unsigned int vStep = supportedSizes.vStep;
++
++	if (hStep == 0)
++		hStep = supportedSizes.max.width - supportedSizes.min.width;
++	if (vStep == 0)
++		vStep = supportedSizes.max.height - supportedSizes.min.height;
++
++	Size adjusted = requestedSize.boundedTo(supportedSizes.max).expandedTo(supportedSizes.min);
++
++	return adjusted.shrunkBy(supportedSizes.min).alignedDownTo(hStep, vStep).grownBy(supportedSizes.min);
++}
++
++} /* namespace */
++
+ CameraConfiguration::Status SimpleCameraConfiguration::validate()
+ {
+ 	const CameraSensor *sensor = data_->sensor_.get();
+@@ -997,10 +1021,19 @@ CameraConfiguration::Status SimpleCameraConfiguration::validate()
+ 		}
+ 
+ 		if (!pipeConfig_->outputSizes.contains(cfg.size)) {
++			Size adjustedSize = pipeConfig_->captureSize;
++			/*
++			 * The converter (when present) may not be able to output
++			 * a size identical to its input size. The capture size is thus
++			 * not guaranteed to be a valid output size. In such cases, use
++			 * the smaller valid output size closest to the requested.
++			 */
++			if (!pipeConfig_->outputSizes.contains(adjustedSize))
++				adjustedSize = adjustSize(cfg.size, pipeConfig_->outputSizes);
+ 			LOG(SimplePipeline, Debug)
+ 				<< "Adjusting size from " << cfg.size
+-				<< " to " << pipeConfig_->captureSize;
+-			cfg.size = pipeConfig_->captureSize;
++				<< " to " << adjustedSize;
++			cfg.size = adjustedSize;
+ 			status = Adjusted;
+ 		}
+ 
+-- 
+2.43.2
+

@@ -52,11 +52,8 @@ in {
         "0014-rtc"
       ];
       autoModules = false;
+      ignoreConfigErrors = false;
       extraStructuredConfig = with lib.kernel; {
-        DRM_AMDGPU = lib.mkForce no;
-        DRM_NOUVEAU = lib.mkForce no;
-        ZEROPLUS_FF = lib.mkForce no;
-
         SURFACE_AGGREGATOR = module;
         SURFACE_AGGREGATOR_BUS = yes;
         SURFACE_AGGREGATOR_CDEV = module;

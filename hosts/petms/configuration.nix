@@ -9,14 +9,9 @@
   networking.hostName = "petms";
   networking.domain = "opcc.tk";
 
-  virtualisation.vmVariant.config = {
-    virtualisation = {
-      memorySize = 2048;
-      cores = 2;
-      diskSize = 102400;
-    };
-
-    networking.interfaces.eth0.macAddress = "0e:a8:8e:d5:10:f0";
+  users.users.petms = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "video" "scanner" "lp" ];
   };
 
   services.openssh.enable = true;
@@ -28,7 +23,6 @@
     "/" = {
       label = "nixos";
       fsType = "btrfs";
-      options = [ "subvol=@" ];
     };
     "/efi" = {
       label = "ESP";

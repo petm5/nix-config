@@ -11,7 +11,7 @@
 
   users.users.petms = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "scanner" "lp" ];
+    extraGroups = [ "wheel" ];
   };
 
   services.openssh.enable = true;

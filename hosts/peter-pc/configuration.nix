@@ -5,7 +5,7 @@
   ];
 
   networking.hostName = "peter-pc";
-  
+
   users.users.petms = {
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "scanner" "lp" ];

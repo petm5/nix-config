@@ -52,7 +52,7 @@ in {
         "0014-rtc"
       ];
       autoModules = false;
-      ignoreConfigErrors = false;
+      ignoreConfigErrors = true;
       extraStructuredConfig = with lib.kernel; {
         SURFACE_AGGREGATOR = module;
         SURFACE_AGGREGATOR_BUS = yes;

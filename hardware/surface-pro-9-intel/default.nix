@@ -51,6 +51,7 @@ in {
         "0013-amd-gpio"
         "0014-rtc"
       ];
+      autoModules = false;
       extraStructuredConfig = with lib.kernel; {
         DRM_AMDGPU = lib.mkForce no;
         DRM_NOUVEAU = lib.mkForce no;

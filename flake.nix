@@ -59,8 +59,6 @@
 
     devShells.x86_64-linux.surface-kernel = let
      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    in (pkgs.callPackage ./pkgs/linux-surface {
-      baseKernel = pkgs.linux_latest;
-    }).overrideAttrs (o: {nativeBuildInputs=o.nativeBuildInputs ++ (with pkgs; [ pkg-config ncurses ]);});
+    in self.nixosConfigurations.peter-pc.config.boot.kernelPackages.kernel.overrideAttrs (o: {nativeBuildInputs=o.nativeBuildInputs ++ (with pkgs; [ pkg-config ncurses ]);});
   };
 }

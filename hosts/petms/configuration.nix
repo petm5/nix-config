@@ -2,6 +2,8 @@
 
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
+    ../../modules/profiles/base.nix
+    ../../modules/services/upnp.nix
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
@@ -16,6 +18,8 @@
 
   services.openssh.enable = true;
   services.openssh.ports = [ 2273 ];
+
+  services.upnpc.enable = true;
 
   time.timeZone = "America/Toronto";
 

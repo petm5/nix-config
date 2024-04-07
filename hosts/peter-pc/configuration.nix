@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }: {
 
   imports = [
-    ../../profiles/desktop.nix
+    ../../modules/profiles/desktop.nix
     ./hardware-configuration.nix
-    ../../hardware/surface-pro-9-intel
-    ../../profiles/secure-boot.nix
+    ../../modules/hardware/surface-pro-9-intel
+    ../../modules/profiles/secure-boot.nix
   ];
 
   networking.hostName = "peter-pc";

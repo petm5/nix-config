@@ -51,7 +51,6 @@
     nixosConfigurations.petms = nixpkgs.lib.nixosSystem {
       modules = [
         ./hosts/petms/configuration.nix
-        ./profiles/base.nix
       ];
     };
 

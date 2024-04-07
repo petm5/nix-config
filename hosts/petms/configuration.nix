@@ -28,7 +28,7 @@
       label = "nixos";
       fsType = "btrfs";
     };
-    "/efi" = {
+    "/boot" = {
       label = "ESP";
       fsType = "vfat";
     };

@@ -6,7 +6,6 @@
     ./audio.nix
     ./tlp.nix
     ./kernel.nix
-    ../../ipu6-softisp/config.nix
     ./ipts.nix
   ];
 

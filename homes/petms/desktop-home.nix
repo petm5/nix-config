@@ -1,13 +1,13 @@
 { config, lib, pkgs, ... }: {
 
-  imports = [ ../petms/home.nix ];
+  imports = [ ./home.nix ];
 
   home.packages = with pkgs; [
     swaybg
     playerctl
     noto-fonts
     noto-fonts-color-emoji
-    hack-font
+    source-code-pro
     material-symbols
     deploy-rs
     socat
@@ -21,10 +21,6 @@
   programs.chromium = {
     enable = true;
     package = pkgs.ungoogled-chromium;
-    extensions = [
-      { id = "ghmbeldphafepmbegfdlkpapadhbakde"; }
-      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
-    ];
     commandLineArgs = [
       "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder"
     ];
@@ -40,18 +36,15 @@
       main = {
         term = "xterm-256color";
         shell = "nu";
-        font = "Hack:size=10";
+        font = "Source Code Pro:size=11";
         dpi-aware = "no";
-        line-height = "11.8";
+        # line-height = "11.8";
         initial-window-size-pixels = "960x640";
         pad = "3x3";
         include = "${pkgs.foot.themes}/share/foot/themes/material-design";
       };
       mouse = {
         hide-when-typing = "yes";
-      };
-      colors = {
-        alpha = 0.95;
       };
     };
   };
@@ -92,7 +85,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
-    settings = import ./config.nix;
+    settings = import ./hyprland.nix;
   };
 
   services.mako = {

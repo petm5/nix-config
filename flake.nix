@@ -25,36 +25,19 @@
 
   outputs = { self, nixpkgs, lanzaboote, home-manager }: let
     inherit (nixpkgs) lib;
-    mkHomeConfig = name: lib.nameValuePair name (home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [ ./homes/${name}/home.nix ];
-      extraSpecialArgs = {
-        sshAliases = let
-          sshHosts = builtins.filter ({ config, ... }: config.services.openssh.enable)
-            (builtins.attrValues self.nixosConfigurations);
-        in builtins.listToAttrs (map ({ config, ... }:
-          lib.nameValuePair config.networking.hostName {
-            hostname = config.networking.fqdnOrHostName;
-            port = builtins.head config.services.openssh.ports;
-          }
-        ) sshHosts);
-      };
-    });
   in {
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
         ./hosts/peter-pc/configuration.nix
         lanzaboote.nixosModules.lanzaboote
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.petms = import ./homes/petms/desktop-home.nix;
+        }
       ];
     };
-
-    nixosConfigurations.petms = nixpkgs.lib.nixosSystem {
-      modules = [
-        ./hosts/petms/configuration.nix
-      ];
-    };
-
-    homeConfigurations = lib.listToAttrs (map mkHomeConfig [ "petms" "petms@peter-pc" ]);
 
     devShells.x86_64-linux.surface-kernel = let
      pkgs = nixpkgs.legacyPackages.x86_64-linux;

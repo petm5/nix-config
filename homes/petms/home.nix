@@ -44,6 +44,17 @@
     userName = "Peter Marshall";
   };
 
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
+  programs.ssh.matchBlocks = {
+    "petms" = {
+      user = "admin";
+      hostname = "opcc.opcc.tk";
+      port = 2273;
+    };
+    "dev" = {
+      user = "petms";
+      hostname = "opcc.opcc.tk";
+      port = 2274;
+    };
+  };
+
 }

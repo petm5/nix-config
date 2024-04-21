@@ -38,9 +38,5 @@
         }
       ];
     };
-
-    devShells.x86_64-linux.surface-kernel = let
-     pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    in self.nixosConfigurations.peter-pc.config.boot.kernelPackages.kernel.overrideAttrs (o: {nativeBuildInputs=o.nativeBuildInputs ++ (with pkgs; [ pkg-config ncurses ]);});
   };
 }

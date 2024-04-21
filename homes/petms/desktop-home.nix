@@ -120,15 +120,21 @@
     enable = true;
     events = [{
       event = "before-sleep";
-      command = "~/.nix-profile/bin/swaylock -fF --fade-in 0 --grace 0";
+      command = "${config.programs.swaylock.package}/bin/swaylock -fF --fade-in 0 --grace 0";
     }];
     timeouts = [{
       timeout = 300;
-      command = "~/.nix-profile/bin/swaylock -fF";
+      command = "${config.programs.swaylock.package}/bin/swaylock -fF";
     } {
       timeout = 360;
       command = "${pkgs.systemd}/bin/systemctl suspend";
     }];
+  };
+
+  systemd.user.services."swayidle" = {
+    Install = {
+      RequiredBy = [ "graphical-session.target" ];
+    };
   };
 
   home.pointerCursor = {

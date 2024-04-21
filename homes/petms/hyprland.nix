@@ -29,7 +29,7 @@
         )
         10)
     );
-  bindr = [ "SUPER, SUPER_L, exec, pkill fuzzel || fuzzel" ];
+  bindr = [ "SUPER, SUPER_L, exec, pkill walker || walker" ];
   binde = [
       ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+"
       ", XF86AudioLowerVolume, exec, wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-"
@@ -55,11 +55,11 @@
     shadow_ignore_window = true;
     shadow_render_power = 2;
     "col.shadow" = "0x10333333";
-    blur.enabled = true;
-    blur.xray = true;
-    blur.size = 32;
-    blur.passes = 2;
-    blur.noise = 0.16;
+    blur.enabled = false;
+    # blur.xray = true;
+    # blur.size = 32;
+    # blur.passes = 2;
+    # blur.noise = 0.16;
   };
   general = {
     gaps_in = 6;

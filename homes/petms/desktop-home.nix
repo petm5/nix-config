@@ -16,6 +16,7 @@
     pamixer
     gnome.simple-scan
     grimblast
+    walker
   ];
 
   programs.chromium = {
@@ -45,34 +46,6 @@
       };
       mouse = {
         hide-when-typing = "yes";
-      };
-    };
-  };
-
-  programs.fuzzel = {
-    enable = true;
-    settings = {
-     main = {
-        terminal = "${pkgs.foot}/bin/foot";
-        layer = "overlay";
-        dpi-aware = true;
-        horizontal-pad = 40;
-        vertical-pad = 20;
-        password-character = "•";
-        icons-enabled = false;
-      };
-      colors = {
-        background = "292e2eff";
-        text = "ffffffff";
-        selection-text = "ffffffff";
-        selection = "282a2bff";
-        match = "dfd212ff";
-        selection-match = "dfd212ff";
-        border = "5ccccdff";
-      };
-      border = {
-        width = 2;
-        radius = 3;
       };
     };
   };

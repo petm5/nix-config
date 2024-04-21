@@ -27,6 +27,8 @@ in {
       USB_VIDEO_CLASS = module;
       USB_STORAGE = module;
       USB_UAS = module;
+      HID_GENERIC = module;
+      HID_BATTERY_STRENGTH = module;
 
       NVME_CORE = module;
       BLK_DEV_NVME = module;
@@ -120,6 +122,7 @@ in {
       BT_INTEL = module;
       BT_HCIBTUSB = module;
       BT_HCIUART = module;
+      UHID = module;
 
       SURFACE_PLATFORMS = yes;
       SERIAL_DEV_BUS = yes;
@@ -135,6 +138,8 @@ in {
       SURFACE_KBD = yes;
       SURFACE_GPE = yes;
       SENSORS_SURFACE_TEMP = module;
+      SURFACE_BATTERY = module;
+      SURFACE_CHARGER = module;
       HID_ITHC = module;
       SERIAL_8250_DW = module;
       X86_INTEL_LPSS = yes;

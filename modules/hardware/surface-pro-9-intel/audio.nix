@@ -20,10 +20,10 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.25
-                          sat_second = 1.75
-                          sat_third = 2.35
-                          blend = 0.40
+                          amt = 1.5
+                          sat_second = 1.4
+                          sat_third = 2.5
+                          blend = 1
                           ceil = 200.0
                           floor = 20.0
                       }

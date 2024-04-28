@@ -36,6 +36,11 @@
     device = "/dev/disk/by-partlabel/root"; 
   };
 
+  fileSystems."/boot" = {
+    fsType = "vfat";
+    device = "/dev/disk/by-partlabel/ESP"; 
+  };
+
   system.stateVersion = "24.05";
 
 }

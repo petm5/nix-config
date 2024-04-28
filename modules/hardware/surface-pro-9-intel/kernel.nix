@@ -28,7 +28,7 @@ in {
       USB_STORAGE = module;
       USB_UAS = module;
       HID_GENERIC = module;
-      HID_BATTERY_STRENGTH = module;
+      HID_BATTERY_STRENGTH = yes;
 
       NVME_CORE = module;
       BLK_DEV_NVME = module;
@@ -138,8 +138,8 @@ in {
       SURFACE_KBD = yes;
       SURFACE_GPE = yes;
       SENSORS_SURFACE_TEMP = module;
-      SURFACE_BATTERY = module;
-      SURFACE_CHARGER = module;
+      BATTERY_SURFACE = module;
+      CHARGER_SURFACE = module;
       HID_ITHC = module;
       SERIAL_8250_DW = module;
       X86_INTEL_LPSS = yes;

@@ -38,5 +38,27 @@
         }
       ];
     };
+    nixosConfigurations.peter-chromebook = nixpkgs.lib.nixosSystem {
+      modules = [
+        ./hosts/peter-chromebook/configuration.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.petms = import ./homes/petms/home.nix;
+        }
+      ];
+    };
+    packages.x86_64-linux.speedy-iso = (nixpkgs.lib.nixosSystem {
+      modules = [
+        ./modules/hardware/veyron-speedy
+        "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal-new-kernel-no-zfs.nix"
+        ({ lib, pkgs, ... }: {
+          boot.supportedFilesystems = [ "bcachefs" ];
+          nixpkgs.buildPlatform = "x86_64-linux";
+          boot.initrd.availableKernelModules = lib.mkOverride 0 [ ];
+        })
+      ];
+    }).config.system.build.isoImage;
   };
 }

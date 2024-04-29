@@ -63,8 +63,16 @@
   wayland.windowManager.sway = {
     systemd.enable = true;
     config = {
+      modifier = "Mod4";
+      window = {
+        titlebar = false;
+        hideEdgeBorders = "smart";
+      };
+      gaps = {
+        smartBorders = "on";
+      };
       bars = [{
-        command = "${pkgs.eww}/bin/eww open bar";
+        command = "${pkgs.eww}/bin/eww daemon; ${pkgs.eww}/bin/eww open bar";
       }];
       menu = "${pkgs.walker}/bin/walker";
     };

@@ -45,7 +45,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.petms = import ./homes/petms/home.nix;
+          home-manager.users.petms = import ./homes/petms/desktop-home.nix;
         }
       ];
     };

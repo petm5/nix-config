@@ -56,9 +56,18 @@
   };
 
   wayland.windowManager.hyprland = {
-    enable = true;
     systemd.enable = true;
     settings = import ./hyprland.nix;
+  };
+
+  wayland.windowManager.sway = {
+    systemd.enable = true;
+    config = {
+      bars = [{
+        command = "${pkgs.eww}/bin/eww open bar";
+      }];
+      menu = "${pkgs.walker}/bin/walker";
+    };
   };
 
   services.mako = {

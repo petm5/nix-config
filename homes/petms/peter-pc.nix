@@ -2,6 +2,7 @@
 
   imports = [ ./desktop-home.nix ];
 
+  wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.settings = {
     monitor = [
       "eDP-1,2880x1920@120,1920x0,2,bitdepth,8"

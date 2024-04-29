@@ -75,10 +75,6 @@
       "swaybg -i ~/.wallpaper -m fill"
       "hyprctl setcursor 'Numix-Cursor' 24"
     ];
-  monitor = [
-    "eDP-1,2880x1920@120,1920x0,2,bitdepth,8"
-    "DP-2,highres,0x0,auto"
-  ];
   device = [{
     name = "microsoft-surface-045e:09af-touchpad";
     accel_profile = "custom 10 0 9 36 81 144";

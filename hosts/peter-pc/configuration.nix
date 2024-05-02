@@ -14,6 +14,22 @@
     extraGroups = [ "wheel" "video" "scanner" "lp" ];
   };
 
+  services.restic.backups.remote = {
+    repository = "sftp://petms@opcc.opcc.tk:2272/backups/peter-pc";
+    passwordFile = "/etc/nixos/restic-password";
+    paths = [
+      "/home"
+    ];
+    exclude = [
+      "/home/*/.cache"
+      "/home/*/Downloads"
+    ];
+    timerConfig = {
+      OnCalendar = "00:05";
+      RandomizedDelaySec = "5h";
+    };
+  };
+
   time.timeZone = "America/Toronto";
 
   console.keyMap = "us";

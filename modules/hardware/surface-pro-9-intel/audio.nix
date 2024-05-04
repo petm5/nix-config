@@ -20,12 +20,13 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.45
+                          amt = 1.6
                           sat_second = 1.75
-                          sat_third = 2.35
+                          sat_third = 2.2
                           blend = 1
-                          ceil = 280.0
+                          ceil = 200.0
                           floor = 20.0
+                          final_hp = 120.0
                       }
                     }
                     {
@@ -66,6 +67,23 @@
                     }
                     {
                         type = "lv2"
+                        plugin = "http://lsp-plug.in/plugins/lv2/mb_compressor_stereo"
+                        name = "bp"
+                        control = {
+                            mode = 0
+                            ce_0 = 1
+                            sla_0 = 5.0
+                            cr_0 = 1.75
+                            al_0 = 0.725
+                            at_0 = 1.0
+                            rt_0 = 100
+                            kn_0 = 0.125
+                            cbe_1 = 1
+                            sf_1 = 250.0
+                        }
+                    }
+                    {
+                        type = "lv2"
                         plugin = "http://lsp-plug.in/plugins/lv2/compressor_stereo"
                         name = "lim"
                         control = {
@@ -97,10 +115,18 @@
                     }
                     {
                       output = "convolver_l:Out"
-                      input = "lim:in_l"
+                      input = "bp:in_l"
                     }
                     {
                       output = "convolver_r:Out"
+                      input = "bp:in_r"
+                    }
+                    {
+                      output = "bp:out_l"
+                      input = "lim:in_l"
+                    }
+                    {
+                      output = "bp:out_r"
                       input = "lim:in_r"
                     }
                   ]

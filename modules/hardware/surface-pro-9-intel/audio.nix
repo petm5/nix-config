@@ -55,7 +55,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 2.0
+                        gain = 2.8
                       }
                     }
                     {
@@ -64,7 +64,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 2.0
+                        gain = 2.8
                       }
                     }
                     {

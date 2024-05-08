@@ -20,9 +20,9 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.6
-                          sat_second = 1.75
-                          sat_third = 2.2
+                          amt = 1.4
+                          sat_second = 1.65
+                          sat_third = 2.35
                           blend = 1
                           ceil = 200.0
                           floor = 20.0
@@ -55,6 +55,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
+                        gain = 10.0
                       }
                     }
                     {
@@ -63,6 +64,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
+                        gain = 10.0
                       }
                     }
                     {
@@ -79,7 +81,7 @@
                             rt_0 = 100
                             kn_0 = 0.125
                             cbe_1 = 1
-                            sf_1 = 250.0
+                            sf_1 = 380.0
                         }
                     }
                     {
@@ -181,9 +183,6 @@
     })
   ];
 
-  environment.etc."surface-audio/sp9/impulse.wav".source = pkgs.fetchurl {
-    url = "https://github.com/peter-marshall5/surface-audio/raw/main/devices/sp9/IR_22ms_17dB_5t_18s_100c.wav";
-    hash = "sha256-xj7/G/gTjGYm4bHcvdfVYHkOSHUPHymBZNBjHOKmhkQ=";
-  };
+  environment.etc."surface-audio/sp9/impulse.wav".source = ./impulse.wav;
 
 }

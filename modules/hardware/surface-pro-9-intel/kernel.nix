@@ -2,8 +2,8 @@
   linuxSurface = pkgs.fetchFromGitHub {
     owner = "linux-surface";
     repo = "linux-surface";
-    rev = "daac927ae7cb7b87c81b22bb32789e1065e118e3";
-    hash = "sha256-IuQ34p/6cn25DU1sDpJAIwKu5avuFOStnzqZeMlx+Yo=";
+    rev = "03cfcbc7c266acd7f5e1a8ab496e98733298426a";
+    hash = "sha256-DVorstcjrA0qrp0wJPdhAaTUKQTnMojW4zEN6P5gWsQ=";
   };
 in {
 
@@ -44,6 +44,7 @@ in {
       EXT4_FS = yes;
       EXT3_FS = yes;
       EXT2_FS = yes;
+      EXFAT_FS = yes;
 
       KVM = module;
       KVM_INTEL = module;

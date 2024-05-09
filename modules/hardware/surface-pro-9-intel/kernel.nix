@@ -378,6 +378,6 @@ in {
       "0014-rtc"
     ];
   });
-  # boot.extraModulePackages = with config.boot.kernelPackages; [ ithc ];
+  boot.extraModulePackages = [ (pkgs.callPackage ./gpe.nix { inherit (config.boot.kernelPackages) kernel; }) ];
 
 }

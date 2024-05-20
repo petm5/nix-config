@@ -9,6 +9,10 @@
     ./ipts.nix
   ];
 
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  boot.extraModulePackages = [ (pkgs.callPackage ./gpe.nix { inherit (config.boot.kernelPackages) kernel; }) ];
+
   boot.initrd.kernelModules = [ "nvme" "xhci_pci" "hid_generic" "atkbd" "surface_aggregator" "surface_aggregator_registry" "surface_aggregator_hub" "surface_hid_core" "8250_dw" "surface_hid" "intel_lpss" "intel_lpss_pci" "pinctrl_tigerlake" "usbhid" ];
 
   boot.swraid.enable = false;
@@ -17,12 +21,26 @@
 
   boot.initrd.availableKernelModules = [ "thunderbolt" "usb_storage" "sd_mod" ];
 
-  boot.kernelParams = [ "mem_sleep_default=deep" "drm.edid_firmware=eDP-1:edid/surface-pro-9-display.bin" ];
+  # boot.kernelParams = [ "drm.edid_firmware=eDP-1:edid/surface-pro-9-display.bin" ];
+  boot.kernelParams = [ "pcie_aspm=force" "workqueue.power_efficient=true" ];
 
-  hardware.firmware = [ (pkgs.runCommandNoCC "firmware-custom-edid" {} ''
-      mkdir -p $out/lib/firmware/edid/
-      cp "${./edid.bin}" $out/lib/firmware/edid/surface-pro-9-display.bin
-    ''
-  ) ];
+  # boot.initrd.prepend = [
+  #   "${(pkgs.runCommand "build-dsdt-override" {
+  #     nativeBuildInputs = [ pkgs.cpio ];
+  #   } ''
+  #     mkdir -p "$out/tmp"
+  #     mkdir -p "$out/tmp/kernel/firmware/acpi"
+  #     cp ${./dsdt.aml} "$out/tmp/kernel/firmware/acpi/dsdt.aml"
+  #     cd "$out/tmp"
+  #     find kernel | cpio -H newc --create > "$out/acpi_override"
+  #     rm -rf "$out/tmp"
+  #   '')}/acpi_override"
+  # ];
+
+  # hardware.firmware = [ (pkgs.runCommandNoCC "firmware-custom-edid" {} ''
+  #     mkdir -p $out/lib/firmware/edid/
+  #     cp "${./edid.bin}" $out/lib/firmware/edid/surface-pro-9-display.bin
+  #   ''
+  # ) ];
 
 }

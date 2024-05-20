@@ -4,7 +4,7 @@
   :geometry (geometry :x "0"
                       :y "0"
                       :width "100%"
-                      :height "28px"
+                      :height "12px"
                       :anchor "bottom center")
   :exclusive true
   :namespace "eww-blur"

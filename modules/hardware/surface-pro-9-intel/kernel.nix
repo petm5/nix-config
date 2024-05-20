@@ -30,6 +30,10 @@ in {
       HID_GENERIC = module;
       HID_BATTERY_STRENGTH = yes;
 
+      HZ = freeform "250";
+      HZ_250 = yes;
+      HZ_1000 = no;
+
       NVME_CORE = module;
       BLK_DEV_NVME = module;
       BLK_DEV_SD = module;
@@ -138,7 +142,6 @@ in {
       SURFACE_HID = yes;
       SURFACE_KBD = yes;
       SURFACE_GPE = yes;
-      SENSORS_SURFACE_TEMP = module;
       BATTERY_SURFACE = module;
       CHARGER_SURFACE = module;
       HID_ITHC = module;
@@ -369,15 +372,9 @@ in {
     }) [
       "0004-ipts"
       "0005-ithc"
-      "0006-surface-sam"
-      "0007-surface-sam-over-hid"
-      "0008-surface-button"
-      "0009-surface-typecover"
       "0010-surface-shutdown"
-      "0011-surface-gpe"
       "0014-rtc"
     ];
   });
-  boot.extraModulePackages = [ (pkgs.callPackage ./gpe.nix { inherit (config.boot.kernelPackages) kernel; }) ];
 
 }

@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  boot.kernelModules = [ "i915" ];
+  boot.initrd.kernelModules = [ "i915" ];
 
   boot.kernelParams = [
     "i915.enable_psr=2"

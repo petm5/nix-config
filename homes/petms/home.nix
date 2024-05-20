@@ -21,8 +21,7 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "github_dark";
-      editor.true-color = true;
+      theme = "base16_transparent";
       editor.soft-wrap = {
         enable = true;
         max-wrap = 25;

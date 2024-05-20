@@ -234,11 +234,13 @@ static int surface_lid_enable_wakeup(struct device *dev, bool enable)
 static int __maybe_unused surface_gpe_suspend(struct device *dev)
 {
 	return surface_lid_enable_wakeup(dev, true);
+	// return 0;
 }
 
 static int __maybe_unused surface_gpe_resume(struct device *dev)
 {
 	return surface_lid_enable_wakeup(dev, false);
+	// return 0;
 }
 
 static SIMPLE_DEV_PM_OPS(surface_gpe_pm, surface_gpe_suspend, surface_gpe_resume);

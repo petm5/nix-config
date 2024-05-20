@@ -3,10 +3,10 @@
 }
 
 @mixin window {
-  margin: 0 0.5rem;
-  background-color: rgba(0,0,0,0);
+  margin: 0 0.2rem;
+  background-color: #222;
   color: white;
-  font-family: 'DejaVu Sans';
+  font-family: 'Noto Sans';
 }
 
 //Global Styles
@@ -17,8 +17,8 @@
 // Styles on classes (see eww.yuck for more information)
 
 button, .button {
-  padding: 0 0.6rem;
-  font-size: 1.05rem;
+  padding: 0;
+  font-size: 0.9rem;
 }
 
 .sidestuff slider {
@@ -61,25 +61,21 @@ button, .button {
 }
 
 .workspace {
-  margin: 0.2rem;
-  padding: 0rem 0.5rem;
-  font-size: 1.1rem;
+  margin: 0 0.2rem;
   transition: 0.3s;
-  min-width: 0.8rem;
+  min-width: 1.3rem;
 
   &.current {
-    border-bottom: 1px solid white;
+    background-color: rgba(0, 0, 0, 0.1);
   }
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.2);
   }
 }
 
 .sidestuff {
   border-radius: 1rem;
-  padding: 0rem 0.5rem;
-  margin-right: 0;
   transition: 0.3s;
 }
 
@@ -90,9 +86,10 @@ button, .button {
 .sidestuff > * {
   margin: 0 0.2rem;
   padding: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .icon {
+  font-size: 1rem;
   font-family: "Material Symbols Outlined";
 }

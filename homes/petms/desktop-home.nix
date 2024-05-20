@@ -42,7 +42,7 @@
         # line-height = "11.8";
         initial-window-size-pixels = "960x640";
         pad = "3x3";
-        include = "${pkgs.foot.themes}/share/foot/themes/material-design";
+        include = "${pkgs.foot.themes}/share/foot/themes/nightfly";
       };
       mouse = {
         hide-when-typing = "yes";

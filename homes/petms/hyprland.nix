@@ -50,8 +50,8 @@
     vrr = 1;
   };
   decoration = {
-    rounding = 6;
-    shadow_range = 20;
+    rounding = 4;
+    shadow_range = 3;
     shadow_ignore_window = true;
     shadow_render_power = 4;
     "col.shadow" = "0x88222222";
@@ -62,8 +62,8 @@
     # blur.noise = 0.16;
   };
   general = {
-    gaps_in = 12;
-    gaps_out = 24;
+    gaps_in = 2;
+    gaps_out = 4;
     border_size = 0;
     "col.active_border" = "0xff446270";
     "col.inactive_border" = "0xff334759";
@@ -82,7 +82,7 @@
     natural_scroll = true;
   }];
   dwindle = {
-    no_gaps_when_only = 1;
+    no_gaps_when_only = 0;
   };
   animation = [
       "workspaces,1,3,default,fade"

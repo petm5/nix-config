@@ -5,11 +5,11 @@
     ../common/gpu/intel
     ./audio.nix
     ./tlp.nix
-    ./kernel.nix
+    # ./kernel.nix
     ./ipts.nix
   ];
 
-  # boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.extraModulePackages = [ (pkgs.callPackage ./gpe.nix { inherit (config.boot.kernelPackages) kernel; }) ];
 

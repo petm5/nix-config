@@ -17,6 +17,7 @@
     gnome.simple-scan
     grimblast
     walker
+    gimp
   ];
 
   programs.chromium = {

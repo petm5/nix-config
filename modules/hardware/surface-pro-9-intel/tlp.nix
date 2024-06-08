@@ -10,6 +10,7 @@
     PLATFORM_PROFILE_ON_BAT = "low-power";
     RUNTIME_PM_ON_AC = "auto";
     RUNTIME_PM_ON_BAT = "auto";
+    RUNTIME_PM_BLACKLIST_MODULES = "snd_hda_audio";
     CPU_SCALING_GOVERNOR_ON_AC = "powersave";
     CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
     CPU_ENERGY_PERF_POLICY_ON_AC = "performance";

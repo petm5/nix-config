@@ -60,6 +60,18 @@
 
   boot.plymouth.enable = true;
 
+  networking.wireguard.interfaces."wg0" = {
+    privateKeyFile = "/root/wg-key";
+    ips = [ "10.100.0.3/32" ];
+    peers = [{
+      endpoint = "opcc.opcc.tk:25565";
+      allowedIPs = [ "10.100.0.1/32" ];
+      publicKey = "xPAmZH9tIelqwpX4S1sUpK4Domngce/UA7kr3u/fAlo=";
+    }];
+  };
+
+  virtualisation.podman.enable = true;
+
   system.stateVersion = "24.05";
 
 }

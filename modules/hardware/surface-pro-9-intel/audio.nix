@@ -20,12 +20,13 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.45
-                          sat_second = 1.75
-                          sat_third = 2.3
+                          amt = 1.8
+                          sat_second = 1.05
+                          sat_third = 2.5
                           blend = 1
                           ceil = 220.0
                           floor = 20.0
+                          final_hp = 120.0
                       }
                     }
                     {
@@ -54,7 +55,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 8.0
+                        gain = 7.0
                       }
                     }
                     {
@@ -63,7 +64,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 8.0
+                        gain = 7.0
                       }
                     }
                     {
@@ -71,8 +72,8 @@
                         plugin = "http://lsp-plug.in/plugins/lv2/mb_compressor_stereo"
                         name = "bp"
                         control = {
+                            bypass = 0
                             mode = 0
-                            cbe_0 = 1
                             ce_0 = 1
                             sla_0 = 5.0
                             cr_0 = 1.75
@@ -81,7 +82,18 @@
                             rt_0 = 100
                             kn_0 = 0.125
                             cbe_1 = 1
-                            sf_1 = 380.0
+                            sf_1 = 250.0
+                            ce_1 = 0
+                            cbe_2 = 0
+                            ce_2 = 0
+                            cbe_3 = 0
+                            ce_3 = 0
+                            cbe_4 = 0
+                            ce_4 = 0
+                            cbe_5 = 0
+                            ce_5 = 0
+                            cbe_6 = 0
+                            ce_6 = 0
                         }
                     }
                     {
@@ -89,6 +101,7 @@
                         plugin = "http://lsp-plug.in/plugins/lv2/compressor_stereo"
                         name = "lim"
                         control = {
+                            bypass = 0
                             sla = 5.0
                             al = 1.0
                             at = 1.0
@@ -137,14 +150,14 @@
                   capture.volumes = [
                       {
                           control = "ell:volume"
-                          min = -48.0
-                          max = -10.0
+                          min = -42.0
+                          max = 0.0
                           scale = "cubic"
                       }
                       {
                           control = "elr:volume"
-                          min = -48.0
-                          max = -10.0
+                          min = -42.0
+                          max = 0.0
                           scale = "cubic"
                       }
                   ]

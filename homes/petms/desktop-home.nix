@@ -24,7 +24,7 @@
     enable = true;
     package = pkgs.ungoogled-chromium;
     commandLineArgs = [
-      "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder" "--ozone-platform=wayland"
+      "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,VaapiVideoEncoder" "--disable-features=UseChromeOSDirectVideoDecoder" "--ozone-platform=wayland"
     ];
   };
 
@@ -142,12 +142,12 @@
     enable = true;
     theme = {
       package = pkgs.libsForQt5.breeze-gtk;
-      name = "Breeze-Dark";
+      name = "Breeze";
     };
 
     iconTheme = {
       package = pkgs.gnome.adwaita-icon-theme;
-      name = "Adwaita-dark";
+      name = "Adwaita";
     };
 
     font = {
@@ -158,7 +158,7 @@
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
+      color-scheme = "prefer-light";
     };
   };
 

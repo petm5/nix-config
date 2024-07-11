@@ -21,7 +21,7 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "base16_transparent";
+      theme = "nord";
       editor.soft-wrap = {
         enable = true;
         max-wrap = 25;

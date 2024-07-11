@@ -13,8 +13,12 @@ def create_left_prompt [] {
     let separator_color = (ansi light_green_bold)
 
     ([
+        (ansi bg_black)
+        (char space)
         $path_color
         ($dir | str replace --all (char path_sep) $"($separator_color)(char path_sep)($path_color)")
+        (char space)
+        (ansi reset)
     ] | str join)
 }
 
@@ -37,7 +41,7 @@ $env.PROMPT_COMMAND_RIGHT = {|| create_right_prompt }
 
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
-$env.PROMPT_INDICATOR = {|| "> " }
+$env.PROMPT_INDICATOR = {|| $"(ansi black) " }
 $env.PROMPT_INDICATOR_VI_INSERT = {|| ": " }
 $env.PROMPT_INDICATOR_VI_NORMAL = {|| "> " }
 $env.PROMPT_MULTILINE_INDICATOR = {|| "::: " }
@@ -82,7 +86,7 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
-$env.PATH = ($env.PATH | split row (char esep) | prepend $"($env.HOME)/.nix-profile/bin")
+$env.PATH = ($env.PATH | split row (char esep) | prepend $"/etc/profiles/per-user/($env.USER)/bin")
 
 $env.EDITOR = "hx"
 $env.SSH_AUTH_SOCK = $env.XDG_RUNTIME_DIR + /ssh-agent

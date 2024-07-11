@@ -3,8 +3,7 @@
   imports = [ ./home.nix ];
 
   home.packages = with pkgs; [
-    swaybg
-    playerctl
+    xwayland
     noto-fonts
     noto-fonts-color-emoji
     source-code-pro
@@ -15,8 +14,6 @@
     brightnessctl
     pamixer
     gnome.simple-scan
-    grimblast
-    walker
     gimp
   ];
 
@@ -37,13 +34,13 @@
     settings = {
       main = {
         term = "xterm-256color";
-        shell = "nu";
+        shell = "${pkgs.nushell}/bin/nu";
         font = "Source Code Pro:size=11";
         dpi-aware = "no";
         # line-height = "11.8";
         initial-window-size-pixels = "960x640";
         pad = "3x3";
-        include = "${pkgs.foot.themes}/share/foot/themes/nightfly";
+        include = "${pkgs.foot.themes}/share/foot/themes/nord";
       };
       mouse = {
         hide-when-typing = "yes";
@@ -58,25 +55,20 @@
 
   wayland.windowManager.hyprland = {
     systemd.enable = true;
-    settings = import ./hyprland.nix;
+    settings = (import ./hyprland.nix) { inherit pkgs; };
   };
 
-  wayland.windowManager.sway = {
-    systemd.enable = true;
-    config = {
-      modifier = "Mod4";
-      window = {
-        titlebar = false;
-        hideEdgeBorders = "smart";
-      };
-      gaps = {
-        smartBorders = "on";
-      };
-      bars = [{
-        command = "${pkgs.eww}/bin/eww daemon; ${pkgs.eww}/bin/eww open bar";
-      }];
-      menu = "${pkgs.walker}/bin/walker";
-    };
+  programs.bash.enable = true;
+  programs.bash.bashrcExtra = ''
+    if [ "$(tty)" = "/dev/tty1" ]; then
+      exec ${config.wayland.windowManager.hyprland.package}/bin/Hyprland > /dev/null
+    fi
+  '';
+
+  programs.rofi = {
+    enable = true;
+    package = pkgs.rofi-wayland;
+    theme = "${pkgs.rofi}/share/rofi/themes/Monokai.rasi";
   };
 
   services.mako = {

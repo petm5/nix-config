@@ -12,23 +12,29 @@
   users.users.petms = {
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "scanner" "lp" ];
+    linger = true;
   };
 
-  services.restic.backups.remote = {
-    repository = "sftp://petms@opcc.opcc.tk:2272/backups/peter-pc";
-    passwordFile = "/etc/nixos/restic-password";
-    paths = [
-      "/home"
-    ];
-    exclude = [
-      "/home/*/.cache"
-      "/home/*/Downloads"
-    ];
-    timerConfig = {
-      OnCalendar = "00:05";
-      RandomizedDelaySec = "5h";
-    };
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "petms";
   };
+
+  # services.restic.backups.remote = {
+  #   repository = "sftp://petms@opcc.opcc.tk:2272/backups/peter-pc";
+  #   passwordFile = "/etc/nixos/restic-password";
+  #   paths = [
+  #     "/home"
+  #   ];
+  #   exclude = [
+  #     "/home/*/.cache"
+  #     "/home/*/Downloads"
+  #   ];
+  #   timerConfig = {
+  #     OnCalendar = "00:05";
+  #     RandomizedDelaySec = "5h";
+  #   };
+  # };
 
   time.timeZone = "America/Toronto";
 
@@ -57,8 +63,6 @@
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.plymouth.enable = true;
 
   networking.wireguard.interfaces."wg0" = {
     privateKeyFile = "/root/wg-key";

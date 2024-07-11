@@ -19,9 +19,10 @@
                       plugin = "https://chadmed.au/bankstown"
                       name = "bankstown"
                       control = {
-                          amt = 1.85
-                          sat_second = 1.7
-                          sat_third = 2.5
+                          bypass = 0
+                          amt = 1.8
+                          sat_second = 2.3
+                          sat_third = 3.1
                           blend = 1
                           ceil = 220.0
                           floor = 20.0
@@ -53,7 +54,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 4.0
+                        gain = 6.5
                       }
                     }
                     {
@@ -62,7 +63,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 4.0
+                        gain = 6.5
                       }
                     }
                     {
@@ -71,16 +72,15 @@
                         name = "bp"
                         control = {
                             mode = 0
-                            cm_0 = 0
                             ce_0 = 1
                             sla_0 = 5.0
-                            cr_0 = 2.8
+                            cr_0 = 1.7
                             al_0 = 0.725
                             at_0 = 1.0
                             rt_0 = 100
                             kn_0 = 0.125
                             cbe_1 = 1
-                            sf_1 = 220.0
+                            sf_1 = 200.0
                             ce_1 = 0
                             cbe_2 = 0
                             ce_2 = 0
@@ -100,7 +100,7 @@
                         name = "lim"
                         control = {
                             sla = 5.0
-                            al = 0.925
+                            al = 1.0
                             at = 1.0
                             rt = 100.0
                             cr = 15.0
@@ -148,13 +148,13 @@
                   capture.volumes = [
                       {
                           control = "ell:volume"
-                          min = -42.0
+                          min = -45.0
                           max = 0.0
                           scale = "cubic"
                       }
                       {
                           control = "elr:volume"
-                          min = -42.0
+                          min = -45.0
                           max = 0.0
                           scale = "cubic"
                       }

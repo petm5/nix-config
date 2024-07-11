@@ -1,10 +1,9 @@
-{
+{ pkgs }: {
   "$mod" = "SUPER";
   bind =
     [
-      "$mod, Return, exec, foot"
-      "$mod, C, exec, chromium"
-      ", Print, exec, grimblast copy area"
+      "$mod, Return, exec, ${pkgs.foot}/bin/foot"
+      ", Print, exec, ${pkgs.grimblast}/bin/grimblast copy area"
       "$mod, Q, killactive,"
       "$mod, F, fullscreen,"
       "$mod, Space, togglefloating,"
@@ -29,7 +28,7 @@
         )
         10)
     );
-  bindr = [ "SUPER, SUPER_L, exec, pkill walker || walker" ];
+  bindr = [ "SUPER, SUPER_L, exec, pkill rofi || rofi -show drun" ];
   binde = [
       ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+"
       ", XF86AudioLowerVolume, exec, wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-"
@@ -50,7 +49,7 @@
     vrr = 1;
   };
   decoration = {
-    rounding = 4;
+    rounding = 3;
     shadow_range = 3;
     shadow_ignore_window = true;
     shadow_render_power = 4;
@@ -62,18 +61,18 @@
     # blur.noise = 0.16;
   };
   general = {
-    gaps_in = 2;
-    gaps_out = 4;
+    gaps_in = 1;
+    gaps_out = 2;
     border_size = 0;
     "col.active_border" = "0xff446270";
     "col.inactive_border" = "0xff334759";
   };
   exec-once = [
       "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-      "eww daemon"
-      "eww open bar"
-      "swaybg -i ~/.wallpaper -m fill"
-      "hyprctl setcursor 'Numix-Cursor' 24"
+      "${pkgs.eww}/bin/eww daemon"
+      "${pkgs.eww}/bin/eww open bar"
+      "${pkgs.swaybg}/bin/swaybg -i ~/.wallpaper -m fill"
+      "${pkgs.hyprland}/bin/hyprctl setcursor 'Numix-Cursor' 24"
     ];
   device = [{
     name = "microsoft-surface-045e:09af-touchpad";
@@ -82,7 +81,7 @@
     natural_scroll = true;
   }];
   dwindle = {
-    no_gaps_when_only = 0;
+    no_gaps_when_only = 1;
   };
   animation = [
       "workspaces,1,3,default,fade"

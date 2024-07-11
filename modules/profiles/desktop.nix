@@ -21,19 +21,6 @@
 
   services.flatpak.enable = true;
 
-  services.greetd = {
-    enable = true;
-    settings = {
-      initial_session.command = "Hyprland";
-      initial_session.user = (builtins.elemAt (builtins.filter (u: u.isNormalUser) (builtins.attrValues config.users.users)) 0).name;
-      default_session.command = "${config.services.greetd.package}/bin/agreety --cmd Hyprland";
-    };
-  };
-
-  environment.etc."greetd/environments".text = ''
-    Hyprland
-  '';
-
   hardware.opengl.enable = true;
 
   xdg.portal = {
@@ -93,5 +80,18 @@
   security.pam.services.swaylock = {};
 
   services.timesyncd.enable = true;
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      initial_session = lib.mkIf config.services.displayManager.autoLogin.enable {
+        user = config.services.displayManager.autoLogin.user;
+        command = "bash";
+      };
+      default_session = {
+        command = "${config.services.greetd.package}/bin/agreety --cmd bash";
+      };
+    };
+  };
 
 }

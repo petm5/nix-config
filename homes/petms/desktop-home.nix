@@ -3,7 +3,6 @@
   imports = [ ./home.nix ];
 
   home.packages = with pkgs; [
-    xwayland
     noto-fonts
     noto-fonts-color-emoji
     source-code-pro
@@ -13,8 +12,10 @@
     jq
     brightnessctl
     pamixer
+    pavucontrol
     gnome.simple-scan
     gimp
+    mpv
   ];
 
   programs.chromium = {

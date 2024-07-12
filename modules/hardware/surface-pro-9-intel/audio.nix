@@ -20,11 +20,11 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.8
-                          sat_second = 2.3
-                          sat_third = 3.1
+                          amt = 1.2
+                          sat_second = 1.15
+                          sat_third = 1.3
                           blend = 1
-                          ceil = 220.0
+                          ceil = 120.0
                           floor = 20.0
                       }
                     }
@@ -54,7 +54,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 6.5
+                        gain = 10
                       }
                     }
                     {
@@ -63,7 +63,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 6.5
+                        gain = 10
                       }
                     }
                     {
@@ -74,13 +74,13 @@
                             mode = 0
                             ce_0 = 1
                             sla_0 = 5.0
-                            cr_0 = 1.7
+                            cr_0 = 1.75
                             al_0 = 0.725
                             at_0 = 1.0
                             rt_0 = 100
                             kn_0 = 0.125
                             cbe_1 = 1
-                            sf_1 = 200.0
+                            sf_1 = 320.0
                             ce_1 = 0
                             cbe_2 = 0
                             ce_2 = 0
@@ -148,13 +148,13 @@
                   capture.volumes = [
                       {
                           control = "ell:volume"
-                          min = -45.0
+                          min = -47.5
                           max = 0.0
                           scale = "cubic"
                       }
                       {
                           control = "elr:volume"
-                          min = -45.0
+                          min = -47.5
                           max = 0.0
                           scale = "cubic"
                       }

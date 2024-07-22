@@ -79,7 +79,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.blacklistedKernelModules = [ "intel-ipu6" "intel-ipu6-isys" ];
 
-  services.fwupd.enable = true;;
+  services.fwupd.enable = true;
 
   system.stateVersion = "24.05";
 

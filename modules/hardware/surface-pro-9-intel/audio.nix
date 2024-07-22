@@ -20,11 +20,11 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.2
-                          sat_second = 1.15
-                          sat_third = 1.3
+                          amt = 1.4
+                          sat_second = 1.8
+                          sat_third = 2.5
                           blend = 1
-                          ceil = 120.0
+                          ceil = 220.0
                           floor = 20.0
                       }
                     }
@@ -54,7 +54,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 10
+                        gain = 12
                       }
                     }
                     {
@@ -63,7 +63,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 10
+                        gain = 12
                       }
                     }
                     {

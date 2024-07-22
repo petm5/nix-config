@@ -31,6 +31,6 @@
     INTEL_GPU_BOOST_FREQ_ON_BAT = 300;
   };
 
-  systemd.services."tlp-sleep".wantedBy = lib.mkForce [];
+  # systemd.services."tlp-sleep".wantedBy = lib.mkForce [];
 
 }

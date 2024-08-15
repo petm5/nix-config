@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   home.username = "petms";
@@ -21,7 +21,7 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "nord";
+      theme = lib.mkDefault "base16-terminal";
       editor.soft-wrap = {
         enable = true;
         max-wrap = 25;

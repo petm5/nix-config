@@ -5,17 +5,19 @@
   home.packages = with pkgs; [
     noto-fonts
     noto-fonts-color-emoji
-    source-code-pro
     material-symbols
-    deploy-rs
+    powerline-symbols
     socat
     jq
     brightnessctl
     pamixer
     pavucontrol
-    gnome.simple-scan
+    simple-scan
     gimp
     mpv
+    blender
+    audacity
+    wireshark
   ];
 
   programs.chromium = {
@@ -30,21 +32,47 @@
     VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
   };
 
-  programs.foot = {
+  programs.helix.settings.theme = "dracula";
+
+  programs.alacritty = {
     enable = true;
     settings = {
-      main = {
-        term = "xterm-256color";
-        shell = "${pkgs.nushell}/bin/nu";
-        font = "Source Code Pro:size=11";
-        dpi-aware = "no";
-        # line-height = "11.8";
-        initial-window-size-pixels = "960x640";
-        pad = "3x3";
-        include = "${pkgs.foot.themes}/share/foot/themes/nord";
+      shell = "${pkgs.nushell}/bin/nu";
+      window = {
+        padding = { x = 3; y = 3; };
       };
-      mouse = {
-        hide-when-typing = "yes";
+      font = {
+        normal = {
+          family = "Noto Sans Mono";
+          style = "Regular";
+        };
+        size = 10;
+      };
+      colors = {
+        primary = {
+          background = "#282a36";
+          foreground = "#f8f8f2";
+        };
+        normal = {
+          black = "#000000";
+          red = "#ff5555";
+          green = "#50fa7b";
+          yellow = "#f1fa8c";
+          blue = "#bd93f9";
+          magenta = "#ff79c6";
+          cyan = "#8be9fd";
+          white = "#bbbbbb";
+        };
+        bright = {
+          black = "#555555";
+          red = "#ff5555";
+          green = "#50fa7b";
+          yellow = "#f1fa8c";
+          blue = "#caa9fa";
+          magenta = "#ff79c6";
+          cyan = "#8be9fd";
+          white = "#ffffff";
+        };
       };
     };
   };
@@ -54,15 +82,66 @@
     configDir = ./dotfiles/eww;
   };
 
-  wayland.windowManager.hyprland = {
+  # wayland.windowManager.hyprland = {
+  #   systemd.enable = true;
+  #   settings = (import ./hyprland.nix) { inherit pkgs; };
+  # };
+
+  wayland.windowManager.sway = {
+    enable = true;
     systemd.enable = true;
-    settings = (import ./hyprland.nix) { inherit pkgs; };
+    config = rec {
+      modifier = "Mod4";
+      window = {
+        titlebar = false;
+        hideEdgeBorders = "smart";
+      };
+      gaps = {
+        smartBorders = "on";
+      };
+      startup = [
+        { command = "${pkgs.eww}/bin/eww daemon"; }
+        { command = "${pkgs.eww}/bin/eww open bar"; always = true; }
+      ];
+      bars = [];
+      menu = "${config.programs.rofi.package}/bin/rofi -show drun";
+      terminal = "${pkgs.alacritty}/bin/alacritty";
+      keybindings = lib.mkOptionDefault {
+        XF86AudioRaiseVolume = "exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
+        XF86AudioLowerVolume = "exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-";
+        XF86AudioMute = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        XF86AudioMicMute = "exec wpctl set-source-mute @DEFAULT_AUDIO_SINK@ toggle";
+        XF86MonBrightnessUp = "exec brillo -A 2 -u 100000 -q";
+        XF86MonBrightnessDown = "exec brillo -U 2 -u 100000 -q";
+        XF86AudioPlay = "exec playerctl play-pause";
+        XF86AudioNext = "exec playerctl next";
+        XF86AudioPrev = "exec playerctl previous";
+      };
+      output = {
+        "*" = {
+          bg = "${./wallpaper} fill";
+        };
+        "LG Electronics LG FULL HD 0x00069969" = {
+          mode = "1920x1080";
+          pos = "0 0";
+          subpixel = "rgb";
+        };
+        "LG Display 0x0719 0x090003A1" = {
+          mode = "2880x1920@120Hz";
+          pos = "1920 0";
+          subpixel = "none";
+          adaptive_sync = "on";
+        };
+      };
+    };
   };
 
   programs.bash.enable = true;
   programs.bash.bashrcExtra = ''
+    export WLR_RENDERER=vulkan
     if [ "$(tty)" = "/dev/tty1" ]; then
-      exec ${config.wayland.windowManager.hyprland.package}/bin/Hyprland > /dev/null
+      # exec ${config.wayland.windowManager.hyprland.package}/bin/Hyprland > /dev/null
+      exec ${config.wayland.windowManager.sway.package}/bin/sway > /dev/null
     fi
   '';
 
@@ -139,7 +218,7 @@
     };
 
     iconTheme = {
-      package = pkgs.gnome.adwaita-icon-theme;
+      package = pkgs.adwaita-icon-theme;
       name = "Adwaita";
     };
 

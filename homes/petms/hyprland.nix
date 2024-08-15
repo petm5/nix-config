@@ -2,7 +2,7 @@
   "$mod" = "SUPER";
   bind =
     [
-      "$mod, Return, exec, ${pkgs.foot}/bin/foot"
+      "$mod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
       ", Print, exec, ${pkgs.grimblast}/bin/grimblast copy area"
       "$mod, Q, killactive,"
       "$mod, F, fullscreen,"

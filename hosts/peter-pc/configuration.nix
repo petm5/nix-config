@@ -11,7 +11,7 @@
 
   users.users.petms = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "scanner" "lp" ];
+    extraGroups = [ "wheel" "video" "scanner" "lp" "wireshark" ];
     linger = true;
   };
 
@@ -77,9 +77,12 @@
   virtualisation.podman.enable = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.blacklistedKernelModules = [ "intel-ipu6" "intel-ipu6-isys" ];
 
   services.fwupd.enable = true;
+
+  programs.wireshark.enable = true;
+
+  services.colord.enable = true;
 
   system.stateVersion = "24.05";
 

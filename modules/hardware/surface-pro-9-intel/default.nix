@@ -10,6 +10,7 @@ in {
     ./audio.nix
     ./tlp.nix
     ./ipts.nix
+    # ./ipu6.nix
   ];
 
   boot.extraModulePackages = [
@@ -29,6 +30,7 @@ in {
       ${pkgs.kmod}/bin/insmod ${gpeMod}/lib/modules/*/updates/surface_gpe.ko.xz
     '';
     wantedBy = [ "default.target" ];
+    restartIfChanged = false;
   };
 
   boot.initrd.kernelModules = [ "nvme" "xhci_pci" "hid_generic" "atkbd" "surface_aggregator" "surface_aggregator_registry" "surface_aggregator_hub" "surface_hid_core" "8250_dw" "surface_hid" "intel_lpss" "intel_lpss_pci" "pinctrl_tigerlake" "usbhid" ];
@@ -40,5 +42,7 @@ in {
   boot.initrd.availableKernelModules = [ "thunderbolt" "usb_storage" "sd_mod" ];
 
   boot.kernelParams = [ "pcie_aspm=force" "workqueue.power_efficient=true" "pci=hpiosize=0" ];
+
+  boot.blacklistedKernelModules = [ "intel-ipu6" "intel-ipu6-isys" ];
 
 }

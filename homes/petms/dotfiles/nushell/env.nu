@@ -13,12 +13,10 @@ def create_left_prompt [] {
     let separator_color = (ansi light_green_bold)
 
     ([
-        (ansi bg_black)
-        (char space)
         $path_color
         ($dir | str replace --all (char path_sep) $"($separator_color)(char path_sep)($path_color)")
-        (char space)
-        (ansi reset)
+        (char nl)
+        (char nl)
     ] | str join)
 }
 
@@ -41,7 +39,7 @@ $env.PROMPT_COMMAND_RIGHT = {|| create_right_prompt }
 
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
-$env.PROMPT_INDICATOR = {|| $"(ansi black) " }
+$env.PROMPT_INDICATOR = {|| $"(ansi magenta)❭ " }
 $env.PROMPT_INDICATOR_VI_INSERT = {|| ": " }
 $env.PROMPT_INDICATOR_VI_NORMAL = {|| "> " }
 $env.PROMPT_MULTILINE_INDICATOR = {|| "::: " }
@@ -90,3 +88,44 @@ $env.PATH = ($env.PATH | split row (char esep) | prepend $"/etc/profiles/per-use
 
 $env.EDITOR = "hx"
 $env.SSH_AUTH_SOCK = $env.XDG_RUNTIME_DIR + /ssh-agent
+
+# Show system info
+
+def system_info [] {
+
+    let primary_color = (ansi blue_bold);
+    let secondary_color = (ansi cyan_bold);
+
+    let host = (sys host);
+    let mem = (sys mem)
+
+    let info = {
+        OS: $"($host.name) ($host.os_version)"
+        Kernel: ($host.kernel_version)
+        Uptime: ($host.uptime)
+        Memory: $"($mem.used) / ($mem.total)"
+        Shell: $"nu ($env.NU_VERSION)"
+    };
+
+    let first_line = ([
+        $primary_color
+        ($env.USER)
+        (ansi reset)
+        "@"
+        $primary_color
+        ($host.hostname)
+        (ansi reset)
+    ] | str join);
+
+    let separator_length = ($env.USER | str length) + ($host | get hostname | str length)
+
+    let info_lines = ([
+        $first_line
+        (0..$separator_length | each {|_| "-"} | str join)
+    ] ++ ($info | | transpose key value | each {|e| $"($secondary_color)($e.key)(ansi reset): ($e.value)"}));
+
+    echo $info_lines | str join (char nl)
+
+}
+
+system_info

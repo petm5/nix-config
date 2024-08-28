@@ -2,16 +2,18 @@
 
   imports = [
     ../../modules/profiles/desktop.nix
+    ../../modules/hardware/wifi.nix
     ./hardware-configuration.nix
     ../../modules/hardware/surface-pro-9-intel
     ../../modules/profiles/secure-boot.nix
+    ../../modules/overlays/wayland-edge.nix
   ];
 
   networking.hostName = "peter-pc";
 
   users.users.petms = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "scanner" "lp" "wireshark" ];
+    extraGroups = [ "users" "wheel" "video" "scanner" "lp" "wireshark" ];
     linger = true;
   };
 
@@ -40,20 +42,6 @@
 
   console.keyMap = "us";
 
-  networking.wireless.iwd.settings = {
-    General = {
-      Country = "CA";
-      # Prevent tracking across networks
-      AddressRandomization = "network";
-    };
-    Rank = {
-      # Prefer faster bands
-      BandModifier2_4GHz = 1.0;
-      BandModifier5GHz = 3.0;
-      BandModifier6GHz = 10.0;
-    };
-  };
-
   zramSwap.enable = true;
 
   security.tpm2.enable = true;
@@ -63,6 +51,7 @@
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.rebootForBitlocker = true;
 
   # networking.wireguard.interfaces."wg0" = {
   #   privateKeyFile = "/root/wg-key";
@@ -76,13 +65,11 @@
 
   virtualisation.podman.enable = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   services.fwupd.enable = true;
 
   programs.wireshark.enable = true;
-
-  services.colord.enable = true;
 
   system.stateVersion = "24.05";
 

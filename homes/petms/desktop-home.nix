@@ -77,19 +77,92 @@
     };
   };
 
-  programs.eww = {
+  programs.waybar = {
     enable = true;
-    configDir = ./dotfiles/eww;
+    settings = {
+      mainBar = {
+        layer = "top";
+        position = "top";
+        height = 26;
+        modules-left = [ "sway/workspaces" ];
+        modules-center = [ "sway/window" ];
+        modules-right = [ "wireplumber" "mpd" "battery" "clock" ];
+        battery = {
+          interval = 2;
+          format = "{icon}";
+          format-icons = {
+            unknown = [ "" ];
+            plugged = [ "" "" "" "" "" "" "" ];
+            full = [ "" ];
+            discharging = [ "" "" "" "" "" "" "" ];
+          };
+        };
+        mpd = {
+          format = "{stateIcon}";
+          format-stopped = "";
+          state-icons = {
+            paused = "";
+            playing = "";
+          };
+        };
+        wireplumber = {
+          format = "{icon}";
+          format-icons = [ "" "" "" ];
+          format-muted = "";
+        };
+        clock = {
+          tooltip-format = "<tt><small>{calendar}</small></tt>";
+          calendar = {
+            mode = "year";
+            mode-mon-col = 3;
+            weeks-pos = "right";
+            format = {
+              months = "<span color='#ffead3'><b>{}</b></span>";
+              days = "<span color='#ecc6d9'><b>{}</b></span>";
+              weeks = "<span color='#99ffdd'><b>W{}</b></span>";
+              weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+              today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+            };
+          };
+        };
+      };
+    };
+    style = ''
+      * {
+        border: none;
+        border-radius: 0;
+        color: white;
+        font-family: "Noto Sans", "Material Symbols Sharp";
+        font-size: 14px;
+      }
+      window {
+        background: #222;
+        padding: 0 2px;
+      }
+      tooltip {
+        background: #222;
+        border-radius: 6px;
+      }
+      box > * > * {
+        padding: 0 4px;
+      }
+      #workspaces {
+        padding: 0;
+      }
+      #workspaces button {
+        padding: 0 4px;
+        color: white;
+      }
+      #clock {
+        margin-right: 4px;
+      }
+    '';
   };
-
-  # wayland.windowManager.hyprland = {
-  #   systemd.enable = true;
-  #   settings = (import ./hyprland.nix) { inherit pkgs; };
-  # };
 
   wayland.windowManager.sway = {
     enable = true;
     systemd.enable = true;
+    package = pkgs.sway_edge;
     config = rec {
       modifier = "Mod4";
       window = {
@@ -100,8 +173,7 @@
         smartBorders = "on";
       };
       startup = [
-        { command = "${pkgs.eww}/bin/eww daemon"; }
-        { command = "${pkgs.eww}/bin/eww open bar"; always = true; }
+        { command = "${pkgs.waybar}/bin/waybar"; always = true; }
       ];
       bars = [];
       menu = "${config.programs.rofi.package}/bin/rofi -show drun";
@@ -117,17 +189,26 @@
         XF86AudioNext = "exec playerctl next";
         XF86AudioPrev = "exec playerctl previous";
       };
+      input = {
+        "type:touchpad" = {
+          tap = "enabled";
+          natural_scroll = "enabled";
+          accel_profile = "adaptive";
+          scroll_factor = "0.3";
+        };
+      };
       output = {
         "*" = {
           bg = "${./wallpaper} fill";
         };
         "LG Electronics LG FULL HD 0x00069969" = {
-          mode = "1920x1080";
+          mode = "1920x1080@60.0Hz";
           pos = "0 0";
           subpixel = "rgb";
+          # color_profile = "icc ${../../modules/hardware/display/LG-22MN430M/LG-22MN430M.icc}";
         };
         "LG Display 0x0719 0x090003A1" = {
-          mode = "2880x1920@120Hz";
+          mode = "2880x1920@60Hz";
           pos = "1920 0";
           subpixel = "none";
           adaptive_sync = "on";
@@ -140,7 +221,6 @@
   programs.bash.bashrcExtra = ''
     export WLR_RENDERER=vulkan
     if [ "$(tty)" = "/dev/tty1" ]; then
-      # exec ${config.wayland.windowManager.hyprland.package}/bin/Hyprland > /dev/null
       exec ${config.wayland.windowManager.sway.package}/bin/sway > /dev/null
     fi
   '';

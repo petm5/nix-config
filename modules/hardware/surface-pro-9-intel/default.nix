@@ -22,15 +22,15 @@ in {
         hash = "sha256-gUmbL4Q4DP4HO/Dux1KKFRA74JG3P34t2WHkFsSenAA=";
       };
     })
-    gpeMod
   ];
 
   systemd.services.surface-gpe = {
     script = ''
-      ${pkgs.kmod}/bin/insmod ${gpeMod}/lib/modules/*/updates/surface_gpe.ko.xz
+      ${pkgs.kmod}/bin/insmod ${gpeMod}/lib/modules/*/updates/surface_gpe.ko*
     '';
     wantedBy = [ "default.target" ];
     restartIfChanged = false;
+    serviceConfig.RemainAfterExit = true;
   };
 
   boot.initrd.kernelModules = [ "nvme" "xhci_pci" "hid_generic" "atkbd" "surface_aggregator" "surface_aggregator_registry" "surface_aggregator_hub" "surface_hid_core" "8250_dw" "surface_hid" "intel_lpss" "intel_lpss_pci" "pinctrl_tigerlake" "usbhid" ];

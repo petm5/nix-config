@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }: {
 
   imports = [
-    ../../modules/profiles/desktop.nix
-    ../../modules/hardware/wifi.nix
     ./hardware-configuration.nix
     ../../modules/hardware/surface-pro-9-intel
+    ../../modules/profiles/desktop.nix
+    ../../modules/profiles/wifi.nix
     ../../modules/profiles/secure-boot.nix
     ../../modules/overlays/wayland-edge.nix
   ];
@@ -44,14 +44,7 @@
 
   zramSwap.enable = true;
 
-  security.tpm2.enable = true;
-
   boot.initrd.services.lvm.enable = true;
-
-  boot.loader.grub.enable = false;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.rebootForBitlocker = true;
 
   # networking.wireguard.interfaces."wg0" = {
   #   privateKeyFile = "/root/wg-key";

@@ -16,24 +16,24 @@
       ]);
     });
     wayland-protocols_edge = super.wayland-protocols.overrideAttrs (finalAttrs: prevAttrs: rec {
-      version = "f4925c9313d26689918c1d1a138ec4819caeb77c";
+      version = "4878e025a5fb95d8d14a05088974af60cbafebd0";
       src = pkgs.fetchFromGitLab {
         domain = "gitlab.freedesktop.org";
         owner = "wayland";
         repo = "wayland-protocols";
         rev = version;
-        hash = "sha256-URMkmlawIM2DLzEN8BfltnKCPjjec9CoxbyVWUT5MpA=";
+        hash = "sha256-ryyv1RZqpwev1UoXRlV8P1ujJUz4m3sR89iEPaLYSZ4=";
       };
       wayland = self.wayland_edge;
     });
     wlroots_edge = super.wlroots.overrideAttrs (finalAttrs: prevAttrs: rec {
-      version = "a0450d219fbc8a453876e70f29b9b5c2f76b0c64";
+      version = "beb9a9ad0a38867154b7606911c33ffa5ecf759f";
       src = pkgs.fetchFromGitLab {
         domain = "gitlab.freedesktop.org";
         owner = "wlroots";
         repo = "wlroots";
         rev = version;
-        hash = "sha256-DkQX2mQcsiDUlaEECBM0i5ERHWp62clOzKqYpVBB9UA=";
+        hash = "sha256-ZlNFxwj3c5zKiSfokA27zhJ+Yar8cma4fj6N/ulI0VM=";
       };
       nativeBuildInputs = prevAttrs.nativeBuildInputs ++ (with self; [
         cmake
@@ -62,12 +62,12 @@
       enableXWayland = false;
     });
     sway-unwrapped_edge = super.sway-unwrapped.overrideAttrs (finalAttrs: prevAttrs: rec {
-      version = "ae7c1b139a3c71d3e11fe2477d8b21c36de6770e";
+      version = "980a4e02113789d0cca94aa023557c6f6e87ec73";
       src = pkgs.fetchFromGitHub {
         owner = "swaywm";
         repo = "sway";
         rev = version;
-        hash = "sha256-U7IoChVLxGQZ/giTd2B7ubcIIr8gTIPSH6PAPgz8WaQ=";
+        hash = "sha256-qciZeQghlLV5aMuOnex3LvFU9vTa941RMlUkdvj0QTU=";
       };
       buildInputs = with self; [
         libGL wayland_edge libxkbcommon pcre2 json_c libevdev

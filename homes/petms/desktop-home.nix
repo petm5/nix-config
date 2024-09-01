@@ -92,7 +92,7 @@
           format = "{icon}";
           format-icons = {
             unknown = [ "" ];
-            plugged = [ "" "" "" "" "" "" "" ];
+            charging = [ "" "" "" "" "" "" "" ];
             full = [ "" ];
             discharging = [ "" "" "" "" "" "" "" ];
           };
@@ -172,9 +172,6 @@
       gaps = {
         smartBorders = "on";
       };
-      startup = [
-        { command = "${pkgs.waybar}/bin/waybar"; always = true; }
-      ];
       bars = [];
       menu = "${config.programs.rofi.package}/bin/rofi -show drun";
       terminal = "${pkgs.alacritty}/bin/alacritty";
@@ -219,9 +216,10 @@
 
   programs.bash.enable = true;
   programs.bash.bashrcExtra = ''
-    export WLR_RENDERER=vulkan
     if [ "$(tty)" = "/dev/tty1" ]; then
-      exec ${config.wayland.windowManager.sway.package}/bin/sway > /dev/null
+      systemctl --user import-environment PATH TERM EDITOR GTK_PATH VDPAU_DRIVER XCURSOR_PATH XDG_CONFIG_DIRS XDG_DATA_DIRS
+      exec ${pkgs.systemd}/bin/systemctl --wait --user start sway
+      exit 1
     fi
   '';
 
@@ -247,15 +245,12 @@
 
   programs.swaylock = {
     enable = true;
-    package = pkgs.swaylock-effects;
     settings = {
       show-failed-attempts = true;
-      grace = 2;
-      fade-in = 0.4;
-      screenshots = true;
-      effect-blur = "128x3";
-      effect-vignette = "0.9:0.1";
-      no-unlock-indicator = true;
+      image = "${./wallpaper}";
+      scaling = "fill";
+      indicator-radius = 100;
+      indicator-idle-visible = false;
     };
   };
 
@@ -263,7 +258,7 @@
     enable = true;
     events = [{
       event = "before-sleep";
-      command = "${config.programs.swaylock.package}/bin/swaylock -fF --fade-in 0 --grace 0";
+      command = "${config.programs.swaylock.package}/bin/swaylock -fF";
     }];
     timeouts = [{
       timeout = 300;
@@ -275,8 +270,42 @@
   };
 
   systemd.user.services."swayidle" = {
+    Unit = {
+      BindsTo = "sway-session.target";
+    };
+    Service = {
+      Type = "simple";
+    };
     Install = {
-      RequiredBy = [ "graphical-session.target" ];
+      RequiredBy = [ "sway-session.target" ];
+    };
+  };
+
+  systemd.user.services."sway" = {
+    Service = {
+      Type = "simple";
+      ExecStart = "${config.wayland.windowManager.sway.package}/bin/sway";
+      Restart = "on-failure";
+      RestartSec = 1;
+      TimeoutStopSec = 10;
+      Environment = [
+        "PATH=/run/wrappers/bin:/run/current-system/sw/bin:${config.home.profileDirectory}/bin"
+        "WLR_BACKENDS=drm,libinput"
+        "WLR_RENDERER=vulkan"
+      ];
+    };
+  };
+
+  systemd.user.services."waybar" = {
+    Service = {
+      Type = "simple";
+      ExecStart = "${config.programs.waybar.package}/bin/waybar";
+      Environment = [
+        "PATH=${pkgs.runtimeShell}/bin"
+      ];
+    };
+    Install = {
+      WantedBy = [ "sway-session.target" ];
     };
   };
 

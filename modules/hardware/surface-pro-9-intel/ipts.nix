@@ -2,7 +2,7 @@
 
   services.iptsd.enable = true;
   services.iptsd.config = {
-    Touch = {
+    Touchscreen = {
       DisableOnPalm = true;
       DisableOnStylus = true;
     };

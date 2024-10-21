@@ -6,7 +6,6 @@
     ../../modules/profiles/desktop.nix
     ../../modules/profiles/wifi.nix
     ../../modules/profiles/secure-boot.nix
-    ../../modules/overlays/wayland-edge.nix
   ];
 
   networking.hostName = "peter-pc";
@@ -22,22 +21,6 @@
     user = "petms";
   };
 
-  # services.restic.backups.remote = {
-  #   repository = "sftp://petms@opcc.opcc.tk:2272/backups/peter-pc";
-  #   passwordFile = "/etc/nixos/restic-password";
-  #   paths = [
-  #     "/home"
-  #   ];
-  #   exclude = [
-  #     "/home/*/.cache"
-  #     "/home/*/Downloads"
-  #   ];
-  #   timerConfig = {
-  #     OnCalendar = "00:05";
-  #     RandomizedDelaySec = "5h";
-  #   };
-  # };
-
   time.timeZone = "America/Toronto";
 
   console.keyMap = "us";
@@ -46,21 +29,9 @@
 
   boot.initrd.services.lvm.enable = true;
 
-  # networking.wireguard.interfaces."wg0" = {
-  #   privateKeyFile = "/root/wg-key";
-  #   ips = [ "10.100.0.3/32" ];
-  #   peers = [{
-  #     endpoint = "opcc.opcc.tk:25565";
-  #     allowedIPs = [ "10.100.0.1/32" ];
-  #     publicKey = "xPAmZH9tIelqwpX4S1sUpK4Domngce/UA7kr3u/fAlo=";
-  #   }];
-  # };
-
   virtualisation.podman.enable = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_zen;
-
-  services.fwupd.enable = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   programs.wireshark.enable = true;
 

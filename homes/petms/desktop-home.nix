@@ -40,6 +40,7 @@
       shell = "${pkgs.nushell}/bin/nu";
       window = {
         padding = { x = 3; y = 3; };
+        opacity = 0.95;
       };
       font = {
         normal = {
@@ -82,10 +83,9 @@
     settings = {
       mainBar = {
         layer = "top";
-        position = "top";
+        position = "bottom";
         height = 26;
         modules-left = [ "sway/workspaces" ];
-        modules-center = [ "sway/window" ];
         modules-right = [ "wireplumber" "mpd" "battery" "clock" ];
         battery = {
           interval = 2;
@@ -125,6 +125,21 @@
             };
           };
         };
+        "sway/workspaces" = {
+          format = "{icon}";
+          format-icons = {
+            "1" = "";
+            "2" = "";
+            "3" = "";
+            "4" = "";
+          };
+          persistent-workspaces = {
+            "1" = [];
+            "2" = [];
+            "3" = [];
+            "4" = [];
+          };
+        };
       };
     };
     style = ''
@@ -133,6 +148,7 @@
         border-radius: 0;
         color: white;
         font-family: "Noto Sans", "Material Symbols Sharp";
+        font-weight: 500;
         font-size: 14px;
       }
       window {
@@ -162,15 +178,51 @@
   wayland.windowManager.sway = {
     enable = true;
     systemd.enable = true;
-    package = pkgs.sway_edge;
+    package = pkgs.swayfx;
+    checkConfig = false; # Breaks with swayfx
     config = rec {
       modifier = "Mod4";
       window = {
-        titlebar = false;
+        titlebar = true;
         hideEdgeBorders = "smart";
+        commands = [
+          {
+            command = "title_format \"[XWayland] %title\"";
+            criteria = {
+              shell = "xwayland";
+            };
+          }
+          {
+            command = "border none";
+            criteria = {
+              app_id = "chromium-browser";
+            };
+          }
+        ];
+      };
+      colors = {
+        focused = {
+          background = "#1b1d21";
+          childBorder = "#252b38";
+          border = "#252b38";
+          indicator = "#363e44";
+          text = "#ffffff";
+        };
+        unfocused = {
+          background = "#222428";
+          childBorder = "#212733";
+          border = "#212733";
+          indicator = "#2d343a";
+          text = "#777777";
+        };
       };
       gaps = {
         smartBorders = "on";
+      };
+      fonts = {
+        names = [ "Noto Sans" ];
+        style = "Regular";
+        size = 10.0;
       };
       bars = [];
       menu = "${config.programs.rofi.package}/bin/rofi -show drun";
@@ -212,6 +264,20 @@
         };
       };
     };
+    extraConfig = ''
+      blur enable
+      blur_xray enable
+      blur_passes 2
+      blur_radius 10
+      blur_noise 0.2
+      blur_brightness 0.9
+      corner_radius 6
+      shadows enable
+      shadow_color #000000d0
+      shadow_inactive_color #000000a0
+      shadow_blur_radius 24
+      shadow_offset 0 0
+    '';
   };
 
   programs.bash.enable = true;
@@ -339,7 +405,7 @@
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-light";
+      color-scheme = "prefer-dark";
     };
   };
 

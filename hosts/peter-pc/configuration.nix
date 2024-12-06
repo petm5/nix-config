@@ -35,6 +35,9 @@
 
   programs.wireshark.enable = true;
 
+  programs.sway.enable = true;
+  programs.sway.package = pkgs.swayfx;
+
   system.stateVersion = "24.05";
 
 }

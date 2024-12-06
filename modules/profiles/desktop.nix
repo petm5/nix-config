@@ -82,4 +82,14 @@
     { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
   ];
 
+  environment.systemPackages = with pkgs; [
+    libavif
+    libwebp
+  ];
+
+  programs.gdk-pixbuf.modulePackages = with pkgs; [
+    libavif
+    webp-pixbuf-loader
+  ];
+
 }

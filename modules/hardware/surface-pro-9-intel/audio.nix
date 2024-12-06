@@ -20,12 +20,12 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.4
-                          sat_second = 1.8
-                          sat_third = 2.5
+                          amt = 1.8
+                          sat_third = 2.40
                           blend = 1
-                          ceil = 220.0
+                          ceil = 200.0
                           floor = 20.0
+                          final_hp = 120.0
                       }
                     }
                     {
@@ -54,7 +54,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 12
+                        gain = 5
                       }
                     }
                     {
@@ -63,7 +63,7 @@
                       label = "convolver"
                       config = {
                         filename = "/etc/surface-audio/sp9/impulse.wav"
-                        gain = 12
+                        gain = 5
                       }
                     }
                     {
@@ -74,13 +74,13 @@
                             mode = 0
                             ce_0 = 1
                             sla_0 = 5.0
-                            cr_0 = 1.75
-                            al_0 = 0.725
+                            cr_0 = 3.50
+                            al_0 = 0.650
                             at_0 = 1.0
                             rt_0 = 100
-                            kn_0 = 0.125
+                            kn_0 = 0.3
                             cbe_1 = 1
-                            sf_1 = 320.0
+                            sf_1 = 250.0
                             ce_1 = 0
                             cbe_2 = 0
                             ce_2 = 0
@@ -100,7 +100,7 @@
                         name = "lim"
                         control = {
                             sla = 5.0
-                            al = 1.0
+                            al = 0.850
                             at = 1.0
                             rt = 100.0
                             cr = 15.0

@@ -4,15 +4,15 @@
 
   services.tlp.enable = true;
   services.tlp.settings = {
-    PCIE_ASPM_ON_BAT = "powersupersave";
+    PCIE_ASPM_ON_BAT = "powersave";
     PCIE_ASPM_ON_AC = "powersave";
-    PLATFORM_PROFILE_ON_AC = "performance";
+    PLATFORM_PROFILE_ON_AC = "balanced-performance";
     PLATFORM_PROFILE_ON_BAT = "low-power";
     RUNTIME_PM_ON_AC = "auto";
     RUNTIME_PM_ON_BAT = "auto";
-    CPU_SCALING_GOVERNOR_ON_AC = "performance";
+    CPU_SCALING_GOVERNOR_ON_AC = "powersave";
     CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-    CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+    CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
     CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
     CPU_BOOST_ON_AC = 1;
     CPU_BOOST_ON_BAT = 0;

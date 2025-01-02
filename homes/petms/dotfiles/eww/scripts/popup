@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "$1" == "launcher" ]; then
+rofi -show drun
+elif [ "$1" = "calendar" ]; then
+eww open calendar --toggle
+elif [ "$1" = "power" ]; then
+eww open power --toggle
+elif [ "$1" = "audio" ]; then
+pavucontrol
+fi

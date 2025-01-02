@@ -20,6 +20,11 @@
     wireshark
     nautilus
     eog
+    libreoffice
+    kdePackages.ark
+    unzip
+    gnome-font-viewer
+    system-config-printer
   ];
 
   programs.chromium = {
@@ -130,7 +135,7 @@
     VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
   };
 
-  programs.helix.settings.theme = "dracula";
+  programs.helix.settings.theme = "base16_transparent";
 
   programs.alacritty = {
     enable = true;
@@ -140,7 +145,7 @@
       };
       window = {
         padding = { x = 3; y = 3; };
-        opacity = 0.95;
+        opacity = 0.8;
       };
       font = {
         normal = {
@@ -151,133 +156,138 @@
       };
       colors = {
         primary = {
-          background = "#282a36";
-          foreground = "#f8f8f2";
+          background = "#212733";
+          foreground = "#d9d7ce";
         };
         normal = {
-          black = "#000000";
-          red = "#ff5555";
-          green = "#50fa7b";
-          yellow = "#f1fa8c";
-          blue = "#bd93f9";
-          magenta = "#ff79c6";
-          cyan = "#8be9fd";
-          white = "#bbbbbb";
+          black = "#191e2a";
+          red = "#ed8274";
+          green = "#a6cc70";
+          yellow = "#fad07b";
+          blue = "#6dcbfa";
+          magenta = "#cfbafa";
+          cyan = "#90e1c6";
+          white = "#c7c7c7";
         };
         bright = {
-          black = "#555555";
-          red = "#ff5555";
-          green = "#50fa7b";
-          yellow = "#f1fa8c";
-          blue = "#caa9fa";
-          magenta = "#ff79c6";
-          cyan = "#8be9fd";
+          black = "#686868";
+          red = "#f28779";
+          green = "#bae67e";
+          yellow = "#ffd580";
+          blue = "#73d0ff";
+          magenta = "#d4bfff";
+          cyan = "#95e6cb";
           white = "#ffffff";
         };
       };
     };
   };
 
-  programs.waybar = {
+  programs.eww = {
     enable = true;
-    settings = {
-      mainBar = {
-        layer = "top";
-        position = "bottom";
-        height = 26;
-        modules-left = [ "sway/workspaces" ];
-        modules-right = [ "wireplumber" "mpd" "battery" "custom/wvkbd" "clock" ];
-        battery = {
-          interval = 2;
-          format = "{icon}";
-          format-icons = {
-            unknown = [ "" ];
-            charging = [ "" "" "" "" "" "" "" ];
-            full = [ "" ];
-            discharging = [ "" "" "" "" "" "" "" ];
-          };
-        };
-        mpd = {
-          format = "{stateIcon}";
-          format-stopped = "";
-          state-icons = {
-            paused = "";
-            playing = "";
-          };
-        };
-        wireplumber = {
-          format = "{icon}";
-          format-icons = [ "" "" "" ];
-          format-muted = "";
-        };
-        clock = {
-          tooltip-format = "<tt><small>{calendar}</small></tt>";
-          calendar = {
-            mode = "year";
-            mode-mon-col = 3;
-            weeks-pos = "right";
-            format = {
-              months = "<span color='#ffead3'><b>{}</b></span>";
-              days = "<span color='#ecc6d9'><b>{}</b></span>";
-              weeks = "<span color='#99ffdd'><b>W{}</b></span>";
-              weekdays = "<span color='#ffcc66'><b>{}</b></span>";
-              today = "<span color='#ff6699'><b><u>{}</u></b></span>";
-            };
-          };
-        };
-        "sway/workspaces" = {
-          format = "{icon}";
-          format-icons = {
-            "1" = "";
-            "2" = "";
-            "3" = "";
-            "4" = "";
-          };
-          persistent-workspaces = {
-            "1" = [];
-            "2" = [];
-            "3" = [];
-            "4" = [];
-          };
-        };
-        "custom/wvkbd" = {
-          format = "";
-          on-click = "pkill -SIGRTMIN wvkbd";
-        };
-      };
-    };
-    style = ''
-      * {
-        border: none;
-        border-radius: 0;
-        color: white;
-        font-family: "Noto Sans", "Material Symbols Sharp";
-        font-weight: 500;
-        font-size: 14px;
-      }
-      window {
-        background: #222;
-        padding: 0 2px;
-      }
-      tooltip {
-        background: #222;
-        border-radius: 6px;
-      }
-      box > * > * {
-        padding: 0 4px;
-      }
-      #workspaces {
-        padding: 0;
-      }
-      #workspaces button {
-        padding: 0 4px;
-        color: white;
-      }
-      #clock {
-        margin-right: 4px;
-      }
-    '';
+    configDir = ./dotfiles/eww;
   };
+
+  # programs.waybar = {
+  #   enable = true;
+  #   settings = {
+  #     mainBar = {
+  #       layer = "top";
+  #       position = "bottom";
+  #       height = 26;
+  #       modules-left = [ "sway/workspaces" ];
+  #       modules-right = [ "wireplumber" "mpd" "battery" "custom/wvkbd" "clock" ];
+  #       battery = {
+  #         interval = 2;
+  #         format = "{icon}";
+  #         format-icons = {
+  #           unknown = [ "" ];
+  #           charging = [ "" "" "" "" "" "" "" ];
+  #           full = [ "" ];
+  #           discharging = [ "" "" "" "" "" "" "" ];
+  #         };
+  #       };
+  #       mpd = {
+  #         format = "{stateIcon}";
+  #         format-stopped = "";
+  #         state-icons = {
+  #           paused = "";
+  #           playing = "";
+  #         };
+  #       };
+  #       wireplumber = {
+  #         format = "{icon}";
+  #         format-icons = [ "" "" "" ];
+  #         format-muted = "";
+  #       };
+  #       clock = {
+  #         tooltip-format = "<tt><small>{calendar}</small></tt>";
+  #         calendar = {
+  #           mode = "year";
+  #           mode-mon-col = 3;
+  #           weeks-pos = "right";
+  #           format = {
+  #             months = "<span color='#ffead3'><b>{}</b></span>";
+  #             days = "<span color='#ecc6d9'><b>{}</b></span>";
+  #             weeks = "<span color='#99ffdd'><b>W{}</b></span>";
+  #             weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+  #             today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+  #           };
+  #         };
+  #       };
+  #       "sway/workspaces" = {
+  #         format = "{icon}";
+  #         format-icons = {
+  #           "1" = "";
+  #           "2" = "";
+  #           "3" = "";
+  #           "4" = "";
+  #         };
+  #         persistent-workspaces = {
+  #           "1" = [];
+  #           "2" = [];
+  #           "3" = [];
+  #           "4" = [];
+  #         };
+  #       };
+  #       "custom/wvkbd" = {
+  #         format = "";
+  #         on-click = "pkill -SIGRTMIN wvkbd";
+  #       };
+  #     };
+  #   };
+  #   style = ''
+  #     * {
+  #       border: none;
+  #       border-radius: 0;
+  #       color: white;
+  #       font-family: "Noto Sans", "Material Symbols Sharp";
+  #       font-weight: 500;
+  #       font-size: 14px;
+  #     }
+  #     window {
+  #       background: #222;
+  #       padding: 0 2px;
+  #     }
+  #     tooltip {
+  #       background: #222;
+  #       border-radius: 6px;
+  #     }
+  #     box > * > * {
+  #       padding: 0 4px;
+  #     }
+  #     #workspaces {
+  #       padding: 0;
+  #     }
+  #     #workspaces button {
+  #       padding: 0 4px;
+  #       color: white;
+  #     }
+  #     #clock {
+  #       margin-right: 4px;
+  #     }
+  #   '';
+  # };
 
   wayland.windowManager.sway = {
     enable = true;
@@ -286,6 +296,9 @@
     checkConfig = false; # Breaks with swayfx
     config = rec {
       modifier = "Mod4";
+      startup = [ {
+        command = "${config.programs.eww.package}/bin/eww open bar";
+      } ];
       window = {
         titlebar = true;
         hideEdgeBorders = "smart";
@@ -324,6 +337,13 @@
           indicator = "#363e44";
           text = "#ffffff";
         };
+        focusedInactive = {
+          background = "#1d1f23";
+          childBorder = "#212733";
+          border = "#212733";
+          indicator = "#2d343a";
+          text = "#777777";
+        };
         unfocused = {
           background = "#222428";
           childBorder = "#212733";
@@ -333,7 +353,9 @@
         };
       };
       gaps = {
-        smartBorders = "on";
+        # smartBorders = "on";
+        inner = 24;
+        outer = 0;
       };
       fonts = {
         names = [ "Noto Sans" ];
@@ -383,11 +405,13 @@
     extraConfig = ''
       blur enable
       blur_xray enable
-      blur_passes 2
+      blur_passes 6
       blur_radius 10
-      blur_noise 0.2
-      blur_brightness 0.9
-      corner_radius 6
+      blur_noise 0.1
+      blur_brightness 0.8
+      blur_contrast 0.8
+      blur_saturation 0.6
+      corner_radius 8
       shadows enable
       shadow_color #000000d0
       shadow_inactive_color #000000a0
@@ -408,7 +432,22 @@
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
-    theme = "${pkgs.rofi}/share/rofi/themes/Monokai.rasi";
+    theme = ./dotfiles/rofi/Catppuccin.rasi;
+    font = "Noto Sans Mono 14";
+    extraConfig = {
+      modi = "run,drun,window";
+      show-icons = true;
+      terminal = "${pkgs.alacritty}/bin/alacritty";
+      drun-display-format = "{icon} {name}";
+      location = 0;
+      disable-history = false;
+      hide-scrollbar = true;
+      display-drun = " Apps ";
+      display-run = " Run ";
+      display-window = " Window ";
+      display-Network = " Network ";
+      sidebar-mode = true;
+    };
   };
 
   services.mako = {
@@ -425,29 +464,11 @@
     defaultTimeout = 15000;
   };
 
-  programs.swaylock = {
-    enable = true;
-    settings = {
-      show-failed-attempts = true;
-      image = "${./wallpaper}";
-      scaling = "fill";
-      indicator-radius = 100;
-      indicator-idle-visible = false;
-    };
-  };
-
   services.swayidle = {
     enable = true;
-    events = [{
-      event = "before-sleep";
-      command = "${config.programs.swaylock.package}/bin/swaylock -fF";
-    }];
     timeouts = [{
-      timeout = 300;
-      command = "${config.programs.swaylock.package}/bin/swaylock -fF";
-    } {
       timeout = 360;
-      command = "${pkgs.systemd}/bin/systemctl suspend";
+      command = "${pkgs.systemd}/bin/systemctl hibernate || ${pkgs.systemd}/bin/systemctl poweroff";
     }];
   };
 
@@ -478,10 +499,10 @@
     };
   };
 
-  systemd.user.services."waybar" = {
+  systemd.user.services."eww" = {
     Service = {
-      Type = "simple";
-      ExecStart = "${config.programs.waybar.package}/bin/waybar";
+      Type = "exec";
+      ExecStart = "${config.programs.eww.package}/bin/eww daemon --no-daemonize";
       Environment = [
         "PATH=/run/wrappers/bin:/run/current-system/sw/bin:${pkgs.runtimeShell}/bin"
       ];

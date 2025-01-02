@@ -7,6 +7,8 @@
   boot.kernelParams = [ "quiet" ];
   boot.consoleLogLevel = 0;
 
+  boot.loader.timeout = 1;
+
   fonts.fontconfig.enable = true;
   fonts.fontconfig.subpixel.rgba = "rgb";
   fonts.fontconfig.hinting.style = "slight";
@@ -56,9 +58,10 @@
   };
 
   services.logind = {
-    powerKey = "suspend";
+    powerKey = "hibernate";
     powerKeyLongPress = "poweroff";
-    lidSwitchExternalPower = "lock";
+    lidSwitch = "hibernate";
+    lidSwitchExternalPower = "ignore";
   };
 
   security.pam.services.swaylock = {};
@@ -91,5 +94,11 @@
     libavif
     webp-pixbuf-loader
   ];
+
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+  services.devmon.enable = true;
+
+  programs.gnome-disks.enable = true;
 
 }

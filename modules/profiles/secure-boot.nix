@@ -13,5 +13,6 @@
     boot.lanzaboote = {
       enable = true;
       pkiBundle = "/etc/secureboot";
+      settings.reboot-for-bitlocker = true;
     };
 }

@@ -135,7 +135,7 @@
     VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
   };
 
-  programs.helix.settings.theme = "base16_transparent";
+  programs.helix.settings.theme = "github_light";
 
   programs.alacritty = {
     enable = true;
@@ -144,40 +144,48 @@
         shell = "${pkgs.nushell}/bin/nu";
       };
       window = {
-        padding = { x = 3; y = 3; };
-        opacity = 0.8;
+        padding = { x = 10; y = 10; };
+        # opacity = 0.9;
       };
       font = {
         normal = {
-          family = "Noto Sans Mono";
+          family = "Liberation Mono";
           style = "Regular";
         };
-        size = 10;
+        size = 9;
+        offset = {
+          x = 0;
+          y = 6;
+        };
       };
       colors = {
+        selection = {
+          background = "#d1ecf9";
+          foreground = "#202020";
+        };
         primary = {
-          background = "#212733";
-          foreground = "#d9d7ce";
+          background = "#ffffff";
+          foreground = "#424242";
         };
         normal = {
-          black = "#191e2a";
-          red = "#ed8274";
-          green = "#a6cc70";
-          yellow = "#fad07b";
-          blue = "#6dcbfa";
-          magenta = "#cfbafa";
-          cyan = "#90e1c6";
-          white = "#c7c7c7";
+          black = "#212121";
+          red = "#B71C1C";
+          green = "#1B5E20";
+          yellow = "#827717";
+          blue = "#1A237E";
+          magenta = "#4A148C";
+          cyan = "#006064";
+          white = "#757575";
         };
         bright = {
-          black = "#686868";
-          red = "#f28779";
-          green = "#bae67e";
-          yellow = "#ffd580";
-          blue = "#73d0ff";
-          magenta = "#d4bfff";
-          cyan = "#95e6cb";
-          white = "#ffffff";
+          black = "#37474F";
+          red = "#D32F2F";
+          green = "#43A047";
+          yellow = "#FDD835";
+          blue = "#1E88E5";
+          magenta = "#7B1FA2";
+          cyan = "#00695C";
+          white = "#9E9E9E";
         };
       };
     };
@@ -187,107 +195,6 @@
     enable = true;
     configDir = ./dotfiles/eww;
   };
-
-  # programs.waybar = {
-  #   enable = true;
-  #   settings = {
-  #     mainBar = {
-  #       layer = "top";
-  #       position = "bottom";
-  #       height = 26;
-  #       modules-left = [ "sway/workspaces" ];
-  #       modules-right = [ "wireplumber" "mpd" "battery" "custom/wvkbd" "clock" ];
-  #       battery = {
-  #         interval = 2;
-  #         format = "{icon}";
-  #         format-icons = {
-  #           unknown = [ "" ];
-  #           charging = [ "" "" "" "" "" "" "" ];
-  #           full = [ "" ];
-  #           discharging = [ "" "" "" "" "" "" "" ];
-  #         };
-  #       };
-  #       mpd = {
-  #         format = "{stateIcon}";
-  #         format-stopped = "";
-  #         state-icons = {
-  #           paused = "";
-  #           playing = "";
-  #         };
-  #       };
-  #       wireplumber = {
-  #         format = "{icon}";
-  #         format-icons = [ "" "" "" ];
-  #         format-muted = "";
-  #       };
-  #       clock = {
-  #         tooltip-format = "<tt><small>{calendar}</small></tt>";
-  #         calendar = {
-  #           mode = "year";
-  #           mode-mon-col = 3;
-  #           weeks-pos = "right";
-  #           format = {
-  #             months = "<span color='#ffead3'><b>{}</b></span>";
-  #             days = "<span color='#ecc6d9'><b>{}</b></span>";
-  #             weeks = "<span color='#99ffdd'><b>W{}</b></span>";
-  #             weekdays = "<span color='#ffcc66'><b>{}</b></span>";
-  #             today = "<span color='#ff6699'><b><u>{}</u></b></span>";
-  #           };
-  #         };
-  #       };
-  #       "sway/workspaces" = {
-  #         format = "{icon}";
-  #         format-icons = {
-  #           "1" = "";
-  #           "2" = "";
-  #           "3" = "";
-  #           "4" = "";
-  #         };
-  #         persistent-workspaces = {
-  #           "1" = [];
-  #           "2" = [];
-  #           "3" = [];
-  #           "4" = [];
-  #         };
-  #       };
-  #       "custom/wvkbd" = {
-  #         format = "";
-  #         on-click = "pkill -SIGRTMIN wvkbd";
-  #       };
-  #     };
-  #   };
-  #   style = ''
-  #     * {
-  #       border: none;
-  #       border-radius: 0;
-  #       color: white;
-  #       font-family: "Noto Sans", "Material Symbols Sharp";
-  #       font-weight: 500;
-  #       font-size: 14px;
-  #     }
-  #     window {
-  #       background: #222;
-  #       padding: 0 2px;
-  #     }
-  #     tooltip {
-  #       background: #222;
-  #       border-radius: 6px;
-  #     }
-  #     box > * > * {
-  #       padding: 0 4px;
-  #     }
-  #     #workspaces {
-  #       padding: 0;
-  #     }
-  #     #workspaces button {
-  #       padding: 0 4px;
-  #       color: white;
-  #     }
-  #     #clock {
-  #       margin-right: 4px;
-  #     }
-  #   '';
-  # };
 
   wayland.windowManager.sway = {
     enable = true;
@@ -301,7 +208,6 @@
       } ];
       window = {
         titlebar = true;
-        hideEdgeBorders = "smart";
         commands = [
           {
             command = "title_format \"[XWayland] %title\"";
@@ -330,36 +236,35 @@
         ];
       };
       colors = {
-        focused = {
-          background = "#1b1d21";
-          childBorder = "#252b38";
-          border = "#252b38";
-          indicator = "#363e44";
-          text = "#ffffff";
+        focused = rec {
+          background = "#dee4f9";
+          text = "#282828";
+          border = background;
+          childBorder = background;
+          indicator = "#d1d1d1";
         };
-        focusedInactive = {
-          background = "#1d1f23";
-          childBorder = "#212733";
-          border = "#212733";
-          indicator = "#2d343a";
-          text = "#777777";
+        focusedInactive = rec {
+          background = "#eaebef";
+          text = "#282828";
+          border = background;
+          childBorder = background;
+          indicator = "#d1d1d1";
         };
-        unfocused = {
-          background = "#222428";
-          childBorder = "#212733";
-          border = "#212733";
-          indicator = "#2d343a";
-          text = "#777777";
+        unfocused = rec {
+          background = "#eaebef";
+          text = "#282828";
+          border = background;
+          childBorder = background;
+          indicator = "#d1d1d1";
         };
       };
       gaps = {
-        # smartBorders = "on";
         inner = 24;
         outer = 0;
       };
       fonts = {
-        names = [ "Noto Sans" ];
-        style = "Regular";
+        names = [ "Liberation Sans" ];
+        style = "";
         size = 10.0;
       };
       bars = [];
@@ -388,7 +293,7 @@
         "*" = {
           bg = "${./wallpaper} fill";
         };
-        "LG Electronics LG FULL HD 0x00069969" = {
+        "Samsung Electric Company S22R35x 0x43574250" = {
           mode = "1920x1080@60.0Hz";
           pos = "0 0";
           subpixel = "rgb";
@@ -408,15 +313,14 @@
       blur_passes 6
       blur_radius 10
       blur_noise 0.1
-      blur_brightness 0.8
-      blur_contrast 0.8
-      blur_saturation 0.6
       corner_radius 8
       shadows enable
-      shadow_color #000000d0
-      shadow_inactive_color #000000a0
+      shadow_color #00000030
+      shadow_inactive_color #00000020
       shadow_blur_radius 24
       shadow_offset 0 0
+      titlebar_padding 12 8
+      default_border pixel 2
     '';
   };
 
@@ -432,7 +336,7 @@
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
-    theme = ./dotfiles/rofi/Catppuccin.rasi;
+    theme = ./dotfiles/rofi/catppuccin-latte.rasi;
     font = "Noto Sans Mono 14";
     extraConfig = {
       modi = "run,drun,window";
@@ -452,11 +356,11 @@
 
   services.mako = {
     enable = true;
-    textColor = "#ffffff";
-    borderColor = "#446270";
-    backgroundColor = "#292E2E";
-    borderSize = 1;
-    borderRadius = 3;
+    textColor = "#282828";
+    borderColor = "#eaebef";
+    backgroundColor = "#ffffff";
+    borderSize = 2;
+    borderRadius = 4;
     width = 400;
     height = 200;
     padding = "20";
@@ -504,7 +408,7 @@
       Type = "exec";
       ExecStart = "${config.programs.eww.package}/bin/eww daemon --no-daemonize";
       Environment = [
-        "PATH=/run/wrappers/bin:/run/current-system/sw/bin:${pkgs.runtimeShell}/bin"
+        "PATH=/run/wrappers/bin:/run/current-system/sw/bin:${pkgs.runtimeShell}/bin:${config.programs.eww.package}/bin:${config.programs.rofi.package}/bin"
       ];
     };
     Install = {
@@ -545,7 +449,7 @@
     enable = true;
     theme = {
       package = pkgs.kdePackages.breeze-gtk;
-      name = "Breeze-Dark";
+      name = "Breeze";
     };
 
     iconTheme = {
@@ -577,7 +481,7 @@
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
+      color-scheme = "prefer-light";
     };
     "org/gnome/desktop/a11y/applications" = {
       screen-keyboard-enabled = true;
@@ -585,6 +489,7 @@
   };
 
   qt.platformTheme = "gtk";
+  qt.style.name = "breeze";
 
   services.mpd.enable = true;
   xdg.userDirs.enable = true;

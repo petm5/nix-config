@@ -1,14 +1,13 @@
 (defwidget launcher []
-	(box :orientation "v" 
+	(box :orientation "h" 
 		 :space-evenly "false" 
   	(button :class "launcher_icon" 
 		   	:onclick "scripts/popup launcher"  "")))
 
 (defwidget workspaces []
   (box :class "works"
-       :orientation "v"
+       :orientation "h"
        :space-evenly true
-       :halign "middle"
        :spacing 0
     (button :onclick "swaymsg workspace 1" :class "icon" "")
     (button :onclick "swaymsg workspace 2" :class "icon" "")
@@ -24,16 +23,14 @@
 (defwidget volum []
 	(eventbox :onhover "eww update volum=true" 		
 			  :onhoverlost "eww update volum=false"
-	(box      :orientation "v" 	  
+	(box      :orientation "h" 	  
 			  :space-evenly "false" 
 			  :spacing "2"
-	(revealer :transition "slideup" 
+	(revealer :transition "slideleft" 
 			  :reveal volum         
 			  :duration "550ms"
 	(scale    :class "volbar" 	  
-			  :value current-volume 
-			  :orientation "v"      
-			  :flipped true 
+			  :value current-volume  
 			  :tooltip "Volume: ${current-volume}%" 
 			  :max 101 
 			  :min 0 
@@ -43,10 +40,9 @@
 (defvar volum false)
 
 (defwidget bat []
-	(box	:orientation "v"	
+	(box	:orientation "h"	
 			:space-evenly "false"
 	(label	:class "bat"		
-			:halign "end"		
 			:text battery	
 			:tooltip "Battery: ${battery-cappacity}%")))
 (defpoll battery			:interval "1s"	"scripts/battery icon")
@@ -63,18 +59,16 @@
 (defwidget bright []
   (eventbox :onhover "eww update bright=true"   
   			:onhoverlost "eww update bright=false"
-  			(box    :orientation "v"  
+  			(box    :orientation "h"  
 			  		:space-evenly "false"  
 					:spacing 2
-  			(revealer :transition "slideup" 
+  			(revealer :transition "slideleft" 
 			  		  :reveal bright   
 					  :duration "550ms"
   			(scale :class "bribar" 
 			  	   :value current-brightness 
 				   :tooltip "Brightness: ${current-brightness}%" 
-				   :onchange "brightnessctl set {}%" 
-				   :orientation "v" 
-				   :flipped true 
+				   :onchange "brightnessctl set {}%"  
 				   :max 101 
 				   :min 0))
   			(label :class "brightness-icon" 
@@ -83,15 +77,11 @@
 (defvar bright false)
 
 (defwidget time []
-	(box	:orientation "v" 
+	(box	:orientation "h" 
 			:class "time" 
-			:valign "end"
 	(button	:onclick "scripts/popup calendar"	
-			:class "time-hour" hour)
-	(button	:onclick "scripts/popup calendar"	
-			:class "time-min"  min)))
-(defpoll hour	:interval "1s"	"date '+%H'")
-(defpoll min	:interval "1s"	"date '+%M'")
+			timepoll)))
+(defpoll timepoll	:interval "1s"	"date '+%H:%M'")
 
 (defwidget cal []
 	(box :class "cal-box" 
@@ -109,7 +99,7 @@
     "date '+%Y'")
 
 (defwidget power []
-	(box  :orientation "v"
+	(box  :orientation "h"
 			:space-evenly false
 			:class "powermenu"
 	(button		:class "button-off"					
@@ -135,7 +125,7 @@
 				:onclick "shutdown now"	"")))
 
 (defwidget control []
-	(box :orientation "v" 
+	(box :orientation "h" 
 		 :space-evenly false  
 		 :class "control"
 (bat)
@@ -144,30 +134,31 @@
 (volum)))
 
 (defwidget bottom []
-	(box	:orientation "v" 
+	(box	:orientation "h" 
 			:space-evenly false 
 			:class "bottom"
 (time)
 (power)))
 
 (defwidget top []
-	(box	:orientation "v" 
+	(box	:orientation "h" 
 			:space-evenly "false" 
-			:valign "start" 
+			:halign "start"
+		 :spacing 5 
 (launcher)
 (workspaces :screen "DP-1")))
 
 (defwidget end []
-	(box :orientation "v" 
+	(box :orientation "h" 
 		 :space-evenly "false" 
-		 :valign "end" 
+		 :halign "end" 
 		 :spacing 5
 (control)
 (bottom)))
 
 (defwidget bar []
 	(box :class "eww_bar" 
-		 :orientation "v" 
+		 :orientation "h" 
 		 :vexpand "false" 
 		 :hexpand "false"
 (top)
@@ -176,19 +167,19 @@
 (defwindow bar
 	:geometry (geometry :x "0%" 
 						:y "0%" 
-						:height "100%" 
-						:width "47px"
-            :anchor "left center")
+						:height "47px" 
+						:width "100%"
+            :anchor "bottom center")
   :monitor 0
   :exclusive true
 (bar))
 
 (defwindow calendar
-	:geometry (geometry :x "28px" 
-						:y "28px" 
+	:geometry (geometry :x "6px" 
+						:y "6px" 
 						:width "270px" 
 						:height "60px"
-						:anchor "bottom left")
+						:anchor "bottom right")
 	:monitor 0
 (cal))
 

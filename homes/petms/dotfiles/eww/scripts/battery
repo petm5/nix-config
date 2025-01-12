@@ -5,8 +5,25 @@ per="$(cat "$bat/capacity")"
 
 icon() {
 
-[ $(cat "$bat/status") = Charging ] && echo "" && exit
-
+if [ $(cat "$bat/status") = Charging ]; then
+if [ "$per" -gt "87" ]; then
+	icon=""
+elif [ "$per" -gt "75" ]; then
+	icon=""
+elif [ "$per" -gt "62" ]; then
+	icon=""
+elif [ "$per" -gt "50" ]; then
+	icon=""
+elif [ "$per" -gt "37" ]; then
+	icon=""
+elif [ "$per" -gt "25" ]; then
+	icon=""
+elif [ "$per" -gt "0" ]; then
+	icon=""
+else
+  icon=""
+fi
+else
 if [ "$per" -gt "87" ]; then
 	icon=""
 elif [ "$per" -gt "75" ]; then
@@ -24,7 +41,8 @@ elif [ "$per" -gt "12" ]; then
 elif [ "$per" -gt "0" ]; then
 	icon=""
 else
-        echo "" && exit
+  icon=""
+fi
 fi
 echo "$icon"
 }

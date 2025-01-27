@@ -26,7 +26,7 @@ in {
 
   systemd.services.surface-gpe = {
     script = ''
-      ${pkgs.kmod}/bin/insmod ${gpeMod}/lib/modules/*/updates/surface_gpe.ko*
+      ${pkgs.kmod}/bin/insmod ${gpeMod}/lib/modules/*/misc/surface_gpe.ko*
     '';
     wantedBy = [ "default.target" ];
     restartIfChanged = false;

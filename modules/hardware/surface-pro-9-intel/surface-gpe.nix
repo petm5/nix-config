@@ -20,7 +20,7 @@ stdenv.mkDerivation rec {
   ];
 
   installPhase = ''
-    install -m644 -b -D surface_gpe.ko $out/lib/modules/${kernel.modDirVersion}/surface_gpe.ko
+    install -m644 -b -D surface_gpe.ko $out/lib/modules/${kernel.modDirVersion}/misc/surface_gpe.ko
   '';
 
   meta = with lib; {

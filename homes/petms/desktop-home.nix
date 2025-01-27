@@ -21,10 +21,11 @@
     nautilus
     eog
     libreoffice
-    kdePackages.ark
+    file-roller
     unzip
     gnome-font-viewer
     system-config-printer
+    dig
   ];
 
   programs.chromium = {
@@ -379,30 +380,24 @@
     };
   };
 
-  services.swayidle = {
+  services.hypridle = {
     enable = true;
-    events = [{
-      event = "before-sleep";
-      command = "${config.programs.swaylock.package}/bin/swaylock -fF";
-    }];
-    timeouts = [{
-      timeout = 300;
-      command = "${config.programs.swaylock.package}/bin/swaylock -fF";
-    } {
-      timeout = 360;
-      command = "${pkgs.systemd}/bin/systemctl suspend";
-    }];
-  };
-
-  systemd.user.services."swayidle" = {
-    Unit = {
-      BindsTo = "sway-session.target";
-    };
-    Service = {
-      Type = "simple";
-    };
-    Install = {
-      RequiredBy = [ "sway-session.target" ];
+    settings = {
+      general = {
+        lock_cmd = "${config.programs.swaylock.package}/bin/swaylock -fF";
+        before_sleep_cmd = "${pkgs.systemd}/bin/loginctl lock-session";
+        after_sleep_cmd = "${pkgs.systemd}/bin/loginctl unlock-session";
+      };
+      listener = [
+        {
+          timeout = 300;
+          on-timeout = "${pkgs.systemd}/bin/loginctl lock-session";
+        }
+        {
+          timeout = 600;
+          on-timeout = "${pkgs.systemd}/bin/systemctl suspend";
+        }
+      ];
     };
   };
 
@@ -419,6 +414,9 @@
         "WLR_RENDERER=vulkan"
       ];
     };
+    Install = {
+      Wants = [ "hypridle.service" ];
+    };
   };
 
   systemd.user.services."eww" = {
@@ -428,25 +426,6 @@
       Environment = [
         "PATH=/run/wrappers/bin:/run/current-system/sw/bin:${pkgs.runtimeShell}/bin:${config.programs.eww.package}/bin:${config.programs.rofi.package}/bin"
       ];
-    };
-    Install = {
-      WantedBy = [ "sway-session.target" ];
-    };
-  };
-
-  systemd.user.services."wvkbd" = let
-    wvkbd = pkgs.wvkbd.overrideAttrs (prev: {
-      src = pkgs.fetchFromGitHub {
-        owner = "petm5";
-        repo = "wvkbd";
-        rev = "7e868606dcd664856ddbf257d57634cfb151f3a4";
-        hash = "sha256-sJWoWKTmZKhtEfOkq+C6uYwzOH269JRwRpIoB+MI2X0=";
-      };
-    });
-  in {
-    Service = {
-      Type = "simple";
-      ExecStart = "${wvkbd}/bin/wvkbd-mobintl -L 240 --fn \"Roboto 20\" --hidden";
     };
     Install = {
       WantedBy = [ "sway-session.target" ];

@@ -1,4 +1,4 @@
-{ pkgs, lib, stdenv, fetchFromGitHub, kernel ? pkgs.linuxPackages_latest.kernel }:
+{ lib, stdenv, fetchFromGitHub, kernel }:
 
 stdenv.mkDerivation rec {
   pname = "surface-gpe";
@@ -11,22 +11,17 @@ stdenv.mkDerivation rec {
     hash = "sha256-3jaYoXNfvJeDt9yTPkKIqJgisYYEUJrfLYuvfmNAOFY=";
   };
 
-  patches = [ ];
-
+  sourceRoot = "${src.name}/module";
+  hardeningDisable = [ "pic" "format" ];
   nativeBuildInputs = kernel.moduleBuildDependencies;
 
-  makeFlags = kernel.makeFlags ++ [
-    "-C ${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
+  makeFlags = kernel.moduleMakeFlags ++ [
+    "KDIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
   ];
 
-  preBuild = ''
-    makeFlags="$makeFlags M=$(pwd)/module"
+  installPhase = ''
+    install -m644 -b -D surface_gpe.ko $out/lib/modules/${kernel.modDirVersion}/surface_gpe.ko
   '';
-
-  buildFlags = [ "modules" ];
-
-  installFlags = [ "INSTALL_MOD_PATH=${placeholder "out"}" ];
-  installTargets = [ "modules_install" ];
 
   meta = with lib; {
     description = "Linux driver for Surface lid GPE";

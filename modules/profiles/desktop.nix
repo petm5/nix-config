@@ -7,7 +7,7 @@
   boot.kernelParams = [ "quiet" ];
   boot.consoleLogLevel = 0;
 
-  boot.loader.timeout = 1;
+  boot.loader.timeout = 0;
 
   fonts.fontconfig.enable = true;
   fonts.fontconfig.subpixel.rgba = "rgb";
@@ -58,9 +58,9 @@
   };
 
   services.logind = {
-    powerKey = "hibernate";
+    powerKey = "suspend";
     powerKeyLongPress = "poweroff";
-    lidSwitch = "hibernate";
+    lidSwitch = "suspend";
     lidSwitchExternalPower = "ignore";
   };
 
@@ -100,5 +100,9 @@
   services.devmon.enable = true;
 
   programs.gnome-disks.enable = true;
+
+  boot.plymouth = {
+    enable = true;
+  };
 
 }

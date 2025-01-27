@@ -368,11 +368,29 @@
     defaultTimeout = 15000;
   };
 
+  programs.swaylock = {
+    enable = true;
+    settings = {
+      show-failed-attempts = true;
+      image = "${./wallpaper}";
+      scaling = "fill";
+      indicator-radius = 100;
+      indicator-idle-visible = false;
+    };
+  };
+
   services.swayidle = {
     enable = true;
+    events = [{
+      event = "before-sleep";
+      command = "${config.programs.swaylock.package}/bin/swaylock -fF";
+    }];
     timeouts = [{
+      timeout = 300;
+      command = "${config.programs.swaylock.package}/bin/swaylock -fF";
+    } {
       timeout = 360;
-      command = "${pkgs.systemd}/bin/systemctl hibernate || ${pkgs.systemd}/bin/systemctl poweroff";
+      command = "${pkgs.systemd}/bin/systemctl suspend";
     }];
   };
 

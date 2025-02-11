@@ -26,6 +26,7 @@
     gnome-font-viewer
     system-config-printer
     dig
+    wl-clipboard
   ];
 
   programs.chromium = {
@@ -542,5 +543,16 @@
 
   services.mpd.enable = true;
   xdg.userDirs.enable = true;
+
+  programs.gpg.enable = true;
+
+  services.gpg-agent.enable = true;
+  services.gpg-agent.pinentryPackage = pkgs.pinentry-rofi;
+
+  programs.password-store.enable = true;
+  programs.password-store.package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
+
+  services.pass-secret-service.enable = true;
+  services.pass-secret-service.storePath = "$\{HOME\}/.password-store";
 
 }

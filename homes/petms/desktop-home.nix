@@ -192,9 +192,103 @@
     };
   };
 
-  programs.eww = {
+    programs.waybar = {
     enable = true;
-    configDir = ./dotfiles/eww;
+    systemd.enable = true;
+    settings = {
+      mainBar = {
+        layer = "top";
+        position = "bottom";
+        height = 26;
+        modules-left = [ "sway/workspaces" ];
+        modules-right = [ "wireplumber" "mpd" "battery" "clock" ];
+        battery = {
+          interval = 2;
+          format = "{icon}";
+          format-icons = {
+            unknown = [ "" ];
+            charging = [ "" "" "" "" "" "" "" ];
+            full = [ "" ];
+            discharging = [ "" "" "" "" "" "" "" ];
+            plugged = [ "" "" "" "" "" "" "" ];
+          };
+        };
+        mpd = {
+          format = "{stateIcon}";
+          format-stopped = "";
+          state-icons = {
+            paused = "";
+            playing = "";
+          };
+        };
+        wireplumber = {
+          format = "{icon}";
+          format-icons = [ "" "" "" ];
+          format-muted = "";
+        };
+        clock = {
+          tooltip-format = "<tt><small>{calendar}</small></tt>";
+          calendar = {
+            mode = "year";
+            mode-mon-col = 3;
+            weeks-pos = "right";
+            format = {
+              months = "<span color='#fe640b'><b>{}</b></span>";
+              days = "<span color='#6c6f85'><b>{}</b></span>";
+              weeks = "<span color='#179299'><b>W{}</b></span>";
+              weekdays = "<span color='#df8e1d'><b>{}</b></span>";
+              today = "<span color='#1e66f5'><b><u>{}</u></b></span>";
+            };
+          };
+        };
+        "sway/workspaces" = {
+          format = "{icon}";
+          format-icons = {
+            "1" = "";
+            "2" = "";
+            "3" = "";
+            "4" = "";
+          };
+          persistent-workspaces = {
+            "1" = [];
+            "2" = [];
+            "3" = [];
+            "4" = [];
+          };
+        };
+      };
+    };
+    style = ''
+      * {
+        border: none;
+        border-radius: 0;
+        color: #4c4f69;
+        font-family: "Liberation Sans", "Material Symbols Sharp";
+        font-weight: 500;
+        font-size: 14px;
+      }
+      window {
+        background: #eff1f5;
+        padding: 0 2px;
+      }
+      tooltip {
+        background: #e6e9ef;
+        border-radius: 6px;
+      }
+      box > * > * {
+        padding: 0 4px;
+      }
+      #workspaces {
+        padding: 0;
+      }
+      #workspaces button {
+        padding: 0 4px;
+        color: #5c5f77;
+      }
+      #clock {
+        margin-right: 4px;
+      }
+    '';
   };
 
   wayland.windowManager.sway = {
@@ -204,9 +298,6 @@
     checkConfig = false; # Breaks with swayfx
     config = rec {
       modifier = "Mod4";
-      startup = [ {
-        command = "${config.programs.eww.package}/bin/eww open bar";
-      } ];
       window = {
         titlebar = true;
         commands = [
@@ -416,19 +507,6 @@
     };
     Install = {
       Wants = [ "hypridle.service" ];
-    };
-  };
-
-  systemd.user.services."eww" = {
-    Service = {
-      Type = "exec";
-      ExecStart = "${config.programs.eww.package}/bin/eww daemon --no-daemonize";
-      Environment = [
-        "PATH=/run/wrappers/bin:/run/current-system/sw/bin:${pkgs.runtimeShell}/bin:${config.programs.eww.package}/bin:${config.programs.rofi.package}/bin"
-      ];
-    };
-    Install = {
-      WantedBy = [ "sway-session.target" ];
     };
   };
 

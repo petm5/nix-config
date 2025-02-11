@@ -294,8 +294,6 @@
   wayland.windowManager.sway = {
     enable = true;
     systemd.enable = true;
-    package = pkgs.swayfx;
-    checkConfig = false; # Breaks with swayfx
     config = rec {
       modifier = "Mod4";
       window = {
@@ -399,21 +397,21 @@
         };
       };
     };
-    extraConfig = ''
-      blur enable
-      blur_xray enable
-      blur_passes 6
-      blur_radius 10
-      blur_noise 0.1
-      corner_radius 8
-      shadows enable
-      shadow_color #00000030
-      shadow_inactive_color #00000020
-      shadow_blur_radius 24
-      shadow_offset 0 0
-      titlebar_padding 12 8
-      default_border pixel 2
-    '';
+    # extraConfig = ''
+    #   blur enable
+    #   blur_xray enable
+    #   blur_passes 6
+    #   blur_radius 10
+    #   blur_noise 0.1
+    #   corner_radius 8
+    #   shadows enable
+    #   shadow_color #00000030
+    #   shadow_inactive_color #00000020
+    #   shadow_blur_radius 24
+    #   shadow_offset 0 0
+    #   titlebar_padding 12 8
+    #   default_border pixel 2
+    # '';
   };
 
   programs.bash.enable = true;

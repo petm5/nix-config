@@ -293,7 +293,6 @@
 
   wayland.windowManager.sway = {
     enable = true;
-    systemd.enable = true;
     config = rec {
       modifier = "Mod4";
       window = {
@@ -416,10 +415,9 @@
 
   programs.bash.enable = true;
   programs.bash.bashrcExtra = ''
-    if [ "$(tty)" = "/dev/tty1" ]; then
-      systemctl --user import-environment PATH TERM EDITOR GTK_PATH VDPAU_DRIVER XCURSOR_PATH XDG_CONFIG_DIRS XDG_DATA_DIRS GDK_PIXBUF_MODULE_FILE
-      exec ${pkgs.systemd}/bin/systemctl --wait --user start sway
-      exit 1
+    if uwsm check may-start; then
+      exec uwsm start sway-uwsm.desktop
+      exit 0
     fi
   '';
 
@@ -487,24 +485,6 @@
           on-timeout = "${pkgs.systemd}/bin/systemctl suspend";
         }
       ];
-    };
-  };
-
-  systemd.user.services."sway" = {
-    Service = {
-      Type = "simple";
-      ExecStart = "${config.wayland.windowManager.sway.package}/bin/sway";
-      Restart = "on-failure";
-      RestartSec = 1;
-      TimeoutStopSec = 10;
-      Environment = [
-        "PATH=/run/wrappers/bin:/run/current-system/sw/bin:${config.home.profileDirectory}/bin"
-        "WLR_BACKENDS=drm,libinput"
-        "WLR_RENDERER=vulkan"
-      ];
-    };
-    Install = {
-      Wants = [ "hypridle.service" ];
     };
   };
 

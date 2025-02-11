@@ -62,24 +62,24 @@
     powerKeyLongPress = "poweroff";
     lidSwitch = "suspend";
     lidSwitchExternalPower = "ignore";
+    extraConfig = "HoldoffTimeoutSec=0";
+  };
+
+  programs.sway.enable = true;
+  services.hypridle.enable = true;
+
+  programs.uwsm.enable = true;
+  programs.uwsm.waylandCompositors = {
+    sway = {
+      prettyName = "Sway";
+      comment = "Sway compositor managed by UWSM";
+      binPath = "/run/current-system/sw/bin/sway";
+    };
   };
 
   security.pam.services.swaylock = {};
 
   services.timesyncd.enable = true;
-
-  services.greetd = {
-    enable = true;
-    settings = {
-      initial_session = lib.mkIf config.services.displayManager.autoLogin.enable {
-        user = config.services.displayManager.autoLogin.user;
-        command = "bash";
-      };
-      default_session = {
-        command = "${config.services.greetd.package}/bin/agreety --cmd bash";
-      };
-    };
-  };
 
   security.pam.loginLimits = [
     { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }

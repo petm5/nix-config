@@ -21,6 +21,9 @@
     user = "petms";
   };
 
+  services.getty.autologinUser = "petms";
+  services.getty.autologinOnce = true;
+
   time.timeZone = "America/Toronto";
 
   console.keyMap = "us";

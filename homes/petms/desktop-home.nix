@@ -390,6 +390,7 @@
           pos = "1920 0";
           subpixel = "none";
           adaptive_sync = "on";
+          color_profile = "icc ${../../modules/hardware/surface-pro-9-intel/LP129WT2_SPA6_calibrated.icm}";
         };
       };
     };

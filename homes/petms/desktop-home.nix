@@ -351,8 +351,8 @@
         size = 10.0;
       };
       bars = [];
-      menu = "${config.programs.rofi.package}/bin/rofi -show drun";
-      terminal = "${pkgs.alacritty}/bin/alacritty";
+      menu = "${pkgs.systemd}/bin/systemd-run --scope --user ${config.programs.rofi.package}/bin/rofi -show drun";
+      terminal = "${pkgs.systemd}/bin/systemd-run --scope --user ${pkgs.alacritty}/bin/alacritty";
       keybindings = lib.mkOptionDefault {
         XF86AudioRaiseVolume = "exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
         XF86AudioLowerVolume = "exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-";

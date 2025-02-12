@@ -23,6 +23,7 @@
     system-config-printer
     dig
     wl-clipboard
+    sway-contrib.grimshot
   ];
 
   programs.chromium = {
@@ -362,6 +363,7 @@
         XF86AudioPlay = "exec playerctl play-pause";
         XF86AudioNext = "exec playerctl next";
         XF86AudioPrev = "exec playerctl previous";
+        Print = "exec grimshot --notify save output";
       };
       input = {
         "type:touchpad" = {

@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, kernel }:
+{ lib, stdenv, fetchFromGitHub, kernel, kernelModuleMakeFlags }:
 
 stdenv.mkDerivation rec {
   pname = "surface-gpe";
@@ -15,12 +15,16 @@ stdenv.mkDerivation rec {
   hardeningDisable = [ "pic" "format" ];
   nativeBuildInputs = kernel.moduleBuildDependencies;
 
-  makeFlags = kernel.moduleMakeFlags ++ [
+  makeFlags = kernelModuleMakeFlags ++ [
     "KDIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
   ];
 
   installPhase = ''
-    install -m644 -b -D surface_gpe.ko $out/lib/modules/${kernel.modDirVersion}/misc/surface_gpe.ko
+    runHook preInstall
+    strip -S surface_gpe.ko
+    xz surface_gpe.ko
+    install -D surface_gpe.ko.xz -t $out/lib/modules/${kernel.modDirVersion}/updates
+    runHook postInstall
   '';
 
   meta = with lib; {

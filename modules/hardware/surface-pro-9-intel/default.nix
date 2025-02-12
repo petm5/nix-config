@@ -1,8 +1,4 @@
-{ config, lib, pkgs, ... }: let
-  gpeMod = (pkgs.callPackage ./surface-gpe.nix {
-    inherit (config.boot.kernelPackages) kernel;
-  });
-in {
+{ config, lib, pkgs, ... }: {
 
   imports = [
     ../common/cpu/intel
@@ -26,7 +22,7 @@ in {
 
   systemd.services.surface-gpe = {
     script = ''
-      ${pkgs.kmod}/bin/insmod ${gpeMod}/lib/modules/*/misc/surface_gpe.ko*
+      ${pkgs.kmod}/bin/insmod ${(config.boot.kernelPackages.callPackage ./surface-gpe.nix {})}/lib/modules/*/updates/surface_gpe.ko*
     '';
     wantedBy = [ "default.target" ];
     restartIfChanged = false;

@@ -13,14 +13,10 @@
     pamixer
     pavucontrol
     simple-scan
-    gimp
     mpv
-    blender
-    audacity
     wireshark
     nautilus
     eog
-    libreoffice
     file-roller
     unzip
     gnome-font-viewer

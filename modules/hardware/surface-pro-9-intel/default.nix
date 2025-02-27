@@ -41,4 +41,9 @@
 
   boot.blacklistedKernelModules = [ "intel-ipu6" "intel-ipu6-isys" ];
 
+  boot.extraModprobeConfig = ''
+    options iwlwifi power_level=5 power_save=Y
+    options iwlmvm power_scheme=3
+  '';
+
 }

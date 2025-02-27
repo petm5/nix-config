@@ -33,6 +33,9 @@
   boot.initrd.services.lvm.enable = true;
 
   virtualisation.podman.enable = true;
+  environment.systemPackages = with pkgs; [
+    podman-compose
+  ];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 

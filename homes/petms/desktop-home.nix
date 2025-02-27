@@ -417,6 +417,13 @@
     fi
   '';
 
+  home.sessionVariables = {
+    SSH_ASKPASS_REQUIRE = "prefer";
+    SSH_ASKPASS = pkgs.writeScript "ssh-askpass" ''
+      exec ${config.programs.rofi.package}/bin/rofi -dmenu -password -p "Passphrase:" -mesg "$1"
+    '';
+  };
+
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
@@ -552,6 +559,6 @@
   programs.password-store.package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
 
   services.pass-secret-service.enable = true;
-  services.pass-secret-service.storePath = "$\{HOME\}/.password-store";
+  services.pass-secret-service.storePath = "$\{XDG_DATA_HOME\}/password-store";
 
 }

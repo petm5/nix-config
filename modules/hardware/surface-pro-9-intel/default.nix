@@ -6,7 +6,6 @@
     ./audio.nix
     ./tlp.nix
     ./ipts.nix
-    # ./ipu6.nix
   ];
 
   boot.extraModulePackages = [
@@ -38,8 +37,6 @@
   boot.initrd.availableKernelModules = [ "thunderbolt" "usb_storage" "sd_mod" ];
 
   boot.kernelParams = [ "pcie_aspm=force" "workqueue.power_efficient=true" "pci=hpiosize=0" ];
-
-  boot.blacklistedKernelModules = [ "intel-ipu6" "intel-ipu6-isys" ];
 
   boot.extraModprobeConfig = ''
     options iwlwifi power_level=5 power_save=Y

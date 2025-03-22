@@ -93,6 +93,8 @@
   environment.systemPackages = with pkgs; [
     libavif
     libwebp
+    dig
+    unzip
   ];
 
   programs.gdk-pixbuf.modulePackages = with pkgs; [

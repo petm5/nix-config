@@ -22,6 +22,8 @@
   boot.loader.grub.enable = lib.mkDefault false;
   boot.loader.systemd-boot.enable = lib.mkDefault true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Fix BitLocker recovery on bootloder update
   boot.loader.systemd-boot.rebootForBitlocker = true;
 
   security.tpm2.enable = true;

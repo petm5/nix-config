@@ -5,11 +5,6 @@
   home.homeDirectory = "/home/petms";
 
   home.stateVersion = "23.11";
-  
-  home.packages = with pkgs; [
-    miniupnpc
-    arp-scan
-  ];
 
   programs.nushell = {
     enable = true;
@@ -40,19 +35,6 @@
     enable = true;
     userEmail = "petms@proton.me";
     userName = "Peter Marshall";
-  };
-
-  programs.ssh.matchBlocks = {
-    "petms" = {
-      user = "admin";
-      hostname = "opcc.opcc.tk";
-      port = 2273;
-    };
-    "dev" = {
-      user = "petms";
-      hostname = "opcc.opcc.tk";
-      port = 2274;
-    };
   };
 
 }

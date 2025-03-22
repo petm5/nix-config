@@ -1,13 +1,11 @@
 { config, lib, pkgs, ... }:
 
 {
-  # boot.initrd.kernelModules = [ "i915" ];
 
-  # boot.kernelParams = [
-  #   "i915.enable_psr=2"
-  #   "i915.enable_psr2_sel_fetch=1"
-  #   "i915.enable_fbc=1"
-  # ];
+  boot.extraModprobeConfig = ''
+    options i915 enable_dc=4 disable_power_well=1 enable_fbc=1 enable_psr=2
+    options xe enable_dc=4 disable_power_well=1 enable_fbc=1 enable_psr=2
+  '';
 
   environment.variables = {
     VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");
@@ -20,4 +18,5 @@
     intel-media-driver
     intel-compute-runtime
   ];
+
 }

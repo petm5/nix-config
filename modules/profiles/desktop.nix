@@ -70,6 +70,7 @@
   };
 
   programs.sway.enable = true;
+  programs.sway.package = pkgs.swayfx;
   services.hypridle.enable = true;
 
   programs.uwsm.enable = true;

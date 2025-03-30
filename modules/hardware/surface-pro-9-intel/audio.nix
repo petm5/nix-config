@@ -20,8 +20,8 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.2
-                          sat_third = 2.3
+                          amt = 1.5
+                          sat_third = 2.5
                           blend = 1
                           ceil = 200.0
                           floor = 20.0
@@ -35,7 +35,7 @@
                         control = {
                             enabled = 1
                             input = 1.0
-                            fft = 4
+                            fft = 2
                         }
                     }
                     {
@@ -45,7 +45,7 @@
                         control = {
                             enabled = 1
                             input = 1.0
-                            fft = 4
+                            fft = 2
                         }
                     }
                     {
@@ -53,7 +53,7 @@
                       name = "convolver_r"
                       label = "convolver"
                       config = {
-                        filename = "/etc/surface-audio/sp9/impulse.wav"
+                        filename = "/etc/surface-audio/sp9/impulse.flac"
                       }
                     }
                     {
@@ -61,7 +61,7 @@
                       name = "convolver_l"
                       label = "convolver"
                       config = {
-                        filename = "/etc/surface-audio/sp9/impulse.wav"
+                        filename = "/etc/surface-audio/sp9/impulse.flac"
                       }
                     }
                     {
@@ -72,13 +72,13 @@
                             mode = 0
                             ce_0 = 1
                             sla_0 = 5.0
-                            cr_0 = 2.50
+                            cr_0 = 1.75
                             al_0 = 0.725
-                            at_0 = 1.0
+                            at_0 = 10.0
                             rt_0 = 100
                             kn_0 = 0.125
                             cbe_1 = 1
-                            sf_1 = 250.0
+                            sf_1 = 200.0
                             ce_1 = 0
                             cbe_2 = 0
                             ce_2 = 0
@@ -146,13 +146,13 @@
                   capture.volumes = [
                       {
                           control = "ell:volume"
-                          min = -40.0
+                          min = -65.0
                           max = 0.0
                           scale = "cubic"
                       }
                       {
                           control = "elr:volume"
-                          min = -40.0
+                          min = -65.0
                           max = 0.0
                           scale = "cubic"
                       }
@@ -192,6 +192,6 @@
     })
   ];
 
-  environment.etc."surface-audio/sp9/impulse.wav".source = ./impulse.wav;
+  environment.etc."surface-audio/sp9/impulse.flac".source = ./impulse.flac;
 
 }

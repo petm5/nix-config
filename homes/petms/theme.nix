@@ -1,4 +1,6 @@
-{ pkgs, ... }: {
+{ pkgs, ... }: let
+  colors = (builtins.fromTOML (builtins.readFile ./dotfiles/alacritty/tokyonight_moon.toml)).colors;
+in {
 
   home.packages = with pkgs; [
     noto-fonts
@@ -26,13 +28,16 @@
   gtk = {
     enable = true;
     theme = {
-      package = pkgs.kdePackages.breeze-gtk;
-      name = "Breeze";
+      package = pkgs.tokyonight-gtk-theme.override {
+        tweakVariants = [ "moon" ];
+        themeVariants = [ "teal" ];
+      };
+      name = "Tokyonight-Teal-Dark-Moon";
     };
 
     iconTheme = {
       package = pkgs.papirus-icon-theme;
-      name = "Papirus";
+      name = "Papirus-Dark";
     };
 
     font = {
@@ -59,10 +64,13 @@
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-light";
+      color-scheme = "prefer-dark";
     };
     "org/gnome/desktop/a11y/applications" = {
       screen-keyboard-enabled = true;
+    };
+    "org/gnome/desktop/wm/preferences" = {
+      button-layout = "";
     };
   };
 
@@ -73,7 +81,7 @@
     settings = {
       window = {
         padding = { x = 10; y = 10; };
-        # opacity = 0.9;
+        opacity = 1.0;
       };
       font = {
         normal = {
@@ -86,56 +94,27 @@
           y = 6;
         };
       };
-      colors = {
-        selection = {
-          background = "#d1ecf9";
-          foreground = "#202020";
-        };
-        primary = {
-          background = "#ffffff";
-          foreground = "#424242";
-        };
-        normal = {
-          black = "#212121";
-          red = "#B71C1C";
-          green = "#1B5E20";
-          yellow = "#827717";
-          blue = "#1A237E";
-          magenta = "#4A148C";
-          cyan = "#006064";
-          white = "#757575";
-        };
-        bright = {
-          black = "#37474F";
-          red = "#D32F2F";
-          green = "#43A047";
-          yellow = "#FDD835";
-          blue = "#1E88E5";
-          magenta = "#7B1FA2";
-          cyan = "#00695C";
-          white = "#9E9E9E";
-        };
-      };
+      inherit colors;
     };
   };
 
-  programs.helix.settings.theme = "github_light";
+  programs.helix.settings.theme = "tokyonight_moon";
 
   programs.waybar.style = ''
     * {
       border: none;
       border-radius: 0;
-      color: #4c4f69;
+      color: ${colors.primary.foreground};
       font-family: "Liberation Sans", "Material Symbols Sharp";
       font-weight: 500;
       font-size: 14px;
     }
     window {
-      background: #eff1f5;
+      background: ${colors.primary.background};
       padding: 0 2px;
     }
     tooltip {
-      background: #e6e9ef;
+      background: ${colors.primary.background};
       border-radius: 6px;
     }
     box > * > * {
@@ -146,7 +125,7 @@
     }
     #workspaces button {
       padding: 0 4px;
-      color: #5c5f77;
+      color: inherit;
     }
     #clock {
       margin-right: 4px;
@@ -154,9 +133,9 @@
   '';
 
   services.mako = {
-    textColor = "#282828";
-    borderColor = "#eaebef";
-    backgroundColor = "#ffffff";
+    textColor = "${colors.primary.foreground}";
+    borderColor = "${colors.primary.foreground}";
+    backgroundColor = "${colors.primary.background}";
     borderSize = 2;
     borderRadius = 4;
     width = 400;
@@ -167,28 +146,16 @@
 
   wayland.windowManager.sway = {
     config = {
-      colors = {
+      colors = rec {
         focused = rec {
-          background = "#dee4f9";
-          text = "#282828";
+          background = "${colors.primary.background}";
+          text = "${colors.primary.foreground}";
           border = background;
           childBorder = background;
-          indicator = "#d1d1d1";
+          indicator = "${colors.primary.foreground}";
         };
-        focusedInactive = rec {
-          background = "#eaebef";
-          text = "#282828";
-          border = background;
-          childBorder = background;
-          indicator = "#d1d1d1";
-        };
-        unfocused = rec {
-          background = "#eaebef";
-          text = "#282828";
-          border = background;
-          childBorder = background;
-          indicator = "#d1d1d1";
-        };
+        focusedInactive = focused;
+        unfocused = focused;
       };
       gaps = {
         inner = 24;
@@ -208,25 +175,20 @@
       blur_noise 0.1
       corner_radius 4
       shadows enable
-      shadow_color #00000030
-      shadow_inactive_color #00000020
-      shadow_blur_radius 24
+      shadow_color #00000010
+      shadow_inactive_color #00000010
+      shadow_blur_radius 3
       shadow_offset 0 0
       # titlebar_padding 12 8
     '';
   };
 
   programs.rofi = {
-    theme = ./dotfiles/rofi/catppuccin-latte.rasi;
+    theme = ./dotfiles/rofi/tokyonight.rasi;
     extraConfig = {
       show-icons = true;
       drun-display-format = "{icon} {name}";
       location = 0;
-      hide-scrollbar = true;
-      display-drun = " Apps ";
-      display-run = " Run ";
-      display-window = " Window ";
-      display-Network = " Network ";
       sidebar-mode = true;
     };
   };

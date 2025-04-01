@@ -4,6 +4,7 @@
     ./home.nix
     ./theme.nix
     ./sway.nix
+    ./firefox.nix
   ];
 
   home.packages = with pkgs; [

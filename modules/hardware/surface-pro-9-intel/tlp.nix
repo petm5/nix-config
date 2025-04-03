@@ -4,14 +4,12 @@
 
   services.tlp.enable = true;
   services.tlp.settings = {
-    PCIE_ASPM_ON_BAT = "powersave";
-    PCIE_ASPM_ON_AC = "powersave";
+    PCIE_ASPM_ON_BAT = "powersupersave";
+    PCIE_ASPM_ON_AC = "default";
     PLATFORM_PROFILE_ON_AC = "balanced";
     PLATFORM_PROFILE_ON_BAT = "low-power";
     RUNTIME_PM_ON_AC = "auto";
     RUNTIME_PM_ON_BAT = "auto";
-    CPU_SCALING_GOVERNOR_ON_AC = "powersave";
-    CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
     CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
     CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
     CPU_BOOST_ON_AC = 1;
@@ -24,11 +22,13 @@
     CPU_MAX_PERF_ON_BAT = 30;
     CPU_SCALING_MAX_FREQ_ON_AC = 4400000;
     INTEL_GPU_MIN_FREQ_ON_AC = 100;
-    INTEL_GPU_MIN_FREQ_ON_BAT = 100;
     INTEL_GPU_MAX_FREQ_ON_AC = 1200;
-    INTEL_GPU_MAX_FREQ_ON_BAT = 200;
     INTEL_GPU_BOOST_FREQ_ON_AC = 1200;
-    INTEL_GPU_BOOST_FREQ_ON_BAT = 300;
+    INTEL_GPU_MIN_FREQ_ON_BAT = 100;
+    INTEL_GPU_MAX_FREQ_ON_BAT = 300;
+    INTEL_GPU_BOOST_FREQ_ON_BAT = 450;
+    USB_AUTOSUSPEND = 1;
+    USB_EXCLUDE_BTUSB = 0;
   };
 
   # systemd.services."tlp-sleep".wantedBy = lib.mkForce [];

@@ -28,6 +28,9 @@
 
   security.tpm2.enable = true;
 
+  hardware.block.defaultScheduler = "kyber";
+  hardware.block.defaultSchedulerRotational = "bfq";
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 }

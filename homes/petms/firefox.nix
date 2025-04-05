@@ -49,12 +49,32 @@
       Extensions = {
         Install = [ "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi" ];
       };
+      EncryptedMediaExtensions = {
+        Enabled = false;
+        Locked = true;
+      };
+      FirefoxHome = {
+        SponsoredTopSites = false;
+        Highlights = false;
+        Pocket = false;
+        SponsoredPocket = false;
+        Snippets = false;
+        Locked = true;
+      };
+      SearchSuggestEnabled = false;
+      UserMessaging = {
+        ExtensionRecommendations = false;
+        FeatureRecommendations = false;
+        UrlbarInterventions = false;
+        SkipOnboarding = true;
+        MoreFromMozilla = false;
+        FirefoxLabs = false;
+        Locked = true;
+      };
       Preferences = {
         "gfx.webrender.precache-shaders" = true;
-        "gfx.canvas.accelerated.cache-items" = 4096;
         "gfx.canvas.accelerated.cache-size" = 512;
         "gfx.content.skia-font-cache-size" = 20;
-        "browser.cache.jsbc_compression_level" = 3;
         "media.memory_cache_max_size" = 65536;
         "network.http.max-connections" = 1800;
         "network.ssl_tokens_cache_capacity" = 10240;
@@ -68,29 +88,15 @@
         "browser.urlbar.untrimOnUserInteraction.featureGate" = true;
         "security.insecure_connection_text.enabled" = true;
         "security.insecure_connection_text.pbmode.enabled" = true;
-        "dom.security.https_only_mode" = true;
         "pdfjs.enableScripting" = false;
         "network.http.referer.XOriginTrimmingPolicy" = 2;
         "browser.safebrowsing.downloads.enabled" = false;
-        "datareporting.policy.dataSubmissionEnabled" = false;
-        "toolkit.telemetry.enabled" = false;
-        "browser.newtabpage.activity-stream.telemetry" = false;
         "browser.tabs.crashReporting.sendReport" = false;
         "browser.crashReports.unsubmittedCheck.autoSubmit2" = false;
         "browser.privatebrowsing.vpnpromourl" = "";
         "extensions.getAddons.showPane" = false;
-        "extensions.htmlaboutaddons.recommendations.enabled" = false;
-        "browser.discovery.enabled" = false;
-        "browser.shell.checkDefaultBrowser" = false;
-        "browser.preferences.moreFromMozilla" = false;
         "browser.aboutConfig.showWarning" = false;
         "browser.aboutwelcome.enabled" = false;
-        "browser.urlbar.trending.featureGate" = false;
-        "browser.search.suggest.enabled" = false;
-        "browser.urlbar.quicksuggest.enabled" = false;
-        "browser.newtabpage.activity-stream.feeds.topsites" = false;
-        "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
-        "extensions.pocket.enabled" = false;
         "general.smoothScroll" = true;
       };
     };

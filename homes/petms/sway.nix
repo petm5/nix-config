@@ -175,13 +175,6 @@
 
   services.gpg-agent.pinentryPackage = pkgs.pinentry-rofi;
 
-  home.sessionVariables = {
-    SSH_ASKPASS_REQUIRE = "prefer";
-    SSH_ASKPASS = pkgs.writeScript "ssh-askpass" ''
-      exec ${config.programs.rofi.package}/bin/rofi -dmenu -password -p "Passphrase:" -mesg "$1"
-    '';
-  };
-
   services.mako = {
     enable = true;
     defaultTimeout = 15000;

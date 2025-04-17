@@ -38,4 +38,9 @@
   services.iptsd.enable = lib.mkDefault true;
   services.iptsd.config = import ./iptsd-config.nix;
 
+  services.thermald = lib.mkDefault {
+    enable = true;
+    configFile = ./thermal-conf.xml;
+  };
+
 }

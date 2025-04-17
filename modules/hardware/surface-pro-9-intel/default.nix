@@ -5,7 +5,6 @@
     ../common/gpu/intel
     ./audio.nix
     ./tlp.nix
-    ./ipts.nix
   ];
 
   boot.extraModulePackages = [
@@ -35,5 +34,8 @@
     options iwlwifi power_level=5 power_save=Y
     options iwlmvm power_scheme=3
   '';
+
+  services.iptsd.enable = lib.mkDefault true;
+  services.iptsd.config = import ./iptsd-config.nix;
 
 }

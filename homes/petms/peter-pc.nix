@@ -2,9 +2,14 @@
 
   imports = [ ./desktop-home.nix ];
 
-  programs.git.signing = {
-    key = "BADD3759FA8A5A03";
-    signByDefault = true;
+  programs.git = {
+    signing = {
+      key = "~/.ssh/id_ed25519";
+      signByDefault = true;
+    };
+    extraConfig = {
+      gpg.format = "ssh";
+    };
   };
 
 }

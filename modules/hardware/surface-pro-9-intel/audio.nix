@@ -20,12 +20,12 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.5
-                          sat_third = 2.3
+                          amt = 1.6
+                          sat_third = 2.6
                           blend = 1
-                          ceil = 160.0
+                          ceil = 200.0
                           floor = 20.0
-                          final_hp = 95.0
+                          final_hp = 140.0
                       }
                     }
                     {
@@ -53,7 +53,7 @@
                       name = "convolver_r"
                       label = "convolver"
                       config = {
-                        filename = "/etc/surface-audio/sp9/impulse.flac"
+                        filename = "/etc/surface-audio/sp9/impulse.wav"
                       }
                     }
                     {
@@ -61,7 +61,7 @@
                       name = "convolver_l"
                       label = "convolver"
                       config = {
-                        filename = "/etc/surface-audio/sp9/impulse.flac"
+                        filename = "/etc/surface-audio/sp9/impulse.wav"
                       }
                     }
                     {
@@ -73,12 +73,12 @@
                             ce_0 = 1
                             sla_0 = 5.0
                             cr_0 = 1.75
-                            al_0 = 0.725
+                            al_0 = 0.425
                             at_0 = 10.0
                             rt_0 = 100
                             kn_0 = 0.125
                             cbe_1 = 1
-                            sf_1 = 380.0
+                            sf_1 = 250.0
                             ce_1 = 0
                             cbe_2 = 0
                             ce_2 = 0
@@ -192,6 +192,6 @@
     })
   ];
 
-  environment.etc."surface-audio/sp9/impulse.flac".source = ./impulse.flac;
+  environment.etc."surface-audio/sp9/impulse.wav".source = ./impulse.wav;
 
 }

@@ -69,18 +69,9 @@
     extraConfig = "HoldoffTimeoutSec=0";
   };
 
-  programs.sway.enable = true;
-  programs.sway.package = pkgs.swayfx;
+  programs.niri.enable = true;
+  programs.niri.package = pkgs.niri;
   services.hypridle.enable = true;
-
-  programs.uwsm.enable = true;
-  programs.uwsm.waylandCompositors = {
-    sway = {
-      prettyName = "Sway";
-      comment = "Sway compositor managed by UWSM";
-      binPath = "/run/current-system/sw/bin/sway";
-    };
-  };
 
   security.pam.services.swaylock = {};
 

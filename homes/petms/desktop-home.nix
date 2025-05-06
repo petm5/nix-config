@@ -3,11 +3,19 @@
   imports = [
     ./home.nix
     ./theme.nix
-    ./sway.nix
+    ./niri.nix
+    ./waybar.nix
     ./firefox.nix
   ];
 
   home.packages = with pkgs; [
+    pavucontrol
+    simple-scan
+    nautilus
+    eog
+    file-roller
+    gnome-font-viewer
+    system-config-printer
     mpv
   ];
 

@@ -82,6 +82,7 @@ in {
       window = {
         padding = { x = 10; y = 10; };
         opacity = 1.0;
+        decorations = "None";
       };
       font = {
         normal = {
@@ -133,64 +134,19 @@ in {
   '';
 
   services.mako.settings = {
-    textColor = "${colors.primary.foreground}";
-    borderColor = "${colors.primary.foreground}";
-    backgroundColor = "${colors.primary.background}";
-    borderSize = 2;
-    borderRadius = 4;
+    text-color = "${colors.primary.foreground}";
+    border-color = "${colors.primary.foreground}";
+    background-color = "${colors.primary.background}";
+    border-size = 2;
+    border-radius = 4;
     width = 400;
     height = 200;
     padding = "20";
     margin = "20";
   };
 
-  wayland.windowManager.sway = {
-    config = {
-      colors = rec {
-        focused = rec {
-          background = "${colors.primary.background}";
-          text = "${colors.primary.foreground}";
-          border = background;
-          childBorder = background;
-          indicator = "${colors.primary.foreground}";
-        };
-        focusedInactive = focused;
-        unfocused = focused;
-      };
-      gaps = {
-        inner = 24;
-        outer = 0;
-      };
-      fonts = {
-        names = [ "Liberation Sans" ];
-        style = "";
-        size = 10.0;
-      };
-    };
-    extraConfig = ''
-      blur enable
-      blur_xray enable
-      blur_passes 6
-      blur_radius 10
-      blur_noise 0.1
-      corner_radius 4
-      shadows enable
-      shadow_color #00000010
-      shadow_inactive_color #00000010
-      shadow_blur_radius 3
-      shadow_offset 0 0
-      # titlebar_padding 12 8
-    '';
-  };
-
-  programs.rofi = {
-    theme = ./dotfiles/rofi/tokyonight.rasi;
-    extraConfig = {
-      show-icons = true;
-      drun-display-format = "{icon} {name}";
-      location = 0;
-      sidebar-mode = true;
-    };
+  programs.fuzzel.settings = {
+    main.include = "${toString ./dotfiles/fuzzel/themes/catppuccin-macchiato/lavender.ini}";
   };
 
 }

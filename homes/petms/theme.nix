@@ -132,7 +132,7 @@ in {
     }
   '';
 
-  services.mako = {
+  services.mako.settings = {
     textColor = "${colors.primary.foreground}";
     borderColor = "${colors.primary.foreground}";
     backgroundColor = "${colors.primary.background}";

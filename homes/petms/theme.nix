@@ -145,8 +145,19 @@ in {
     margin = "20";
   };
 
-  programs.fuzzel.settings = {
-    main.include = "${toString ./dotfiles/fuzzel/themes/catppuccin-macchiato/lavender.ini}";
+  # fuzzel colors from catppuccin-macchiato/lavender.ini
+  programs.fuzzel.settings.colors = {
+    background = "24273add";
+    text = "cad3f5ff";
+    prompt = "b8c0e0ff";
+    placeholder = "8087a2ff";
+    input = "cad3f5ff";
+    match = "b7bdf8ff";
+    selection = "5b6078ff";
+    selection-text = "cad3f5ff";
+    selection-match = "b7bdf8ff";
+    counter = "8087a2ff";
+    border = "b7bdf8ff";
   };
 
 }

@@ -46,17 +46,8 @@ in {
     };
 
     gtk3.extraCss = ''
-      .titlebar,
-      window {
+      window, .titlebar, headerbar, decoration {
       	border-radius: 0;
-      	box-shadow: none;
-      }
-
-      decoration {
-      	box-shadow: none;
-      }
-
-      decoration:backdrop {
       	box-shadow: none;
       }
     '';

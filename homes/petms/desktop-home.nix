@@ -19,14 +19,6 @@
     mpv
   ];
 
-  programs.chromium = {
-    enable = true;
-    package = pkgs.ungoogled-chromium;
-    commandLineArgs = [
-      "--ozone-platform=wayland" "--enable-features=TouchpadOverscrollHistoryNavigation" "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
-    ];
-  };
-
   programs.alacritty = {
     enable = true;
     settings.terminal = {

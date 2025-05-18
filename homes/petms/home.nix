@@ -14,6 +14,13 @@
   programs.helix = {
     enable = true;
     defaultEditor = true;
+    extraPackages = with pkgs; [
+      marksman
+      rust-analyzer
+      typescript-language-server
+      nil
+      bash-language-server
+    ];
     settings = {
       theme = lib.mkDefault "base16-terminal";
       editor.soft-wrap = {

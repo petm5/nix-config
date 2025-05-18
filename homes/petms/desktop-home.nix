@@ -29,9 +29,6 @@
   services.mpd.enable = true;
   xdg.userDirs.enable = true;
 
-  programs.gpg.enable = true;
-  services.gpg-agent.enable = true;
-
   programs.password-store.enable = true;
   programs.password-store.package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
 

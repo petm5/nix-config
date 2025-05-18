@@ -107,6 +107,11 @@ output "eDP-1" {
     scale 2
 }
 
+output "Samsung Electric Company S22R35x 0x43574250" {
+    mode "1920x1080@74.973"
+    position x=-1080 y=0
+}
+
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Layout

@@ -4,7 +4,6 @@
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.pre-commit-hooks-nix.follows = "";
     };
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -12,9 +11,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, lanzaboote, home-manager }: let
-    inherit (nixpkgs) lib;
-  in {
+  outputs = { self, nixpkgs, lanzaboote, home-manager }: {
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
         ./hosts/peter-pc/configuration.nix

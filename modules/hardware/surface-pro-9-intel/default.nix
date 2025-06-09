@@ -8,7 +8,7 @@
   ];
 
   boot.extraModulePackages = [
-    (pkgs.callPackage ../../../pkgs/ithc-linux/latest.nix { inherit (config.boot) kernelPackages; })
+    (pkgs.callPackage ../../../pkgs/ithc-linux/latest.nix { inherit (config.boot.kernelPackages) kernel kernelModuleMakeFlags; })
   ];
 
   systemd.services.surface-gpe = {

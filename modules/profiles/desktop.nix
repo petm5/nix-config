@@ -21,19 +21,6 @@
 
   hardware.graphics.enable = true;
 
-  environment.variables = {
-    WLR_RENDERER = "vulkan";
-  };
-
-  xdg.portal = {
-    enable = true;
-    config.common.default = "gtk";
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-wlr
-    ];
-  };
-
   services.dbus.enable = true;
   programs.dconf.enable = true;
 

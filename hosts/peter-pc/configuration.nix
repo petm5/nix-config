@@ -12,7 +12,7 @@
 
   users.users.petms = {
     isNormalUser = true;
-    extraGroups = [ "users" "wheel" "video" "scanner" "lp" "wireshark" "storage" ];
+    extraGroups = [ "users" "wheel" "video" "scanner" "lp" "wireshark" "storage" "tss" ];
     linger = true;
   };
 

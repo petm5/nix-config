@@ -31,6 +31,11 @@
   hardware.block.defaultScheduler = "kyber";
   hardware.block.defaultSchedulerRotational = "bfq";
 
+  services.journald.storage = "volatile";
+  services.journald.extraConfig = ''
+    RuntimeMaxUse=32M
+  '';
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 }

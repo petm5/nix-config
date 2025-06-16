@@ -85,7 +85,6 @@
   services.devmon.enable = true;
 
   programs.gnome-disks.enable = true;
-  programs.geary.enable = true;
 
   boot.plymouth = {
     enable = true;

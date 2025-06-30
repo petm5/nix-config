@@ -12,7 +12,7 @@
 
   users.users.petms = {
     isNormalUser = true;
-    extraGroups = [ "users" "wheel" "video" "scanner" "lp" "wireshark" "storage" "tss" ];
+    extraGroups = [ "users" "wheel" "video" "scanner" "lp" "storage" "tss" ];
     linger = true;
   };
 
@@ -36,8 +36,6 @@
   environment.systemPackages = with pkgs; [
     podman-compose
   ];
-
-  programs.wireshark.enable = true;
 
   services.fwupd.enable = true;
 

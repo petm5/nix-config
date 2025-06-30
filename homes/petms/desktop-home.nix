@@ -24,4 +24,8 @@
   services.pass-secret-service.enable = true;
   services.pass-secret-service.storePath = "$\{XDG_DATA_HOME\}/password-store";
 
+  home.sessionVariables = {
+    TERMINAL = "${pkgs.alacritty}/bin/alacritty";
+  };
+
 }

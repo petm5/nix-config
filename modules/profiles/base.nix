@@ -1,4 +1,4 @@
-{ config, lib, modulesPath, ... }: {
+{ lib, pkgs, ... }: {
 
   boot.initrd.systemd.enable = true;
 
@@ -35,6 +35,9 @@
   services.journald.extraConfig = ''
     RuntimeMaxUse=32M
   '';
+
+  # Use the latest available kernel
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

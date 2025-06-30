@@ -37,8 +37,6 @@
     podman-compose
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
   programs.wireshark.enable = true;
 
   services.fwupd.enable = true;

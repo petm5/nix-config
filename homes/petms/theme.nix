@@ -95,10 +95,7 @@ in {
     box > * > * {
       padding: 0 4px;
     }
-    #workspaces {
-      padding: 0;
-    }
-    #workspaces button {
+    #workspaces button, #taskbar button {
       padding: 0 4px;
       color: inherit;
     }

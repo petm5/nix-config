@@ -8,7 +8,7 @@
         layer = "top";
         position = "bottom";
         height = 26;
-        modules-left = [ "wlr/workspaces" ];
+        modules-left = [ "wlr/taskbar" ];
         modules-right = [ "wireplumber" "mpd" "battery" "clock" ];
         battery = {
           interval = 2;
@@ -49,20 +49,10 @@
             };
           };
         };
-        "wlr/workspaces" = {
+        "wlr/taskbar" = {
           format = "{icon}";
-          format-icons = {
-            "1" = "";
-            "2" = "";
-            "3" = "";
-            "4" = "";
-          };
-          persistent-workspaces = {
-            "1" = [];
-            "2" = [];
-            "3" = [];
-            "4" = [];
-          };
+          icon-size = 20;
+          on-click = "activate";
         };
       };
     };

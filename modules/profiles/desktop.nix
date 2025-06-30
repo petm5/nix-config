@@ -12,6 +12,13 @@
   fonts.fontconfig.enable = true;
   fonts.fontconfig.subpixel.rgba = "rgb";
   fonts.fontconfig.hinting.style = "slight";
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-color-emoji
+    liberation_ttf
+    material-symbols
+    powerline-symbols
+  ];
 
   hardware.brillo.enable = true;
 

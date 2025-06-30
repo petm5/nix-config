@@ -2,14 +2,6 @@
   colors = (builtins.fromTOML (builtins.readFile ./dotfiles/alacritty/tokyonight_moon.toml)).colors;
 in {
 
-  home.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-color-emoji
-    liberation_ttf
-    material-symbols
-    powerline-symbols
-  ];
-
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;

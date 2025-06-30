@@ -5,7 +5,7 @@
   fileSystems = {
     "/" = {
       fsType = "btrfs";
-      options = [ "subvol=@" ];
+      options = [ "subvol=@" "noatime" "compress=zstd" ];
       device = "/dev/mapper/root";
       encrypted = {
         enable = true;
@@ -19,12 +19,12 @@
     };
     "/home" = {
       fsType = "btrfs";
-      options = [ "subvol=@home" ];
+      options = [ "subvol=@home" "compress=zstd" ];
       device = "/dev/mapper/root";
     };
     "/nix" = {
       fsType = "btrfs";
-      options = [ "subvol=@nix" ];
+      options = [ "subvol=@nix" "noatime" "compress=zstd" ];
       device = "/dev/mapper/root";
     };
   };

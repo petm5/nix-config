@@ -29,6 +29,8 @@
     };
   };
 
+  boot.initrd.luks.devices."root".allowDiscards = true;
+
   boot.initrd.luks.cryptoModules = [ "aes" "aes_generic" "cbc" "sha1" "sha256" "sha512" "af_alg" ];
 
 }

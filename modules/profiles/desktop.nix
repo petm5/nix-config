@@ -92,6 +92,7 @@
     gnome-software
     adwaita-icon-theme
     papirus-icon-theme
+    numix-cursor-theme
   ];
 
   programs.gdk-pixbuf.modulePackages = with pkgs; [

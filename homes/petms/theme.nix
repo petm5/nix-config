@@ -27,10 +27,7 @@ in {
       name = "Tokyonight-Teal-Dark-Moon";
     };
 
-    iconTheme = {
-      package = pkgs.papirus-icon-theme;
-      name = "Papirus-Dark";
-    };
+    iconTheme.name = "Papirus-Dark";
 
     font = {
       name = "Noto Sans";

@@ -89,6 +89,8 @@
     mpv
     pavucontrol
     simple-scan
+    adwaita-icon-theme
+    papirus-icon-theme
   ];
 
   programs.gdk-pixbuf.modulePackages = with pkgs; [

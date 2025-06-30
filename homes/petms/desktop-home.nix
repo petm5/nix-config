@@ -8,17 +8,6 @@
     ./firefox.nix
   ];
 
-  home.packages = with pkgs; [
-    pavucontrol
-    simple-scan
-    nautilus
-    eog
-    file-roller
-    gnome-font-viewer
-    system-config-printer
-    mpv
-  ];
-
   programs.alacritty = {
     enable = true;
     settings.terminal = {

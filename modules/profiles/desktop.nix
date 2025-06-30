@@ -73,6 +73,15 @@
     libwebp
     dig
     unzip
+    alacritty
+    nautilus
+    eog
+    file-roller
+    gnome-font-viewer
+    system-config-printer
+    mpv
+    pavucontrol
+    simple-scan
   ];
 
   programs.gdk-pixbuf.modulePackages = with pkgs; [

@@ -19,13 +19,6 @@ in {
 
   gtk = {
     enable = true;
-    theme = {
-      package = pkgs.tokyonight-gtk-theme.override {
-        tweakVariants = [ "moon" ];
-        themeVariants = [ "teal" ];
-      };
-      name = "Tokyonight-Teal-Dark-Moon";
-    };
 
     iconTheme.name = "Papirus-Dark";
 
@@ -45,6 +38,7 @@ in {
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
+      accent-color = "teal";
     };
     "org/gnome/desktop/a11y/applications" = {
       screen-keyboard-enabled = true;

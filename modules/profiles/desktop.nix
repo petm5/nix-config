@@ -89,6 +89,7 @@
     mpv
     pavucontrol
     simple-scan
+    gnome-software
     adwaita-icon-theme
     papirus-icon-theme
   ];

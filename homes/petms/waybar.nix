@@ -9,7 +9,7 @@
         position = "bottom";
         height = 26;
         modules-left = [ "wlr/taskbar" ];
-        modules-right = [ "wireplumber" "mpd" "battery" "clock" ];
+        modules-right = [ "tray" "wireplumber" "mpd" "battery" "clock" ];
         battery = {
           interval = 2;
           format = "{icon}";
@@ -53,6 +53,9 @@
           format = "{icon}";
           icon-size = 20;
           on-click = "activate";
+        };
+        tray = {
+          icon-size = 20;
         };
       };
     };

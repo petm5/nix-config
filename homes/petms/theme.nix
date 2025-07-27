@@ -12,9 +12,6 @@ in {
 
   fonts.fontconfig = {
     enable = true;
-    defaultFonts = {
-      sansSerif = [ "Noto Sans" ];
-    };
   };
 
   gtk = {
@@ -23,8 +20,8 @@ in {
     iconTheme.name = "Papirus-Dark";
 
     font = {
-      name = "Noto Sans";
-      size = 10;
+      name = "Roboto";
+      size = 10.5;
     };
 
     gtk3.extraCss = ''
@@ -60,13 +57,13 @@ in {
       };
       font = {
         normal = {
-          family = "Liberation Mono";
+          family = "Cascadia Code";
           style = "Regular";
         };
-        size = 9;
+        size = 10.5;
         offset = {
           x = 0;
-          y = 6;
+          y = 4;
         };
       };
       inherit colors;
@@ -119,6 +116,7 @@ in {
   programs.fuzzel.settings = {
     main = {
       icon-theme = "Papirus-Dark";
+      font = "DejaVu Sans Mono";
     };
     # fuzzel colors from catppuccin-macchiato/lavender.ini
     colors = {

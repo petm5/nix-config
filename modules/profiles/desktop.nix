@@ -9,16 +9,27 @@
 
   boot.loader.timeout = 0;
 
-  fonts.fontconfig.enable = true;
-  fonts.fontconfig.subpixel.rgba = "rgb";
-  fonts.fontconfig.hinting.style = "slight";
-  fonts.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-color-emoji
-    liberation_ttf
-    material-symbols
-    powerline-symbols
-  ];
+  fonts = {
+    fontconfig = {
+      enable = true;
+      subpixel.rgba = "rgb";
+      hinting.style = "slight";
+      defaultFonts = {
+        serif = [ "DejaVu Serif" ];
+        sansSerif = [ "Roboto" ];
+        monospace = [ "Cascadia Code" ];
+      };
+    };
+    packages = with pkgs; [
+      noto-fonts
+      noto-fonts-color-emoji
+      roboto
+      liberation_ttf
+      cascadia-code
+      material-symbols
+      powerline-symbols
+    ];
+  };
 
   hardware.brillo.enable = true;
 

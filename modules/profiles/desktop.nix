@@ -104,6 +104,7 @@
     adwaita-icon-theme
     papirus-icon-theme
     numix-cursor-theme
+    xwayland-satellite
   ];
 
   programs.gdk-pixbuf.modulePackages = with pkgs; [

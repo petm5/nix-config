@@ -8,10 +8,14 @@
     ./firefox.nix
   ];
 
-  programs.alacritty = {
+  programs.foot = {
     enable = true;
-    settings.terminal = {
-      shell = "${pkgs.nushell}/bin/nu";
+    server.enable = true;
+    settings = {
+      main = {
+        shell = "${pkgs.nushell}/bin/nu";
+        term = "xterm-256color";
+      };
     };
   };
 
@@ -25,7 +29,7 @@
   services.pass-secret-service.storePath = "$\{XDG_DATA_HOME\}/password-store";
 
   home.sessionVariables = {
-    TERMINAL = "${pkgs.alacritty}/bin/alacritty";
+    TERMINAL = "${pkgs.foot}/bin/footclient";
   };
 
 }

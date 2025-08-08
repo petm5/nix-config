@@ -48,25 +48,34 @@ in {
   qt.platformTheme = "gtk";
   qt.style.name = "breeze";
 
-  programs.alacritty = {
-    settings = {
-      window = {
-        padding = { x = 10; y = 10; };
-        opacity = 1.0;
-        decorations = "None";
-      };
-      font = {
-        normal = {
-          family = "Cascadia Code";
-          style = "Regular";
-        };
-        size = 10.5;
-        offset = {
-          x = 0;
-          y = 4;
-        };
-      };
-      inherit colors;
+  programs.foot.settings = {
+    main = {
+      font = "Cascadia Code:size=10";
+      line-height = "13";
+      pad = "10x10";
+      dpi-aware = "no";
+    };
+    colors = let
+      formatColor = hex: builtins.substring 1 7 hex;
+    in {
+      foreground = formatColor colors.primary.foreground;
+      background = formatColor colors.primary.background;
+      regular0 = formatColor colors.normal.black;
+      regular1 = formatColor colors.normal.red;
+      regular2 = formatColor colors.normal.green;
+      regular3 = formatColor colors.normal.yellow;
+      regular4 = formatColor colors.normal.blue;
+      regular5 = formatColor colors.normal.magenta;
+      regular6 = formatColor colors.normal.cyan;
+      regular7 = formatColor colors.normal.white;
+      bright0 = formatColor colors.bright.black;
+      bright1 = formatColor colors.bright.red;
+      bright2 = formatColor colors.bright.green;
+      bright3 = formatColor colors.bright.yellow;
+      bright4 = formatColor colors.bright.blue;
+      bright5 = formatColor colors.bright.magenta;
+      bright6 = formatColor colors.bright.cyan;
+      bright7 = formatColor colors.bright.white;
     };
   };
 

@@ -99,7 +99,6 @@
     libwebp
     dig
     unzip
-    alacritty
     nautilus
     eog
     file-roller

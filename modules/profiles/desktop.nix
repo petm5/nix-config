@@ -58,6 +58,14 @@
     enable = true;
     alsa.enable = true;
     pulse.enable = true;
+    extraConfig.pipewire = {
+      "10-bluetooth" = {
+        "properties" = {
+          "bluez5.msbc-support" = true;
+          "bluez5.sbc-xq-support" = true;
+        };
+      };
+    };
   };
 
   networking.firewall = {

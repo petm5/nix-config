@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ pkgs, ... }: {
 
   services.pipewire.wireplumber.configPackages = [
     ((pkgs.writeTextDir "share/wireplumber/wireplumber.conf.d/99-surface-pro-9-dsp.conf" ''
@@ -20,8 +20,8 @@
                       name = "bankstown"
                       control = {
                           bypass = 0
-                          amt = 1.6
-                          sat_third = 2.8
+                          amt = 1.5
+                          sat_third = 2.5
                           blend = 1
                           ceil = 200.0
                           floor = 20.0
@@ -73,12 +73,12 @@
                             ce_0 = 1
                             sla_0 = 5.0
                             cr_0 = 1.75
-                            al_0 = 0.625
+                            al_0 = 0.725
                             at_0 = 1.0
                             rt_0 = 100
                             kn_0 = 0.125
                             cbe_1 = 1
-                            sf_1 = 200.0
+                            sf_1 = 380.0
                             ce_1 = 0
                             cbe_2 = 0
                             ce_2 = 0

@@ -9,7 +9,15 @@
         position = "bottom";
         height = 26;
         modules-left = [ "wlr/taskbar" ];
-        modules-right = [ "tray" "wireplumber" "mpd" "battery" "clock" ];
+        modules-right = [ "tray" "wireplumber" "mpd" "network" "battery" "clock" ];
+        network = {
+          format-wifi = "{icon}";
+          format-ethernet = "";
+          format-disconnected = "󰌙";
+          format-icons = [ "" "" "" "" "" ];
+          tooltip-format = "Connected ({ifname})";
+          tooltip-format-disconnected = "Disconnected";
+        };
         battery = {
           interval = 2;
           format = "{icon}";

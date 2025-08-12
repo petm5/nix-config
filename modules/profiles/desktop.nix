@@ -98,6 +98,7 @@
     libavif
     libwebp
     dig
+    zip
     unzip
     nautilus
     eog
@@ -111,6 +112,8 @@
     adwaita-icon-theme
     papirus-icon-theme
     numix-cursor-theme
+    btop
+    keepassxc
     xwayland-satellite
   ];
 

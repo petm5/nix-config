@@ -21,7 +21,7 @@
                       control = {
                           bypass = 0
                           amt = 1.5
-                          sat_third = 2.5
+                          sat_third = 2.8
                           blend = 1
                           ceil = 200.0
                           floor = 20.0
@@ -146,13 +146,13 @@
                   capture.volumes = [
                       {
                           control = "ell:volume"
-                          min = -65.0
+                          min = -40.0
                           max = 0.0
                           scale = "cubic"
                       }
                       {
                           control = "elr:volume"
-                          min = -65.0
+                          min = -40.0
                           max = 0.0
                           scale = "cubic"
                       }

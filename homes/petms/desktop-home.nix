@@ -19,7 +19,6 @@
     };
   };
 
-  services.mpd.enable = true;
   xdg.userDirs.enable = true;
 
   programs.password-store.enable = true;

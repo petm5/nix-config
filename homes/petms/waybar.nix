@@ -9,7 +9,7 @@
         position = "bottom";
         height = 26;
         modules-left = [ "wlr/taskbar" ];
-        modules-right = [ "tray" "wireplumber" "mpd" "network" "battery" "clock" ];
+        modules-right = [ "tray" "wireplumber" "network" "battery" "clock" ];
         network = {
           format-wifi = "{icon}";
           format-ethernet = "";
@@ -27,14 +27,6 @@
             full = [ "" ];
             discharging = [ "" "" "" "" "" "" "" ];
             plugged = [ "" "" "" "" "" "" "" ];
-          };
-        };
-        mpd = {
-          format = "{stateIcon}";
-          format-stopped = "";
-          state-icons = {
-            paused = "";
-            playing = "";
           };
         };
         wireplumber = {

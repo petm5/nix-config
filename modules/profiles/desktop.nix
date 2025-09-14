@@ -74,12 +74,12 @@
     allowedUDPPortRanges = [{ from = 32768; to = 61000; }];
   };
 
-  services.logind = {
-    powerKey = "suspend";
-    powerKeyLongPress = "poweroff";
-    lidSwitch = "suspend";
-    lidSwitchExternalPower = "ignore";
-    extraConfig = "HoldoffTimeoutSec=0";
+  services.logind.settings.Login = {
+    HoldoffTimeoutSec = 2;
+    HandlePowerKey = "suspend";
+    HandlePowerKeyLongPress = "poweroff";
+    HandleLidSwitch = "suspend";
+    HandlelidSwitchExternalPower = "ignore";
   };
 
   programs.niri.enable = true;
@@ -115,11 +115,6 @@
     btop
     keepassxc
     xwayland-satellite
-  ];
-
-  programs.gdk-pixbuf.modulePackages = with pkgs; [
-    libavif
-    webp-pixbuf-loader
   ];
 
   services.udisks2.enable = true;

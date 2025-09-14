@@ -33,7 +33,10 @@
 
   programs.ssh = {
     enable = true;
-    addKeysToAgent = "1h";
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      addKeysToAgent = "1h";
+    };
   };
 
   services.ssh-agent.enable = true;

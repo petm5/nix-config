@@ -20,6 +20,7 @@
       typescript-language-server
       nil
       bash-language-server
+      svelte-language-server
     ];
     settings = {
       theme = lib.mkDefault "base16-terminal";

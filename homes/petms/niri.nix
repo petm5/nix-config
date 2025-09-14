@@ -13,7 +13,7 @@
     enable = true;
     settings = {
       show-failed-attempts = true;
-      image = "${./wallpaper}";
+      image = ".wallpaper";
       scaling = "fill";
       indicator-radius = 100;
       indicator-idle-visible = false;
@@ -46,9 +46,10 @@
       PartOf = "graphical-session.target";
       After = "graphical-session.target";
       Requisite = "graphical-session.target";
+      ConditionFileNotEmpty = "%h/.wallpaper";
     };
     Service = {
-      ExecStart = "${pkgs.swaybg}/bin/swaybg -m fill -i ${./wallpaper}";
+      ExecStart = "${pkgs.swaybg}/bin/swaybg -m fill -i \"%h/.wallpaper\"";
       Restart = "on-failure";
     };
     Install = {

@@ -1,6 +1,6 @@
 {
 
-  imports = [ ./desktop-home.nix ];
+  imports = [ ./desktop-home.nix ./rclone.nix ];
 
   programs.git = {
     signing = {

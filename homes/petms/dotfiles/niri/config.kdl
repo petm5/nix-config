@@ -70,7 +70,7 @@ input {
 // Find more information on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
 // Remember to uncomment the node by removing "/-"!
-output "eDP-1" {
+output "LG Display 0x0719 0x090003A1" {
     // Uncomment this line to disable this output.
     // off
 
@@ -100,12 +100,6 @@ output "eDP-1" {
     // If the position is unset or results in an overlap, the output is instead placed
     // automatically.
     /-position x=1280 y=0
-}
-
-output "eDP-1" {
-    variable-refresh-rate
-    mode "2880x1920@120.000"
-    scale 2
 }
 
 output "Samsung Electric Company S22R35x 0x43574250" {

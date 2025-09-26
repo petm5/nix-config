@@ -24,5 +24,9 @@
         }
       ];
     };
+    homeConfigurations."petms@peter-pc" = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      modules = [ ./homes/petms/peter-pc.nix ];
+    };
   };
 }

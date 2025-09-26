@@ -1,10 +1,12 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   home.username = "petms";
   home.homeDirectory = "/home/petms";
 
   home.stateVersion = "23.11";
+
+  programs.home-manager.enable = true;
 
   programs.nushell = {
     enable = true;

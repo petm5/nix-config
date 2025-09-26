@@ -52,4 +52,11 @@
   services.gpg-agent.enable = true;
   services.gpg-agent.pinentry.package = pkgs.pinentry-tty;
 
+  home.packages = with pkgs; [
+    dig
+    zip
+    unzip
+    btop
+  ];
+
 }

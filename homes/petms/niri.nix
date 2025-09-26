@@ -73,4 +73,30 @@
     fi
   '';
 
+  home.packages = with pkgs; [ niri xwayland-satellite brillo ];
+
+  systemd.user.services."niri" = {
+    Unit = {
+      Description = "A scrollable-tiling Wayland compositor";
+      BindsTo = "graphical-session.target";
+      Before = [ "graphical-session.target" "xdg-desktop-autostart.target" ];
+      Wants = [ "graphical-session-pre.target" "xdg-desktop-autostart.target" ];
+      After = "graphical-session-pre.target";
+      X-RestartIfChanged = false;
+    };
+    Service = {
+      Slice = "session.slice";
+      Type = "notify";
+      ExecStart = "${pkgs.niri}/bin/niri --session";
+    };
+  };
+
+  services.gnome-keyring.enable = true;
+
+  xdg.portal = {
+    enable = true;
+    configPackages = [ pkgs.niri ];
+    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+  };
+
 }

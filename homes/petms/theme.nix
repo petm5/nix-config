@@ -12,12 +12,37 @@ in {
 
   fonts.fontconfig = {
     enable = true;
+    subpixelRendering = "rgb";
+    hinting = "slight";
+    defaultFonts = {
+      serif = [ "DejaVu Serif" ];
+      sansSerif = [ "Roboto" ];
+      monospace = [ "Cascadia Code" ];
+    };
   };
+
+  home.packages = with pkgs; [
+    dejavu_fonts
+    noto-fonts
+    noto-fonts-color-emoji
+    roboto
+    liberation_ttf
+    cascadia-code
+    material-symbols
+    powerline-symbols
+    adwaita-icon-theme
+    papirus-icon-theme
+    numix-cursor-theme
+  ];
 
   gtk = {
     enable = true;
 
     iconTheme.name = "Papirus-Dark";
+
+    gtk3.theme.name = "Adwaita-dark";
+    gtk2.theme.name = "Adwaita-dark";
+    gtk2.theme.package = pkgs.gnome-themes-extra;
 
     font = {
       name = "Roboto";

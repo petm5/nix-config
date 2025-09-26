@@ -9,33 +9,7 @@
 
   boot.loader.timeout = 0;
 
-  fonts = {
-    fontconfig = {
-      enable = true;
-      subpixel.rgba = "rgb";
-      hinting.style = "slight";
-      defaultFonts = {
-        serif = [ "DejaVu Serif" ];
-        sansSerif = [ "Roboto" ];
-        monospace = [ "Cascadia Code" ];
-      };
-    };
-    packages = with pkgs; [
-      noto-fonts
-      noto-fonts-color-emoji
-      roboto
-      liberation_ttf
-      cascadia-code
-      material-symbols
-      powerline-symbols
-    ];
-  };
-
-  hardware.brillo.enable = true;
-
   services.upower.enable = true;
-
-  services.flatpak.enable = true;
 
   hardware.graphics.enable = true;
 
@@ -82,40 +56,14 @@
     HandlelidSwitchExternalPower = "ignore";
   };
 
-  programs.niri.enable = true;
-  programs.niri.package = pkgs.niri;
-  services.hypridle.enable = true;
-
-  security.pam.services.swaylock = {};
-
   services.timesyncd.enable = true;
 
   security.pam.loginLimits = [
     { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
   ];
 
-  environment.systemPackages = with pkgs; [
-    libavif
-    libwebp
-    dig
-    zip
-    unzip
-    nautilus
-    eog
-    file-roller
-    gnome-font-viewer
-    system-config-printer
-    mpv
-    pavucontrol
-    simple-scan
-    gnome-software
-    adwaita-icon-theme
-    papirus-icon-theme
-    numix-cursor-theme
-    btop
-    keepassxc
-    xwayland-satellite
-  ];
+  security.polkit.enable = true;
+  security.pam.services.swaylock = {};
 
   services.udisks2.enable = true;
   services.gvfs.enable = true;
@@ -128,5 +76,11 @@
     themePackages = [ (pkgs.callPackage ../plymouth/minimal {}) ];
     theme = "minimal";
   };
+
+  environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
+
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video $sys$devpath/brightness", RUN+="${pkgs.coreutils}/bin/chmod g+w $sys$devpath/brightness"
+  '';
 
 }

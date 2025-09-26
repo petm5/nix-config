@@ -24,11 +24,26 @@
   programs.password-store.enable = true;
   programs.password-store.package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
 
-  services.pass-secret-service.enable = true;
-  services.pass-secret-service.storePath = "$\{XDG_DATA_HOME\}/password-store";
-
   home.sessionVariables = {
     TERMINAL = "${pkgs.foot}/bin/footclient";
   };
+
+  xdg.portal.enable = true;
+
+  home.packages = with pkgs; [
+    nautilus
+    eog
+    file-roller
+    gnome-font-viewer
+    system-config-printer
+    mpv
+    pavucontrol
+    simple-scan
+    flatpak
+    gnome-software
+    keepassxc
+  ];
+
+  xdg.systemDirs.data = [ "$HOME/.local/share/flatpak/exports/share" "/var/lib/flatpak/exports/share" ];
 
 }

@@ -40,6 +40,11 @@
     matchBlocks."*" = {
       addKeysToAgent = "1h";
     };
+    matchBlocks."origin.opcc.tk".user = "admin";
+    matchBlocks."services-1.logotherapy.ca" = {
+      proxyCommand = "${pkgs.websocat}/bin/websocat --binary wss://services-1.logotherapy.ca/";
+      user = "ubuntu";
+    };
   };
 
   services.ssh-agent.enable = true;

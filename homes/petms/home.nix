@@ -1,8 +1,6 @@
 { lib, pkgs, ... }:
 
 {
-  home.username = "petms";
-  home.homeDirectory = "/home/petms";
 
   home.stateVersion = "23.11";
 

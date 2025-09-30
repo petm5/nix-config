@@ -60,6 +60,7 @@
 
   security.pam.loginLimits = [
     { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
+    { domain = "@users"; item = "nproc"; type = "hard"; value = 2000; }
   ];
 
   security.polkit.enable = true;

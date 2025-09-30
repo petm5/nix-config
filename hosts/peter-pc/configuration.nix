@@ -32,17 +32,6 @@
 
   boot.initrd.services.lvm.enable = true;
 
-  virtualisation.podman.enable = true;
-  environment.systemPackages = with pkgs; [
-    podman-compose
-    gnome-boxes
-  ];
-
-  virtualisation.libvirtd.enable = true;
-  virtualisation.libvirtd.qemu.package = pkgs.qemu_kvm;
-  virtualisation.libvirtd.qemu.swtpm.enable = true;
-  programs.virt-manager.enable = true;
-
   services.fwupd.enable = true;
 
   system.stateVersion = "24.05";

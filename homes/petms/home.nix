@@ -23,7 +23,7 @@
       svelte-language-server
     ];
     settings = {
-      theme = lib.mkDefault "base16-terminal";
+      theme = "tokyonight_moon";
       editor.soft-wrap = {
         enable = true;
         max-wrap = 25;

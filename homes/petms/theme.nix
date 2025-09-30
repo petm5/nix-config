@@ -104,8 +104,6 @@ in {
     };
   };
 
-  programs.helix.settings.theme = "tokyonight_moon";
-
   programs.waybar.style = ''
     * {
       border: none;

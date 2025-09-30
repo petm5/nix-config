@@ -56,6 +56,14 @@ input {
         // middle-emulation
     }
 
+    tablet {
+        map-to-output "eDP-1"
+    }
+
+    touch {
+        map-to-output "eDP-1"
+    }
+
     // Uncomment this to make the mouse warp to the center of newly focused windows.
     // warp-mouse-to-focus
 

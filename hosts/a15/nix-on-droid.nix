@@ -30,6 +30,8 @@
     color15 = formatColor colors.bright.white;
   };
 
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
   home-manager.config = ../../homes/petms/home.nix;
 
 }

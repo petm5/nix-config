@@ -74,7 +74,7 @@
 
   boot.plymouth = {
     enable = true;
-    themePackages = [ (pkgs.callPackage ../plymouth/minimal {}) ];
+    themePackages = [ (pkgs.callPackage ../../pkgs/plymouth-minimal-theme {}) ];
     theme = "minimal";
   };
 

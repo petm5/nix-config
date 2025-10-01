@@ -1,5 +1,5 @@
 { pkgs, ... }: let
-  colors = (builtins.fromTOML (builtins.readFile ./dotfiles/alacritty/tokyonight_moon.toml)).colors;
+  colors = import ../../modules/colors;
 in {
 
   home.pointerCursor = {
@@ -80,45 +80,24 @@ in {
       pad = "10x10";
       dpi-aware = "no";
     };
-    colors = let
-      formatColor = hex: builtins.substring 1 7 hex;
-    in {
-      foreground = formatColor colors.primary.foreground;
-      background = formatColor colors.primary.background;
-      regular0 = formatColor colors.normal.black;
-      regular1 = formatColor colors.normal.red;
-      regular2 = formatColor colors.normal.green;
-      regular3 = formatColor colors.normal.yellow;
-      regular4 = formatColor colors.normal.blue;
-      regular5 = formatColor colors.normal.magenta;
-      regular6 = formatColor colors.normal.cyan;
-      regular7 = formatColor colors.normal.white;
-      bright0 = formatColor colors.bright.black;
-      bright1 = formatColor colors.bright.red;
-      bright2 = formatColor colors.bright.green;
-      bright3 = formatColor colors.bright.yellow;
-      bright4 = formatColor colors.bright.blue;
-      bright5 = formatColor colors.bright.magenta;
-      bright6 = formatColor colors.bright.cyan;
-      bright7 = formatColor colors.bright.white;
-    };
+    colors = colors.foot;
   };
 
   programs.waybar.style = ''
     * {
       border: none;
       border-radius: 0;
-      color: ${colors.primary.foreground};
+      color: ${colors.alacritty.primary.foreground};
       font-family: "Liberation Sans", "Material Symbols Sharp";
       font-weight: 500;
       font-size: 14px;
     }
     window {
-      background: ${colors.primary.background};
+      background: ${colors.alacritty.primary.background};
       padding: 0 2px;
     }
     tooltip {
-      background: ${colors.primary.background};
+      background: ${colors.alacritty.primary.background};
       border-radius: 6px;
     }
     box > * > * {
@@ -134,9 +113,9 @@ in {
   '';
 
   services.mako.settings = {
-    text-color = "${colors.primary.foreground}";
-    border-color = "${colors.primary.foreground}";
-    background-color = "${colors.primary.background}";
+    text-color = "${colors.alacritty.primary.foreground}";
+    border-color = "${colors.alacritty.primary.foreground}";
+    background-color = "${colors.alacritty.primary.background}";
     border-size = 2;
     border-radius = 4;
     width = 400;

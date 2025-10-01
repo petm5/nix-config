@@ -16,6 +16,10 @@
     linger = true;
   };
 
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.users.petms = import ../../homes/petms/peter-pc.nix;
+
   services.displayManager.autoLogin = {
     enable = true;
     user = "petms";

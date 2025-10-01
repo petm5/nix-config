@@ -22,11 +22,6 @@
         ./hosts/peter-pc/configuration.nix
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.petms = import ./homes/petms/peter-pc.nix;
-        }
       ];
     };
     homeConfigurations."petms@peter-pc" = home-manager.lib.homeManagerConfiguration {

@@ -13,7 +13,7 @@
     server.enable = true;
     settings = {
       main = {
-        shell = "${pkgs.nushell}/bin/nu";
+        shell = lib.getExe pkgs.nushell;
         term = "xterm-256color";
       };
     };

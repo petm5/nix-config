@@ -1,5 +1,5 @@
 { pkgs, ... }: let
-  colors = import ../../modules/colors;
+  colors = pkgs.callPackage ../../modules/colors {};
 in {
 
   home.pointerCursor = {

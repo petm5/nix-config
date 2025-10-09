@@ -10,7 +10,7 @@
       encrypted = {
         enable = true;
         label = "root";
-        blkDev = "/dev/vg0/lv0";
+        blkDev = "/dev/vg0/nixos";
       };
     };
     "/boot" = {

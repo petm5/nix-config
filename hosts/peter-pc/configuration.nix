@@ -14,6 +14,7 @@
     isNormalUser = true;
     extraGroups = [ "users" "wheel" "video" "scanner" "lp" "storage" ];
     linger = true;
+    initialPassword = "test";
   };
 
   home-manager.useGlobalPkgs = true;

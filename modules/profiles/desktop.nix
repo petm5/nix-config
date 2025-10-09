@@ -56,7 +56,7 @@
     HandlelidSwitchExternalPower = "ignore";
   };
 
-  services.timesyncd.enable = true;
+  services.timesyncd.enable = lib.mkDefault true;
 
   security.pam.loginLimits = [
     { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }

@@ -72,13 +72,19 @@
 
   programs.gnome-disks.enable = true;
 
+  programs.niri.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    nautilus
+    system-config-printer
+    pavucontrol
+  ];
+
   boot.plymouth = {
     enable = true;
     themePackages = [ (pkgs.callPackage ../../pkgs/plymouth-minimal-theme {}) ];
     theme = "minimal";
   };
-
-  environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
 
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chgrp video $sys$devpath/brightness", RUN+="${pkgs.coreutils}/bin/chmod g+w $sys$devpath/brightness"

@@ -28,16 +28,11 @@
     TERMINAL = "${pkgs.foot}/bin/footclient";
   };
 
-  xdg.portal.enable = true;
-
   home.packages = with pkgs; [
-    nautilus
     eog
     file-roller
     gnome-font-viewer
-    system-config-printer
     mpv
-    pavucontrol
     simple-scan
     flatpak
     gnome-software

@@ -1,8 +1,6 @@
-{
-
-  programs.firefox = {
-    enable = true;
-    policies = {
+{ pkgs, flake-inputs, ...}: let
+  finalPackage = pkgs.wrapFirefox pkgs.firefox-unwrapped {
+    extraPolicies = {
       SearchEngines.Default = "DuckDuckGo";
       DisableTelemetry = true;
       DisableFirefoxAccounts = true;
@@ -101,5 +99,73 @@
       };
     };
   };
+
+  keepassxcProxyBin = "${pkgs.keepassxc}/bin/keepassxc-proxy";
+
+  keepassxcNmConfig = pkgs.writeText "org.keepassxc.keepassxc_browser.json" (builtins.toJSON {
+    name = "org.keepassxc.keepassxc_browser";
+    description = "KeePassXC integration with native messaging support";
+    type = "stdio";
+    path = keepassxcProxyBin;
+    allowed_extensions = ["keepassxc-browser@keepassxc.org"];
+  });
+
+  sandboxedPackage = ((flake-inputs.nixpak.lib.nixpak {
+    inherit (pkgs) lib;
+    inherit pkgs;
+  }) {
+    config = { sloth, ... }: {
+      app.package = finalPackage;
+      dbus.policies = {
+        "org.gnome.SessionManager" = "talk";
+        "org.a11y.Bus" = "talk";
+        "org.gtk.vfs.*" = "talk";
+        "org.freedesktop.ScreenSaver" = "talk";
+        "org.freedesktop.FileManager1" = "talk";
+        "org.freedesktop.Notifications" = "talk";
+        "org.freedesktop.portal.*" = "talk";
+        "org.freedesktop.UPower" = "talk";
+
+        "org.mozilla.firefox_beta.*" = "own";
+        "org.mpris.MediaPlayer2.firefox.*" = "own";
+        "org.mozilla.firefox.*" = "own";
+      };
+      gpu.enable = true;
+      fonts.enable = true;
+      locale.enable = true;
+      etc.sslCertificates.enable = true;
+      bubblewrap = {
+        network = true;
+        bind.ro = [
+          ["${finalPackage}/lib/firefox" "/app/etc/firefox"]
+          [keepassxcProxyBin "/app/bin/keepassxc-proxy"]
+          [
+            (toString keepassxcNmConfig)
+            (sloth.concat' sloth.homeDir "/.mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json")
+          ]
+        ];
+        bind.rw = [
+          (sloth.concat' sloth.xdgCacheHome "/mesa_shader_cache")
+          (sloth.concat' sloth.xdgCacheHome "/mesa_shader_cache_db")
+          (sloth.concat' sloth.xdgCacheHome "/fontconfig")
+          (sloth.concat' sloth.homeDir "/.mozilla")
+          (sloth.concat' sloth.xdgCacheHome "/mozilla")
+          (sloth.concat' sloth.homeDir "/Downloads")
+          (sloth.concat' sloth.runtimeDir "/doc")
+          (sloth.concat' sloth.runtimeDir "/app/org.keepassxc.KeePassXC")
+        ];
+        tmpfs = ["/tmp"];
+        sockets = {
+          wayland = true;
+          pulse = true;
+          pipewire = true;
+        };
+        apivfs.proc = true;
+      };
+    };
+  }).config.env;
+in {
+
+  home.packages = [ sandboxedPackage ];
 
 }

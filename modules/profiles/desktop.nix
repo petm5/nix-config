@@ -78,6 +78,8 @@
     nautilus
     system-config-printer
     pavucontrol
+    gnome-software
+    flatpak
   ];
 
   boot.plymouth = {

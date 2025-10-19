@@ -34,8 +34,6 @@
     gnome-font-viewer
     mpv
     simple-scan
-    flatpak
-    gnome-software
     keepassxc
   ];
 

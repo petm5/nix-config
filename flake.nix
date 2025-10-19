@@ -16,12 +16,15 @@
     };
   };
 
-  outputs = { self, nixpkgs, lanzaboote, home-manager, nix-on-droid }: {
+  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, ... }: {
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
         ./hosts/peter-pc/configuration.nix
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
+        {
+          home-manager.extraSpecialArgs.flake-inputs = inputs;
+        }
       ];
     };
     homeConfigurations."petms@peter-pc" = home-manager.lib.homeManagerConfiguration {

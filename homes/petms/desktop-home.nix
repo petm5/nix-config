@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, flake-inputs, ... }: {
 
   imports = [
     ./home.nix
@@ -6,6 +6,7 @@
     ./niri.nix
     ./waybar.nix
     ./firefox.nix
+    flake-inputs.nix-flatpak.homeManagerModules.nix-flatpak
   ];
 
   programs.foot = {
@@ -29,13 +30,33 @@
   };
 
   home.packages = with pkgs; [
-    eog
-    file-roller
-    gnome-font-viewer
     mpv
-    simple-scan
     keepassxc
   ];
+
+  services.flatpak.enable = true;
+  services.flatpak.packages = [
+    "org.gnome.Calculator"
+    "org.gnome.Loupe"
+    "org.gnome.SimpleScan"
+    "org.gnome.FileRoller"
+    "org.gnome.font-viewer"
+  ];
+
+  services.flatpak.overrides = {
+    global.Context = {
+      sockets = [
+        "wayland" "!x11" "!fallback-x11"
+        "!system-bus" "!session-bus"
+        "!ssh-auth"
+      ];
+      devices = ["!all" "!input" "dri"];
+      filesystems = [
+        "!host" "!home"
+      ];
+    };
+  };
+
 
   xdg.systemDirs.data = [ "$HOME/.local/share/flatpak/exports/share" "/var/lib/flatpak/exports/share" ];
 

@@ -49,12 +49,13 @@
 
   services.ssh-agent.enable = true;
 
-  programs.git = {
-    enable = true;
-    settings.user = {
+  programs.git.enable = true;
+  programs.git.settings = {
+    user = {
       email = "petms@proton.me";
       name = "Peter Marshall";
     };
+    gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
   };
 
   programs.gpg.enable = true;

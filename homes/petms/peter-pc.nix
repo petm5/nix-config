@@ -8,6 +8,7 @@
   programs.git.settings = {
     user.signingKey = "~/.ssh/id_ed25519";
     gpg.format = "ssh";
+    commit.gpgsign = true;
   };
 
 }

@@ -51,8 +51,10 @@
 
   programs.git = {
     enable = true;
-    userEmail = "petms@proton.me";
-    userName = "Peter Marshall";
+    settings.user = {
+      email = "petms@proton.me";
+      name = "Peter Marshall";
+    };
   };
 
   programs.gpg.enable = true;

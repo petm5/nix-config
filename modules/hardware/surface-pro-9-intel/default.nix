@@ -13,7 +13,7 @@
 
   systemd.services.surface-gpe = {
     script = ''
-      ${pkgs.kmod}/bin/insmod ${(config.boot.kernelPackages.callPackage ./surface-gpe.nix {})}/lib/modules/*/updates/surface_gpe.ko*
+      ${pkgs.kmod}/bin/insmod ${(config.boot.kernelPackages.callPackage ../../../pkgs/surface-gpe {})}/lib/modules/*/updates/surface_gpe.ko*
     '';
     wantedBy = [ "default.target" ];
     restartIfChanged = false;

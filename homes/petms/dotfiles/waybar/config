@@ -1,0 +1,119 @@
+[
+  {
+    "battery": {
+      "format": "{icon}",
+      "format-icons": {
+        "charging": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "discharging": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "full": [
+          ""
+        ],
+        "plugged": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "unknown": [
+          ""
+        ]
+      },
+      "interval": 2
+    },
+    "clock": {
+      "calendar": {
+        "format": {
+          "days": "<span color='#6c6f85'><b>{}</b></span>",
+          "months": "<span color='#fe640b'><b>{}</b></span>",
+          "today": "<span color='#1e66f5'><b><u>{}</u></b></span>",
+          "weekdays": "<span color='#df8e1d'><b>{}</b></span>",
+          "weeks": "<span color='#179299'><b>W{}</b></span>"
+        },
+        "mode": "year",
+        "mode-mon-col": 3,
+        "weeks-pos": "right"
+      },
+      "tooltip-format": "<tt><small>{calendar}</small></tt>"
+    },
+    "height": 26,
+    "layer": "top",
+    "modules-left": [
+      "custom/launcher",
+      "wlr/taskbar"
+    ],
+    "modules-center": [
+      "niri/window"
+    ],
+    "modules-right": [
+      "tray",
+      "group/info"
+    ],
+    "group/info": {
+      "modules": [
+        "wireplumber",
+        "network",
+        "battery",
+        "clock"
+      ],
+      "orientation": "horizontal"
+    },
+    "custom/launcher": {
+      "format": "",
+      "tooltip": false,
+      "on-click": "fuzzel"
+    },
+    "network": {
+      "format-disconnected": "󰌙",
+      "format-ethernet": "",
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "format-wifi": "{icon}",
+      "tooltip-format": "Connected ({ifname})",
+      "tooltip-format-disconnected": "Disconnected"
+    },
+    "position": "bottom",
+    "tray": {
+      "icon-size": 20,
+      "spacing": 4,
+      "show-passive-items": true
+    },
+    "wireplumber": {
+      "format": "{icon}",
+      "format-icons": [
+        "",
+        "",
+        ""
+      ],
+      "format-muted": ""
+    },
+    "wlr/taskbar": {
+      "format": "{icon}",
+      "icon-size": 20,
+      "on-click": "activate"
+    }
+  }
+]

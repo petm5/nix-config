@@ -1,0 +1,38 @@
+* {
+  border: none;
+  border-radius: 0;
+  color: #c8d3f5;
+  font-family: "Liberation Sans";
+  font-weight: 500;
+  font-size: 14px;
+}
+window {
+  background: #222436;
+}
+tooltip {
+  background: #222436;
+}
+.modules-left, .modules-right {
+  padding: 0 2px;
+}
+.module {
+  padding: 0 4px;
+}
+#wireplumber, #network, #battery {
+  font-family: "Material Symbols Sharp";
+  font-size: 15px;
+}
+#custom-launcher {
+  font-size: 19px;
+}
+#workspaces button, #taskbar button {
+  margin: 0 2px;
+  padding: 0 2px;
+  color: inherit;
+}
+#workspaces button:hover, #taskbar button:hover {
+  background: rgba(100%,100%,100%,0.1);
+}
+#clock {
+  font-weight: bold;
+}

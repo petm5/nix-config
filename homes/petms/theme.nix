@@ -83,35 +83,6 @@ in {
     colors = colors.foot;
   };
 
-  programs.waybar.style = ''
-    * {
-      border: none;
-      border-radius: 0;
-      color: ${colors.alacritty.primary.foreground};
-      font-family: "Liberation Sans", "Material Symbols Sharp";
-      font-weight: 500;
-      font-size: 14px;
-    }
-    window {
-      background: ${colors.alacritty.primary.background};
-      padding: 0 2px;
-    }
-    tooltip {
-      background: ${colors.alacritty.primary.background};
-      border-radius: 6px;
-    }
-    box > * > * {
-      padding: 0 4px;
-    }
-    #workspaces button, #taskbar button {
-      padding: 0 4px;
-      color: inherit;
-    }
-    #clock {
-      margin-right: 4px;
-    }
-  '';
-
   services.mako.settings = {
     text-color = "${colors.alacritty.primary.foreground}";
     border-color = "${colors.alacritty.primary.foreground}";

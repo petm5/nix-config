@@ -28,7 +28,7 @@
       Description = "RClone Sync";
     };
     Service = {
-      ExecStart = "${pkgs.rclone}/bin/rclone bisync \"gdrive:/keepassxc\" \"gdrive/keepassxc\" --force --conflict-resolve older --conflict-loser num --resilient --quiet";
+      ExecStart = "${pkgs.rclone}/bin/rclone bisync \"gdrive:/keepassxc\" \"gdrive/keepassxc\" --force --conflict-resolve path2 --conflict-loser num --resilient --inplace --quiet";
       Restart = "on-failure";
     };
   };

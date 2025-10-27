@@ -13,11 +13,10 @@
     "8.8.4.4"
   ];
 
-  # FIXME: DNS over TLS is broken in systemd v257.8
-  # services.resolved = {
-  #   dnsovertls = "true";
-  #   dnssec = "true";
-  # };
+  services.resolved = {
+    dnsovertls = "true";
+    dnssec = "true";
+  };
 
   # We don't need to support legacy BIOS systems by default
   boot.loader.grub.enable = lib.mkDefault false;

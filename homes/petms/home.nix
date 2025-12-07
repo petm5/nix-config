@@ -67,6 +67,7 @@
     zip
     unzip
     btop
+    gh
   ];
 
 }

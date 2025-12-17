@@ -64,6 +64,9 @@ input {
         map-to-output "eDP-1"
     }
 
+    // Power key is handled by systemd-logind
+    disable-power-key-handling
+
     // Uncomment this to make the mouse warp to the center of newly focused windows.
     // warp-mouse-to-focus
 

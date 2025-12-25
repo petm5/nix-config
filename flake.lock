@@ -142,6 +142,27 @@
         "type": "github"
       }
     },
+    "niri": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay_2"
+      },
+      "locked": {
+        "lastModified": 1766483519,
+        "narHash": "sha256-LRSUhcm2erq/v/6EkwVP86kdVyRSsZ+AYQgwsKJMwCM=",
+        "owner": "YaLTeR",
+        "repo": "niri",
+        "rev": "4d295418ce8e8e110060396bb485c4f0c381d37e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "YaLTeR",
+        "repo": "niri",
+        "type": "github"
+      }
+    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1739444422,
@@ -346,6 +367,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
+        "niri": "niri",
         "nix-flatpak": "nix-flatpak",
         "nix-on-droid": "nix-on-droid",
         "nixpak": "nixpak",
@@ -365,6 +387,27 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "3bfa664055e1a09c6aedab5533c5fc8d6ca5741a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
+      "inputs": {
+        "nixpkgs": [
+          "niri",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1757989933,
+        "narHash": "sha256-9cpKYWWPCFhgwQTww8S94rTXgg8Q8ydFv9fXM6I8xQM=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "8249aa3442fb9b45e615a35f39eca2fe5510d7c3",
         "type": "github"
       },
       "original": {

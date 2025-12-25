@@ -19,9 +19,13 @@
       url = "github:nixpak/nixpak";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    niri = {
+      url = "github:YaLTeR/niri";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, ... }: {
+  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, niri, ... }: {
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
         ./hosts/peter-pc/configuration.nix
@@ -29,6 +33,9 @@
         home-manager.nixosModules.home-manager
         {
           home-manager.extraSpecialArgs.flake-inputs = inputs;
+          nixpkgs.overlays = [ (self: super: {
+            niri = niri.packages.x86_64-linux.niri;
+          }) ];
         }
       ];
     };

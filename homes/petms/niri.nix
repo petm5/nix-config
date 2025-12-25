@@ -73,6 +73,16 @@
     fi
   '';
 
+  services.gammastep = {
+    enable = true;
+    latitude = "45";
+    longitude = "-76";
+    temperature = {
+      day = 6500;
+      night = 2800;
+    };
+  };
+
   home.packages = with pkgs; [ xwayland-satellite brillo ];
 
 }

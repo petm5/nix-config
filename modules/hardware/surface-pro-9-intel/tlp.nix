@@ -1,4 +1,24 @@
-{
+{ pkgs, ... }:
+let
+
+  powerLimitScript = pkgs.writeScript "set-power-limit" ''
+    #!${pkgs.runtimeShell}
+
+    ac_dev="/sys/class/power_supply/ADP1/online"
+    rapl_short="/sys/class/powercap/intel-rapl:1/constraint_1_power_limit_uw"
+    rapl_long="/sys/class/powercap/intel-rapl:1/constraint_0_power_limit_uw"
+
+    if [ "$(cat "$ac_dev")" == 0 ]
+    then
+      echo 6000000 > $rapl_short
+      echo 3400000 > $rapl_long
+    else
+      echo 52000000 > $rapl_short
+      echo 52000000 > $rapl_long
+    fi
+  '';
+
+in {
 
   services.power-profiles-daemon.enable = false;
 
@@ -17,13 +37,13 @@
     CPU_MIN_PERF_ON_AC = 0;
     CPU_MAX_PERF_ON_AC = 100;
     CPU_MIN_PERF_ON_BAT = 0;
-    CPU_MAX_PERF_ON_BAT = 15;
+    CPU_MAX_PERF_ON_BAT = 60;
     CPU_SCALING_MAX_FREQ_ON_AC = 4400000;
     CPU_SCALING_MAX_FREQ_ON_BAT = 4400000;
     USB_AUTOSUSPEND = 1;
     USB_EXCLUDE_BTUSB = 0;
-    INTEL_GPU_MIN_FREQ_ON_AC = 0;
-    INTEL_GPU_MIN_FREQ_ON_BAT = 0;
+    INTEL_GPU_MIN_FREQ_ON_AC = 100;
+    INTEL_GPU_MIN_FREQ_ON_BAT = 100;
     INTEL_GPU_MAX_FREQ_ON_AC = 1200;
     INTEL_GPU_MAX_FREQ_ON_BAT = 400;
     INTEL_GPU_BOOST_FREQ_ON_AC = 1200;
@@ -31,5 +51,19 @@
     PCIE_ASPM_ON_AC = "default";
     PCIE_ASPM_ON_BAT = "powersupersave";
   };
+
+  systemd.services."power-limit" = {
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = powerLimitScript;
+    };
+    after = [ "sysfs.mount" ];
+    wantedBy = [ "multi-user.target" ];
+  };
+
+  services.udev.extraRules = ''
+    ACTION=="change", SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_TYPE}=="Mains", \
+    RUN+="${powerLimitScript}"
+  '';
 
 }

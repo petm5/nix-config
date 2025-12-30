@@ -30,9 +30,14 @@
   };
 
   home.packages = with pkgs; [
-    mpv
     keepassxc
   ];
+
+  programs.mpv = {
+    enable = true;
+    config.hwdec = "auto";
+    scripts = with pkgs.mpvScripts; [ mpris ];
+  };
 
   services.flatpak.enable = true;
   services.flatpak.packages = [

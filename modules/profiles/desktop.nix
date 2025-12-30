@@ -72,6 +72,8 @@
 
   programs.gnome-disks.enable = true;
 
+  services.gnome.localsearch.enable = true;
+
   programs.niri.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -79,6 +81,7 @@
     system-config-printer
     pavucontrol
     gnome-software
+    gnome-music
     flatpak
   ];
 

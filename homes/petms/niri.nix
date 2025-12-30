@@ -83,6 +83,6 @@
     };
   };
 
-  home.packages = with pkgs; [ xwayland-satellite brillo ];
+  home.packages = with pkgs; [ xwayland-satellite brillo playerctl ];
 
 }

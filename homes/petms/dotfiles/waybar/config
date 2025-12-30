@@ -70,6 +70,7 @@
     "group/info": {
       "modules": [
         "wireplumber",
+        "mpris",
         "network",
         "battery",
         "clock"
@@ -114,6 +115,13 @@
       "format": "{icon}",
       "icon-size": 20,
       "on-click": "activate"
+    },
+    "mpris": {
+      "format": "{status_icon}",
+      "status-icons": {
+        "playing": "",
+        "paused": ""
+      }
     }
   }
 ]

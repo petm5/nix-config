@@ -18,7 +18,7 @@ tooltip {
 .module {
   padding: 0 4px;
 }
-#wireplumber, #network, #battery {
+#wireplumber, #network, #battery, #mpris {
   font-family: "Material Symbols Sharp";
   font-size: 15px;
 }

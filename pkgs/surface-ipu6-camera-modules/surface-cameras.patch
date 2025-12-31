@@ -27,7 +27,7 @@ index 032fbcb981..6e87ef7826 100644
  	{ }
  };
 diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index 162b490469..128cd48714 100644
+index 162b490469..6b993cef33 100644
 --- a/drivers/media/i2c/ov13858.c
 +++ b/drivers/media/i2c/ov13858.c
 @@ -3,6 +3,7 @@
@@ -118,7 +118,7 @@ index 162b490469..128cd48714 100644
 +
 +	return ov13858_write_reg(ov13858, OV13858_REG_FORMAT1,
 +				OV13858_REG_VALUE_08BIT,
-+				enable ? val & ~BIT(3) : val | BIT(3));
++				enable ? (val & ~BIT(3)) : (val | BIT(3)));
 +
 +}
 +

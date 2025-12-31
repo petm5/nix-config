@@ -1,0 +1,13 @@
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-mmu.c b/drivers/media/pci/intel/ipu6/ipu6-mmu.c
+index 6d1c0b9016..7f33b9c898 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-mmu.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-mmu.c
+@@ -29,6 +29,8 @@
+ #include "ipu6-mmu.h"
+ #include "ipu6-platform-regs.h"
+ 
++#define DMA_BIT_MASK(n)	GENMASK_ULL((n) - 1, 0)
++
+ #define ISP_PAGE_SHIFT		12
+ #define ISP_PAGE_SIZE		BIT(ISP_PAGE_SHIFT)
+ #define ISP_PAGE_MASK		(~(ISP_PAGE_SIZE - 1))

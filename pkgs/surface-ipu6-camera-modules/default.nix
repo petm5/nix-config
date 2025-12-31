@@ -5,6 +5,8 @@ moduleTargets = [
   "drivers/platform/x86/intel/int3472/intel_skl_int3472_discrete"
   "drivers/platform/x86/intel/int3472/intel_skl_int3472_tps68470"
   "drivers/media/pci/intel/ipu-bridge"
+  "drivers/media/pci/intel/ipu6/intel-ipu6"
+  "drivers/media/pci/intel/ipu6/intel-ipu6-isys"
   "drivers/media/i2c/ov5693"
   "drivers/media/i2c/ov13858"
   "drivers/media/i2c/dw9719"
@@ -22,6 +24,7 @@ in stdenv.mkDerivation {
 
   patches = [
     ./surface-cameras.patch
+    ./fix-ipu6-dma-crash.patch
   ];
 
   makeFlags = [

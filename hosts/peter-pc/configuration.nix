@@ -41,7 +41,4 @@
 
   system.stateVersion = "24.05";
 
-  # TODO: Remove when camera patches are stable
-  boot.blacklistedKernelModules = [ "ov5693" "ov13858" "intel_ipu6_isys" "intel_ipu6" "ipu_bridge" "intel_skl_int3472_discrete" "intel_skl_int3472_tps68470" ];
-
 }

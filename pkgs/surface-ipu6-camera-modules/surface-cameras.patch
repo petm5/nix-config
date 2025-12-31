@@ -1,0 +1,774 @@
+diff --git a/drivers/media/i2c/dw9719.c b/drivers/media/i2c/dw9719.c
+index 032fbcb981..6e87ef7826 100644
+--- a/drivers/media/i2c/dw9719.c
++++ b/drivers/media/i2c/dw9719.c
+@@ -25,6 +25,7 @@
+ 
+ #define DW9719_INFO			CCI_REG8(0)
+ #define DW9719_ID			0xF1
++#define DW9XX2_ID			0xF2
+ #define DW9761_ID			0xF4
+ 
+ #define DW9719_CONTROL			CCI_REG8(2)
+@@ -101,6 +102,7 @@ static int dw9719_power_up(struct dw9719_device *dw9719, bool detect)
+ 
+ 		switch (val) {
+ 		case DW9719_ID:
++		case DW9XX2_ID:
+ 			dw9719->model = DW9719;
+ 			dw9719->mode_low_bits = 0x00;
+ 			dw9719->sac_mode = DW9719_DEFAULT_SAC;
+@@ -355,6 +357,7 @@ static void dw9719_remove(struct i2c_client *client)
+ 
+ static const struct i2c_device_id dw9719_id_table[] = {
+ 	{ "dw9719" },
++	{ "dw9xx2" },
+ 	{ "dw9761" },
+ 	{ }
+ };
+diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
+index 162b490469..128cd48714 100644
+--- a/drivers/media/i2c/ov13858.c
++++ b/drivers/media/i2c/ov13858.c
+@@ -3,6 +3,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
+@@ -81,6 +82,9 @@
+ #define OV13858_TEST_PATTERN_ENABLE	BIT(7)
+ #define OV13858_TEST_PATTERN_MASK	0xfc
+ 
++/* Flip Control */
++#define OV13858_REG_FORMAT1		0x3820
++
+ /* Number of frames to skip */
+ #define OV13858_NUM_OF_SKIP_FRAMES	2
+ 
+@@ -937,6 +941,7 @@ static const char * const ov13858_test_pattern_menu[] = {
+ };
+ 
+ /* Configurations for supported link frequencies */
++#define OV13858_XVCLK_FREQ 19200000
+ #define OV13858_NUM_OF_LINK_FREQS	2
+ #define OV13858_LINK_FREQ_540MHZ	540000000ULL
+ #define OV13858_LINK_FREQ_270MHZ	270000000ULL
+@@ -1028,6 +1033,13 @@ static const struct ov13858_mode supported_modes[] = {
+ 	}
+ };
+ 
++static const char * const ov13858_supply_names[] = {
++	"avdd",		/* Analog power */
++	"dvdd",		/* Digital circuit power */
++};
++
++#define OV13858_NUM_SUPPLIES	ARRAY_SIZE(ov13858_supply_names)
++
+ struct ov13858 {
+ 	struct device *dev;
+ 	struct clk *clk;
+@@ -1043,15 +1055,29 @@ struct ov13858 {
+ 	struct v4l2_ctrl *hblank;
+ 	struct v4l2_ctrl *exposure;
+ 
++	bool quirk_rotate_180deg;
++
+ 	/* Current mode */
+ 	const struct ov13858_mode *cur_mode;
+ 
++	struct gpio_desc *reset;
++	struct regulator_bulk_data supplies[OV13858_NUM_SUPPLIES];
++	struct clk *xvclk;
++
+ 	/* Mutex for serialized access */
+ 	struct mutex mutex;
+ };
+ 
+ #define to_ov13858(_sd)	container_of(_sd, struct ov13858, sd)
+ 
++static const guid_t dsm_get_sensor_id_guid =
++	GUID_INIT(0x822ace8f, 0x2814, 0x4174,
++		  0xa5, 0x6b, 0x5f, 0x02, 0x9f, 0xe0, 0x79, 0xee);
++
++static const char * const ov13858_quirk_module_names[] = {
++	"MSHW0341",
++};
++
+ /* Read registers up to 4 at a time */
+ static int ov13858_read_reg(struct ov13858 *ov13858, u16 reg, u32 len,
+ 			    u32 *val)
+@@ -1208,6 +1234,42 @@ static int ov13858_enable_test_pattern(struct ov13858 *ov13858, u32 pattern)
+ 				 OV13858_REG_VALUE_08BIT, val);
+ }
+ 
++static int ov13858_set_ctrl_hflip(struct ov13858 *ov13858, u32 enable)
++{
++	int ret;
++	u32 val;
++
++	enable ^= ov13858->quirk_rotate_180deg;
++
++	ret = ov13858_read_reg(ov13858, OV13858_REG_FORMAT1,
++			       OV13858_REG_VALUE_08BIT, &val);
++	if (ret)
++		return ret;
++
++	return ov13858_write_reg(ov13858, OV13858_REG_FORMAT1,
++				OV13858_REG_VALUE_08BIT,
++				enable ? val & ~BIT(3) : val | BIT(3));
++
++}
++
++static int ov13858_set_ctrl_vflip(struct ov13858 *ov13858, u32 enable)
++{
++	int ret;
++	u32 val;
++
++	enable ^= ov13858->quirk_rotate_180deg;
++
++	ret = ov13858_read_reg(ov13858, OV13858_REG_FORMAT1,
++			       OV13858_REG_VALUE_08BIT, &val);
++	if (ret)
++		return ret;
++
++	return ov13858_write_reg(ov13858, OV13858_REG_FORMAT1,
++				OV13858_REG_VALUE_08BIT,
++				enable ? val | BIT(4) : val & ~BIT(4));
++
++}
++
+ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct ov13858 *ov13858 = container_of(ctrl->handler,
+@@ -1257,11 +1319,14 @@ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
+ 	case V4L2_CID_TEST_PATTERN:
+ 		ret = ov13858_enable_test_pattern(ov13858, ctrl->val);
+ 		break;
+-	default:
+-		dev_info(ov13858->dev,
+-			 "ctrl(id:0x%x,val:0x%x) is not handled\n",
+-			 ctrl->id, ctrl->val);
++	case V4L2_CID_HFLIP:
++		ov13858_set_ctrl_hflip(ov13858, ctrl->val);
+ 		break;
++	case V4L2_CID_VFLIP:
++		ov13858_set_ctrl_vflip(ov13858, ctrl->val);
++		break;
++	default:
++		ret = -EINVAL;
+ 	}
+ 
+ 	pm_runtime_put(ov13858->dev);
+@@ -1400,6 +1465,30 @@ ov13858_set_pad_format(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+ 
++static int ov13858_get_selection(struct v4l2_subdev *sd,
++				struct v4l2_subdev_state *state,
++				struct v4l2_subdev_selection *sel)
++{
++	struct ov13858 *ov13858 = to_ov13858(sd);
++	const struct ov13858_mode *mode = ov13858->cur_mode;
++
++	switch (sel->target) {
++	case V4L2_SEL_TGT_CROP:
++	case V4L2_SEL_TGT_CROP_BOUNDS:
++	case V4L2_SEL_TGT_CROP_DEFAULT:
++	case V4L2_SEL_TGT_NATIVE_SIZE:
++		sel->r.top = 0;
++		sel->r.left = 0;
++		sel->r.width = mode->width;
++		sel->r.height = mode->height;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int ov13858_get_skip_frames(struct v4l2_subdev *sd, u32 *frames)
+ {
+ 	*frames = OV13858_NUM_OF_SKIP_FRAMES;
+@@ -1526,6 +1615,7 @@ static const struct v4l2_subdev_pad_ops ov13858_pad_ops = {
+ 	.enum_mbus_code = ov13858_enum_mbus_code,
+ 	.get_fmt = ov13858_get_pad_format,
+ 	.set_fmt = ov13858_set_pad_format,
++	.get_selection = ov13858_get_selection,
+ 	.enum_frame_size = ov13858_enum_frame_size,
+ };
+ 
+@@ -1622,6 +1712,12 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
+ 				     V4L2_CID_TEST_PATTERN,
+ 				     ARRAY_SIZE(ov13858_test_pattern_menu) - 1,
+ 				     0, 0, ov13858_test_pattern_menu);
++
++	v4l2_ctrl_new_std(ctrl_hdlr, &ov13858_ctrl_ops,
++			  V4L2_CID_HFLIP, 0, 1, 1, 0);
++	v4l2_ctrl_new_std(ctrl_hdlr, &ov13858_ctrl_ops,
++			  V4L2_CID_VFLIP, 0, 1, 1, 0);
++
+ 	if (ctrl_hdlr->error) {
+ 		ret = ctrl_hdlr->error;
+ 		dev_err(ov13858->dev, "%s control init failed (%d)\n",
+@@ -1655,6 +1751,118 @@ static void ov13858_free_controls(struct ov13858 *ov13858)
+ 	mutex_destroy(&ov13858->mutex);
+ }
+ 
++static int ov13858_configure_gpios(struct ov13858 *ov13858)
++{
++	ov13858->reset = devm_gpiod_get_optional(ov13858->dev, "reset",
++						GPIOD_OUT_HIGH);
++	if (IS_ERR(ov13858->reset)) {
++		dev_err(ov13858->dev, "Error fetching reset GPIO\n");
++		return PTR_ERR(ov13858->reset);
++	}
++
++	return 0;
++}
++
++static int ov13858_get_regulators(struct ov13858 *ov13858)
++{
++	unsigned int i;
++
++	for (i = 0; i < OV13858_NUM_SUPPLIES; i++)
++		ov13858->supplies[i].supply = ov13858_supply_names[i];
++
++	return devm_regulator_bulk_get(ov13858->dev, OV13858_NUM_SUPPLIES,
++				       ov13858->supplies);
++}
++
++static void ov13858_sensor_powerdown(struct ov13858 *ov13858)
++{
++	gpiod_set_value_cansleep(ov13858->reset, 1);
++
++	regulator_bulk_disable(OV13858_NUM_SUPPLIES, ov13858->supplies);
++
++	clk_disable_unprepare(ov13858->xvclk);
++}
++
++static int ov13858_sensor_powerup(struct ov13858 *ov13858)
++{
++	int ret;
++
++	gpiod_set_value_cansleep(ov13858->reset, 1);
++
++	ret = clk_prepare_enable(ov13858->xvclk);
++	if (ret) {
++		dev_err(ov13858->dev, "Failed to enable clk\n");
++		goto fail_power;
++	}
++
++	ret = regulator_bulk_enable(OV13858_NUM_SUPPLIES, ov13858->supplies);
++	if (ret) {
++		dev_err(ov13858->dev, "Failed to enable regulators\n");
++		goto fail_power;
++	}
++
++	gpiod_set_value_cansleep(ov13858->reset, 0);
++
++	usleep_range(5000, 7500);
++
++	return 0;
++
++fail_power:
++	ov13858_sensor_powerdown(ov13858);
++	return ret;
++}
++
++static int __maybe_unused ov13858_sensor_suspend(struct device *dev)
++{
++	struct v4l2_subdev *sd = dev_get_drvdata(dev);
++	struct ov13858 *ov13858 = to_ov13858(sd);
++
++	ov13858_sensor_powerdown(ov13858);
++
++	return 0;
++}
++
++static int __maybe_unused ov13858_sensor_resume(struct device *dev)
++{
++	struct v4l2_subdev *sd = dev_get_drvdata(dev);
++	struct ov13858 *ov13858 = to_ov13858(sd);
++	int ret;
++
++	ret = ov13858_sensor_powerup(ov13858);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int ov13858_read_module_name(struct ov13858 *ov13858)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&ov13858->sd);
++	union acpi_object *obj;
++	struct acpi_device *adev = ACPI_COMPANION(&client->dev);
++	int i;
++
++	if (!adev)
++		return 0;
++
++	obj = acpi_evaluate_dsm_typed(adev->handle,
++				      &dsm_get_sensor_id_guid, 0x00,
++				      0x01, NULL, ACPI_TYPE_STRING);
++	if (!obj)
++		return 0;
++
++	dev_dbg(&client->dev, "module name: %s", obj->string.pointer);
++	for (i = 0; i < ARRAY_SIZE(ov13858_quirk_module_names); i++) {
++		if (!strcmp(ov13858_quirk_module_names[i], obj->string.pointer)) {
++			ov13858->quirk_rotate_180deg = 1;
++			break;
++		}
++	}
++	ACPI_FREE(obj);
++
++	return 0;
++}
++
+ static int ov13858_probe(struct i2c_client *client)
+ {
+ 	struct ov13858 *ov13858;
+@@ -1673,7 +1881,7 @@ static int ov13858_probe(struct i2c_client *client)
+ 				     "failed to get clock\n");
+ 
+ 	freq = clk_get_rate(ov13858->clk);
+-	if (freq != 19200000)
++	if (freq != OV13858_XVCLK_FREQ)
+ 		return dev_err_probe(ov13858->dev, -EINVAL,
+ 				     "external clock %lu is not supported\n",
+ 				     freq);
+@@ -1681,19 +1889,30 @@ static int ov13858_probe(struct i2c_client *client)
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&ov13858->sd, client, &ov13858_subdev_ops);
+ 
+-	/* Check module identity */
+-	ret = ov13858_identify_module(ov13858);
+-	if (ret) {
+-		dev_err(ov13858->dev, "failed to find sensor: %d\n", ret);
++	/* External clock init */
++	ov13858->xvclk = devm_clk_get_optional(ov13858->dev, "xvclk");
++	if (IS_ERR(ov13858->xvclk))
++		return dev_err_probe(ov13858->dev, PTR_ERR(ov13858->xvclk),
++				     "failed to get xvclk: %ld\n",
++				     PTR_ERR(ov13858->xvclk));
++
++	ret = ov13858_configure_gpios(ov13858);
++	if (ret)
+ 		return ret;
+-	}
++
++	ret = ov13858_get_regulators(ov13858);
++	if (ret)
++		return dev_err_probe(ov13858->dev, ret,
++				     "Error fetching regulators\n");
+ 
+ 	/* Set default mode to max resolution */
+ 	ov13858->cur_mode = &supported_modes[0];
+ 
++	ov13858_read_module_name(ov13858);
++
+ 	ret = ov13858_init_controls(ov13858);
+ 	if (ret)
+-		return ret;
++		goto err_powerdown;
+ 
+ 	/* Initialize subdev */
+ 	ov13858->sd.internal_ops = &ov13858_internal_ops;
+@@ -1710,20 +1929,38 @@ static int ov13858_probe(struct i2c_client *client)
+ 		goto error_handler_free;
+ 	}
+ 
+-	ret = v4l2_async_register_subdev_sensor(&ov13858->sd);
+-	if (ret < 0)
++	ret = ov13858_sensor_powerup(ov13858);
++	if (ret)
+ 		goto error_media_entity;
+ 
+-	/*
+-	 * Device is already turned on by i2c-core with ACPI domain PM.
+-	 * Enable runtime PM and turn off the device.
+-	 */
++	/* Check module identity */
++	ret = ov13858_identify_module(ov13858);
++	if (ret) {
++		dev_err(ov13858->dev, "failed to find sensor: %d\n", ret);
++		goto err_powerdown;
++	}
++
+ 	pm_runtime_set_active(ov13858->dev);
++	pm_runtime_get_noresume(ov13858->dev);
+ 	pm_runtime_enable(ov13858->dev);
+-	pm_runtime_idle(ov13858->dev);
++
++	ret = v4l2_async_register_subdev_sensor(&ov13858->sd);
++	if (ret < 0)
++		goto err_pm_runtime;
++
++	pm_runtime_set_autosuspend_delay(ov13858->dev, 1000);
++	pm_runtime_use_autosuspend(ov13858->dev);
++	pm_runtime_put_autosuspend(ov13858->dev);
+ 
+ 	return 0;
+ 
++err_pm_runtime:
++	pm_runtime_disable(ov13858->dev);
++	pm_runtime_put_noidle(ov13858->dev);
++
++err_powerdown:
++	ov13858_sensor_powerdown(ov13858);
++
+ error_media_entity:
+ 	media_entity_cleanup(&ov13858->sd.entity);
+ 
+@@ -1746,6 +1983,10 @@ static void ov13858_remove(struct i2c_client *client)
+ 	pm_runtime_disable(ov13858->dev);
+ }
+ 
++static const struct dev_pm_ops ov13858_pm_ops = {
++	SET_RUNTIME_PM_OPS(ov13858_sensor_suspend, ov13858_sensor_resume, NULL)
++};
++
+ static const struct i2c_device_id ov13858_id_table[] = {
+ 	{ "ov13858" },
+ 	{}
+@@ -1766,6 +2007,7 @@ static struct i2c_driver ov13858_i2c_driver = {
+ 	.driver = {
+ 		.name = "ov13858",
+ 		.acpi_match_table = ACPI_PTR(ov13858_acpi_ids),
++		.pm = &ov13858_pm_ops,
+ 	},
+ 	.probe = ov13858_probe,
+ 	.remove = ov13858_remove,
+diff --git a/drivers/media/i2c/ov5693.c b/drivers/media/i2c/ov5693.c
+index d294477f9d..08aee389e0 100644
+--- a/drivers/media/i2c/ov5693.c
++++ b/drivers/media/i2c/ov5693.c
+@@ -77,7 +77,7 @@
+ #define OV5693_FIXED_PPL			2688U
+ #define OV5693_TIMING_VTS_REG			CCI_REG16(0x380e)
+ #define OV5693_TIMING_MAX_VTS			0xffff
+-#define OV5693_TIMING_MIN_VTS			0x04
++#define OV5693_TIMING_MIN_VTS			0x12
+ 
+ #define OV5693_OFFSET_START_X_REG		CCI_REG16(0x3810)
+ #define OV5693_OFFSET_START_Y_REG		CCI_REG16(0x3812)
+@@ -88,7 +88,7 @@
+ #define OV5693_FORMAT1_REG			CCI_REG8(0x3820)
+ #define OV5693_FORMAT1_FLIP_VERT_ISP_EN		BIT(6)
+ #define OV5693_FORMAT1_FLIP_VERT_SENSOR_EN	BIT(1)
+-#define OV5693_FORMAT1_VBIN_EN			BIT(0)
++#define OV5693_FORMAT1_VBIN_EN			BIT(2)
+ #define OV5693_FORMAT2_REG			CCI_REG8(0x3821)
+ #define OV5693_FORMAT2_HDR_EN			BIT(7)
+ #define OV5693_FORMAT2_FLIP_HORZ_ISP_EN		BIT(2)
+@@ -124,6 +124,10 @@
+ 
+ #define to_ov5693_sensor(x) container_of(x, struct ov5693_device, sd)
+ 
++static const guid_t dsm_get_sensor_id_guid =
++	GUID_INIT(0x822ace8f, 0x2814, 0x4174,
++		  0xa5, 0x6b, 0x5f, 0x02, 0x9f, 0xe0, 0x79, 0xee);
++
+ static const char * const ov5693_supply_names[] = {
+ 	"avdd",		/* Analog power */
+ 	"dovdd",	/* Digital I/O power */
+@@ -170,6 +174,10 @@ struct ov5693_device {
+ 		struct v4l2_ctrl *vblank;
+ 		struct v4l2_ctrl *test_pattern;
+ 	} ctrls;
++
++	struct ov5693_quirks {
++		bool rotate_180;
++	} quirks;
+ };
+ 
+ static const struct cci_reg_sequence ov5693_global_regs[] = {
+@@ -316,7 +324,9 @@ static const struct cci_reg_sequence ov5693_global_regs[] = {
+ 	{CCI_REG8(0x5e10), 0x0c},
+ 	{CCI_REG8(0x3820), 0x00},
+ 	{CCI_REG8(0x3821), 0x1e},
+-	{CCI_REG8(0x5041), 0x14}
++	{CCI_REG8(0x5041), 0x14},
++	/* Enable MIPI clock gate */
++	{CCI_REG8(0x4800), 0x20}
+ };
+ 
+ static const struct v4l2_rect ov5693_default_crop = {
+@@ -351,6 +361,10 @@ static const u8 ov5693_test_pattern_bits[] = {
+ 	OV5693_TEST_PATTERN_ROLLING,
+ };
+ 
++static const char * const ov5693_quirk_module_names[] = {
++	"MSHW0340",
++};
++
+ /* V4L2 Controls Functions */
+ 
+ static int ov5693_flip_vert_configure(struct ov5693_device *ov5693,
+@@ -360,6 +374,8 @@ static int ov5693_flip_vert_configure(struct ov5693_device *ov5693,
+ 		  OV5693_FORMAT1_FLIP_VERT_SENSOR_EN;
+ 	int ret;
+ 
++	enable ^= ov5693->quirks.rotate_180;
++
+ 	ret = cci_update_bits(ov5693->regmap, OV5693_FORMAT1_REG, bits,
+ 			      enable ? bits : 0, NULL);
+ 	if (ret)
+@@ -375,8 +391,10 @@ static int ov5693_flip_horz_configure(struct ov5693_device *ov5693,
+ 		  OV5693_FORMAT2_FLIP_HORZ_SENSOR_EN;
+ 	int ret;
+ 
++	enable ^= ov5693->quirks.rotate_180;
++
+ 	ret = cci_update_bits(ov5693->regmap, OV5693_FORMAT2_REG, bits,
+-			      enable ? bits : 0, NULL);
++			      enable ? 0 : bits, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -559,7 +577,7 @@ static int ov5693_mode_configure(struct ov5693_device *ov5693)
+ 		  &ret);
+ 
+ 	/* Offset X */
+-	cci_write(ov5693->regmap, OV5693_OFFSET_START_X_REG, 0, &ret);
++	cci_write(ov5693->regmap, OV5693_OFFSET_START_X_REG, 2, &ret);
+ 
+ 	/* Output Size X */
+ 	cci_write(ov5693->regmap, OV5693_OUTPUT_SIZE_X_REG, mode->format.width,
+@@ -567,7 +585,7 @@ static int ov5693_mode_configure(struct ov5693_device *ov5693)
+ 
+ 	/* Crop End X */
+ 	cci_write(ov5693->regmap, OV5693_CROP_END_X_REG,
+-		  mode->crop.left + mode->crop.width, &ret);
++		  mode->crop.left + mode->crop.width + 7, &ret);
+ 
+ 	/* Horizontal Total Size */
+ 	cci_write(ov5693->regmap, OV5693_TIMING_HTS_REG, OV5693_FIXED_PPL,
+@@ -578,7 +596,7 @@ static int ov5693_mode_configure(struct ov5693_device *ov5693)
+ 		  &ret);
+ 
+ 	/* Offset Y */
+-	cci_write(ov5693->regmap, OV5693_OFFSET_START_Y_REG, 0, &ret);
++	cci_write(ov5693->regmap, OV5693_OFFSET_START_Y_REG, 2, &ret);
+ 
+ 	/* Output Size Y */
+ 	cci_write(ov5693->regmap, OV5693_OUTPUT_SIZE_Y_REG, mode->format.height,
+@@ -586,7 +604,7 @@ static int ov5693_mode_configure(struct ov5693_device *ov5693)
+ 
+ 	/* Crop End Y */
+ 	cci_write(ov5693->regmap, OV5693_CROP_END_Y_REG,
+-		  mode->crop.top + mode->crop.height, &ret);
++		  mode->crop.top + mode->crop.height + 7, &ret);
+ 
+ 	/* Subsample X increase */
+ 	cci_write(ov5693->regmap, OV5693_SUB_INC_X_REG,
+@@ -711,24 +729,8 @@ static int __maybe_unused ov5693_sensor_resume(struct device *dev)
+ 	struct ov5693_device *ov5693 = to_ov5693_sensor(sd);
+ 	int ret;
+ 
+-	mutex_lock(&ov5693->lock);
+-
+ 	ret = ov5693_sensor_powerup(ov5693);
+-	if (ret)
+-		goto out_unlock;
+-
+-	ret = ov5693_sensor_init(ov5693);
+-	if (ret) {
+-		dev_err(dev, "ov5693 sensor init failure\n");
+-		goto err_power;
+-	}
+-
+-	goto out_unlock;
+ 
+-err_power:
+-	ov5693_sensor_powerdown(ov5693);
+-out_unlock:
+-	mutex_unlock(&ov5693->lock);
+ 	return ret;
+ }
+ 
+@@ -813,7 +815,7 @@ static int ov5693_set_fmt(struct v4l2_subdev *sd,
+ 	struct ov5693_device *ov5693 = to_ov5693_sensor(sd);
+ 	const struct v4l2_rect *crop;
+ 	struct v4l2_mbus_framefmt *fmt;
+-	unsigned int hratio, vratio;
++	unsigned int hratio, vratio, ratio;
+ 	unsigned int width, height;
+ 	unsigned int hblank;
+ 	int exposure_max;
+@@ -831,18 +833,19 @@ static int ov5693_set_fmt(struct v4l2_subdev *sd,
+ 
+ 	/*
+ 	 * We can only support setting either the dimensions of the crop rect
+-	 * or those dimensions binned (separately) by a factor of two.
++	 * or those dimensions binned by a factor of two.
+ 	 */
+ 	hratio = clamp_t(unsigned int,
+ 			 DIV_ROUND_CLOSEST(crop->width, width), 1, 2);
+ 	vratio = clamp_t(unsigned int,
+ 			 DIV_ROUND_CLOSEST(crop->height, height), 1, 2);
++	ratio = min_t(unsigned int, hratio, vratio);
+ 
+ 	fmt = __ov5693_get_pad_format(ov5693, state, format->pad,
+ 				      format->which);
+ 
+-	fmt->width = crop->width / hratio;
+-	fmt->height = crop->height / vratio;
++	fmt->width = crop->width / ratio;
++	fmt->height = crop->height / ratio;
+ 	fmt->code = MEDIA_BUS_FMT_SBGGR10_1X10;
+ 
+ 	format->format = *fmt;
+@@ -852,10 +855,10 @@ static int ov5693_set_fmt(struct v4l2_subdev *sd,
+ 
+ 	mutex_lock(&ov5693->lock);
+ 
+-	ov5693->mode.binning_x = hratio > 1;
+-	ov5693->mode.inc_x_odd = hratio > 1 ? 3 : 1;
+-	ov5693->mode.binning_y = vratio > 1;
+-	ov5693->mode.inc_y_odd = vratio > 1 ? 3 : 1;
++	ov5693->mode.binning_x = ratio > 1;
++	ov5693->mode.inc_x_odd = ratio > 1 ? 3 : 1;
++	ov5693->mode.binning_y = ratio > 1;
++	ov5693->mode.inc_y_odd = ratio > 1 ? 3 : 1;
+ 
+ 	ov5693->mode.vts = __ov5693_calc_vts(fmt->height);
+ 
+@@ -976,6 +979,14 @@ static int ov5693_s_stream(struct v4l2_subdev *sd, int enable)
+ 			return ret;
+ 
+ 		mutex_lock(&ov5693->lock);
++
++		ret = ov5693_sensor_init(ov5693);
++		if (ret) {
++			dev_err(ov5693->dev, "ov5693 sensor init failure\n");
++			mutex_unlock(&ov5693->lock);
++			goto err_power_down;
++		}
++
+ 		ret = __v4l2_ctrl_handler_setup(&ov5693->ctrls.handler);
+ 		if (ret) {
+ 			mutex_unlock(&ov5693->lock);
+@@ -1265,6 +1276,33 @@ static int ov5693_check_hwcfg(struct ov5693_device *ov5693)
+ 	return ret;
+ }
+ 
++static int ov5693_read_module_name(struct ov5693_device *ov5693)
++{
++	union acpi_object *obj;
++	struct acpi_device *adev = ACPI_COMPANION(ov5693->dev);
++	int i;
++
++	if (!adev)
++		return 0;
++
++	obj = acpi_evaluate_dsm_typed(adev->handle,
++				      &dsm_get_sensor_id_guid, 0x00,
++				      0x01, NULL, ACPI_TYPE_STRING);
++	if (!obj)
++		return 0;
++
++	dev_dbg(ov5693->dev, "module name: %s", obj->string.pointer);
++	for (i = 0; i < ARRAY_SIZE(ov5693_quirk_module_names); i++) {
++		if (!strcmp(ov5693_quirk_module_names[i], obj->string.pointer)) {
++			ov5693->quirks.rotate_180 = 1;
++			break;
++		}
++	}
++	ACPI_FREE(obj);
++
++	return 0;
++}
++
+ static int ov5693_probe(struct i2c_client *client)
+ {
+ 	struct ov5693_device *ov5693;
+@@ -1317,6 +1355,8 @@ static int ov5693_probe(struct i2c_client *client)
+ 	ov5693->mode.format = ov5693_default_fmt;
+ 	ov5693->mode.vts = __ov5693_calc_vts(ov5693->mode.format.height);
+ 
++	ov5693_read_module_name(ov5693);
++
+ 	ret = ov5693_init_controls(ov5693);
+ 	if (ret)
+ 		return ret;
+@@ -1396,6 +1436,7 @@ static const struct dev_pm_ops ov5693_pm_ops = {
+ 
+ static const struct acpi_device_id ov5693_acpi_match[] = {
+ 	{"INT33BE"},
++	{"OVTI5693"},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(acpi, ov5693_acpi_match);
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index 4e579352ab..cb1c919e03 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -58,6 +58,7 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
+ 	IPU_SENSOR_CONFIG("INT0310", 1, 55692000),
+ 	/* Omnivision OV5693 */
+ 	IPU_SENSOR_CONFIG("INT33BE", 1, 419200000),
++	IPU_SENSOR_CONFIG("OVTI5693", 1, 419200000),
+ 	/* Onsemi MT9M114 */
+ 	IPU_SENSOR_CONFIG("INT33F0", 1, 384000000),
+ 	/* Omnivision OV2740 */
+@@ -83,6 +84,8 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
+ 	IPU_SENSOR_CONFIG("OVTI08A1", 1, 500000000),
+ 	/* Omnivision OV08x40 */
+ 	IPU_SENSOR_CONFIG("OVTI08F4", 3, 400000000, 749000000, 800000000),
++	/* OmniVision OV13858 */
++	IPU_SENSOR_CONFIG("OVTID858", 2, 270000000, 540000000),
+ 	/* Omnivision OV13B10 */
+ 	IPU_SENSOR_CONFIG("OVTI13B1", 1, 560000000),
+ 	IPU_SENSOR_CONFIG("OVTIDB10", 1, 560000000),
+@@ -114,6 +117,14 @@ static const char * const ipu_vcm_types[] = {
+ 	"wv517s",
+ 	"lc898122xa",
+ 	"lc898212axb",
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	"dw9xx2",
+ };
+ 
+ /*
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 1505fc3ef7..514c1e8612 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -224,6 +224,8 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
+ 	case INT3472_GPIO_TYPE_HANDSHAKE:
++	case 0x08:
++	case 0x10:
+ 		*con_id = "dvdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		/* Setups using a handshake pin need 25 ms enable delay */
+@@ -333,6 +335,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 	case INT3472_GPIO_TYPE_PRIVACY_LED:
+ 	case INT3472_GPIO_TYPE_POWER_ENABLE:
+ 	case INT3472_GPIO_TYPE_HANDSHAKE:
++	case 0x08:
++	case 0x10:
+ 		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
+ 		if (IS_ERR(gpio)) {
+ 			ret = PTR_ERR(gpio);
+@@ -357,6 +361,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 			second_sensor = int3472->quirks.avdd_second_sensor;
+ 			fallthrough;
+ 		case INT3472_GPIO_TYPE_HANDSHAKE:
++		case 0x08:
++		case 0x10:
+ 			ret = skl_int3472_register_regulator(int3472, gpio, enable_time_us,
+ 							     con_id, second_sensor);
+ 			if (ret)

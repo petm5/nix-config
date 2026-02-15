@@ -24,14 +24,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "";
     };
+    surface-audio = {
+      url = "github:petm5/surface-audio/custom-tune";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, niri, ... }: {
+  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, niri, surface-audio, ... }: {
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
         ./hosts/peter-pc/configuration.nix
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
+        surface-audio.nixosModules.surface-audio
         {
           home-manager.extraSpecialArgs.flake-inputs = inputs;
           nixpkgs.overlays = [ (self: super: {

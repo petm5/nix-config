@@ -3,7 +3,6 @@
   imports = [
     ../common/cpu/intel
     ../common/gpu/intel
-    ./audio.nix
     ./tlp.nix
   ];
 

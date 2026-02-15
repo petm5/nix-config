@@ -13,8 +13,8 @@ stdenvNoCC.mkDerivation {
   src = fetchFromGitHub {
     owner = "petm5";
     repo = "surface-audio";
-    rev = "f2398486780962e8262e97099f0f808210834d60";
-    hash = "sha256-KqUOEpoLjnchI/z8JcklJ4iLk9Nus3Ty7Jyywe9ta08=";
+    rev = "e8a7fcf97796c84f90756ec232cd074a2b8a7f5f";
+    sha256 = "1yb9nvz8whjk1a88mvzk5b3jwakbp0241c3yfvhj6zzrajqbgpcx";
   };
 
   makeFlags = [

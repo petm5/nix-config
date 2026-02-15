@@ -13,9 +13,9 @@
     "8.8.4.4"
   ];
 
-  services.resolved = {
-    dnsovertls = "true";
-    dnssec = "true";
+  services.resolved.settings.Resolve = {
+    DNSOverTLS = true;
+    DNSSEC = true;
   };
 
   # We don't need to support legacy BIOS systems by default

@@ -5,16 +5,13 @@ let
     #!${pkgs.runtimeShell}
 
     ac_dev="/sys/class/power_supply/ADP1/online"
-    rapl_short="/sys/class/powercap/intel-rapl:1/constraint_1_power_limit_uw"
-    rapl_long="/sys/class/powercap/intel-rapl:1/constraint_0_power_limit_uw"
+    rapl_short="/sys/class/powercap/intel-rapl:0/constraint_1_power_limit_uw"
 
     if [ "$(cat "$ac_dev")" == 0 ]
     then
       echo 6000000 > $rapl_short
-      echo 3400000 > $rapl_long
     else
-      echo 52000000 > $rapl_short
-      echo 52000000 > $rapl_long
+      echo 60000000 > $rapl_short
     fi
   '';
 

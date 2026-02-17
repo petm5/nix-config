@@ -62,6 +62,7 @@
     };
   };
 
+  services.ssh-agent.enable = true;
 
   xdg.systemDirs.data = [ "$HOME/.local/share/flatpak/exports/share" "/var/lib/flatpak/exports/share" ];
 

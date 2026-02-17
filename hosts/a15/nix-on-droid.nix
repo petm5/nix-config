@@ -2,6 +2,9 @@
 
   system.stateVersion = "24.05";
 
+  user.uid = 10482;
+  user.gid = 10482;
+
   user.shell = lib.getExe pkgs.nushell;
 
   terminal.font = "${pkgs.cascadia-code}/share/fonts/truetype/CascadiaCode.ttf";

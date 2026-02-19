@@ -19,6 +19,9 @@
   in {
     inherit (cacheSettings) substituters;
     trustedPublicKeys = cacheSettings.trusted-public-keys;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
   };
 
 }

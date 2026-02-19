@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ThermalConfiguration>
 <Platform>
-	<Name>Surface Pro Intel RAPL</Name>
+	<Name>Surface Pro Intel</Name>
 	<ProductName>*</ProductName>
 	<Preference>QUIET</Preference>
 	<ThermalZones>
@@ -17,7 +17,7 @@
 						<index>1</index>
 						<type>rapl_controller</type>
 						<influence>100</influence>
-						<SamplingPeriod>10</SamplingPeriod>
+						<SamplingPeriod>5</SamplingPeriod>
 					</CoolingDevice>
 				</TripPoint>
 			</TripPoints>

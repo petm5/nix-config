@@ -66,6 +66,7 @@
     unzip
     btop
     gh
+    direnv
   ];
 
 }

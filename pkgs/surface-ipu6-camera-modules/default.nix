@@ -24,7 +24,6 @@ in stdenv.mkDerivation {
 
   patches = [
     ./surface-cameras.patch
-    ./fix-ipu6-dma-crash.patch
   ];
 
   makeFlags = [

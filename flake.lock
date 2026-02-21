@@ -237,11 +237,11 @@
         "nmd": "nmd"
       },
       "locked": {
-        "lastModified": 1771517136,
-        "narHash": "sha256-bIl2Hsovj4vfynSCPiMqqJiu/GkW1reE+UuDyoab87I=",
+        "lastModified": 1771689152,
+        "narHash": "sha256-PnWjT5dpQJ8DGIIjZ8a1qfc5cNSHT7rfvIvn08IrMSI=",
         "owner": "petm5",
         "repo": "nix-on-droid",
-        "rev": "08f5d7c3fc00258a564b8ac606214fb187523034",
+        "rev": "baa1841ecfabc47b5c97b848d495bbfa7548d728",
         "type": "github"
       },
       "original": {

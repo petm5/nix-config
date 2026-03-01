@@ -52,6 +52,7 @@
         "mode-mon-col": 3,
         "weeks-pos": "right"
       },
+      "format": "{:%I:%M %p}",
       "tooltip-format": "<tt><small>{calendar}</small></tt>"
     },
     "height": 26,
@@ -83,14 +84,16 @@
       "on-click": "fuzzel"
     },
     "network": {
-      "format-disconnected": "󰌙",
-      "format-ethernet": "",
+      "format-disconnected": "",
+      "format-linked": "",
+      "format-disabled": "",
+      "format-ethernet": "settings_ethernet",
       "format-icons": [
-        "",
-        "",
-        "",
-        "",
-        ""
+        "signal_wifi_0_bar",
+        "network_wifi_1_bar",
+        "network_wifi_2_bar",
+        "network_wifi_3_bar",
+        "signal_wifi_4_bar"
       ],
       "format-wifi": "{icon}",
       "tooltip-format": "Connected ({ifname})",

@@ -11,6 +11,7 @@
     };
     nix-on-droid = {
       url = "github:petm5/nix-on-droid/test-native-build";
+      # url = "git+file:///home/petms/nix-on-droid/";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
@@ -36,7 +37,7 @@
         ./hosts/peter-pc/configuration.nix
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
-        surface-audio.nixosModules.surface-audio
+        # surface-audio.nixosModules.surface-audio
         {
           home-manager.extraSpecialArgs.flake-inputs = inputs;
           nixpkgs.overlays = [ (self: super: {

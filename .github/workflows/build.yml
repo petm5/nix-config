@@ -19,6 +19,10 @@ jobs:
         platforms: arm64
     - name: Restore and save Nix Store
       uses: nix-community/cache-nix-action@v7
+      with:
+        primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+        restore-prefixes-first-match: nix-${{ runner.os }}-
+        gc-max-store-size-linux: 1G
     - name: Setup Nix binary cache
       run: nix run .#setup-nix-cache
     - name: Build desktop Nix config

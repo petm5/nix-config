@@ -34,6 +34,8 @@ jobs:
       uses: webfactory/ssh-agent@v0.10.0
       with:
         ssh-private-key: ${{ secrets.NIX_SSH_PRIVATE_KEY }}
+      if: ${{ secrets.NIX_SSH_PRIVATE_KEY != '' }}
     - name: Copy Nix paths to remote server
       run: |
-        nix copy --to "${{ env.NIX_REMOTE_HOST }}" result-nixos result-nod
+        nix copy --to "${{ vars.NIX_REMOTE_HOST }}" result-nixos result-nod
+      if: ${{ vars.NIX_REMOTE_HOST != '' }}

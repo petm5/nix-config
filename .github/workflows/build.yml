@@ -1,4 +1,4 @@
-name: "Build"
+name: "Build and Cache Outputs"
 on:
   pull_request:
   push:
@@ -7,12 +7,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - name: Install Nix
+      uses: cachix/install-nix-action@v31.10.1
+      extra_nix_options: |
+        experimental-features = nix-command flakes
+        extra-platforms = aarch64-linux
+    - name: Set up QEMU ARM64
+      uses: docker/setup-qemu-action@v4.0.0
       with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Cachix
-      uses: cachix/cachix-action@v14
+        platforms: arm64
+    - name: Restore and save Nix Store
+      uses: nix-community/cache-nix-action@v7
+    - name: Setup Nix binary cache
+      run: nix run .#setup-nix-cache
+    - name: Build desktop Nix config
+      run: |
+        nix build \
+          .#nixosConfigurations.peter-pc.config.system.build.toplevel \
+          --out-link result-nixos
+    - name: Build nix-on-droid config
+      run: |
+        nix build \
+          .#nixOnDroidConfigurations.a15.activationPackage \
+          --out-link result-nod
+    - name: Setup SSH Agent
+      uses: webfactory/ssh-agent@v0.10.0
       with:
-        name: peter-marshall5
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix build .#nixosConfigurations.peter-pc.config.system.build.toplevel --accept-flake-config
+        ssh-private-key: ${{ secrets.NIX_SSH_PRIVATE_KEY }}
+    - name: Copy Nix paths to remote server
+      run: |
+        nix copy --to "${{ env.NIX_REMOTE_HOST }}" result-nixos result-nod

@@ -55,22 +55,15 @@
       modules = [ ./hosts/a15/nix-on-droid.nix ];
       bootstrapSystem = "x86_64-linux";
     };
-    apps = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system: {
-      setup-nix-cache = {
-        type = "app";
-        program = let
-          pkgs = nixpkgs.legacyPackages.${system};
-          lib = pkgs.lib;
-          cacheCfg = import ./modules/binary-cache.nix;
-        in "${pkgs.writeScript "setup-nix-cache" ''
-            #!${pkgs.runtimeShell}
-            [ -e /etc/nix/nix.conf ] || exit 1
-            cat <<EOF >> /etc/nix/nix.conf
-            extra-substituters = ${lib.strings.concatStringsSep " " cacheCfg.substituters}
-            extra-trusted-public-keys = ${lib.strings.concatStringsSep " " cacheCfg.trusted-public-keys}
-            EOF
-          ''}";
-      };
+    packages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+      lib = pkgs.lib;
+      cacheCfg = import ./modules/binary-cache.nix;
+    in {
+      nixConfigFragment = "${pkgs.writeText "nix-extra-config" ''
+        extra-substituters = ${lib.strings.concatStringsSep " " cacheCfg.substituters}
+        extra-trusted-public-keys = ${lib.strings.concatStringsSep " " cacheCfg.trusted-public-keys}
+      ''}";
     });
   };
 }

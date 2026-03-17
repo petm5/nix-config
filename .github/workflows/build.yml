@@ -24,7 +24,12 @@ jobs:
         restore-prefixes-first-match: nix-${{ runner.os }}-
         gc-max-store-size-linux: 1G
     - name: Setup Nix binary cache
-      run: nix run .#setup-nix-cache
+      run: |
+        CONFIG_PATH=$(nix build .#nixConfigFragment --print-out-paths)
+
+        cat "$CONFIG_PATH" | sudo tee -a /etc/nix/nix.conf
+
+        sudo systemctl restart nix-daemon
     - name: Build desktop Nix config
       run: |
         nix build \

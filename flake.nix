@@ -60,10 +60,10 @@
       lib = pkgs.lib;
       cacheCfg = import ./modules/binary-cache.nix;
     in {
-      nixConfigFragment = "${pkgs.writeText "nix-extra-config" ''
+      nixConfigFragment = pkgs.writeText "nix-extra-config" ''
         extra-substituters = ${lib.strings.concatStringsSep " " cacheCfg.substituters}
         extra-trusted-public-keys = ${lib.strings.concatStringsSep " " cacheCfg.trusted-public-keys}
-      ''}";
+      '';
     });
   };
 }

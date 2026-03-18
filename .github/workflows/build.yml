@@ -50,7 +50,4 @@ jobs:
         chmod 600 cache-priv-key.pem
         nix store sign -k cache-priv-key.pem ./result*
         nix copy --substitute-on-destination --to "${{ vars.NIX_REMOTE_HOST }}" ./result*
-      if: |
-        vars.NIX_REMOTE_HOST != '' &&
-        secrets.NIX_SIGNING_KEY != '' &&
-        secrets.NIX_SSH_PRIVATE_KEY != ''
+      if: vars.NIX_REMOTE_HOST != ''

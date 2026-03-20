@@ -64,7 +64,7 @@
     nixOnDroidConfigurations."a15" = nix-on-droid.lib.nixOnDroidConfiguration {
       pkgs = import nixpkgs { system = "aarch64-linux"; };
       modules = [
-        (import ./modules/nixos/cache.nix self)
+        (import ./modules/nod/cache.nix self)
         ./hosts/a15/nix-on-droid.nix
       ];
       bootstrapSystem = "x86_64-linux";

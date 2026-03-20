@@ -14,14 +14,8 @@
   home-manager.useUserPackages = true;
   home-manager.config = ../../homes/petms/home.nix;
 
-  nix = let
-    cacheSettings = import ../../modules/binary-cache.nix;
-  in {
-    inherit (cacheSettings) substituters;
-    trustedPublicKeys = cacheSettings.trusted-public-keys;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-  };
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
 
 }

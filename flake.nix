@@ -69,15 +69,5 @@
       ];
       bootstrapSystem = "x86_64-linux";
     };
-    packages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
-      lib = pkgs.lib;
-      cacheCfg = import ./modules/binary-cache.nix;
-    in {
-      nixConfigFragment = pkgs.writeText "nix-extra-config" ''
-        extra-substituters = ${lib.strings.concatStringsSep " " cacheCfg.substituters}
-        extra-trusted-public-keys = ${lib.strings.concatStringsSep " " cacheCfg.trusted-public-keys}
-      '';
-    });
   };
 }

@@ -13,6 +13,7 @@ jobs:
         extra_nix_config: |
           experimental-features = nix-command flakes
           extra-platforms = aarch64-linux
+          accept-flake-config = 1
     - name: Set up QEMU ARM64
       uses: docker/setup-qemu-action@v4.0.0
       with:
@@ -23,13 +24,6 @@ jobs:
         primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
         restore-prefixes-first-match: nix-${{ runner.os }}-
         gc-max-store-size-linux: 1G
-    - name: Setup Nix binary cache
-      run: |
-        CONFIG_PATH=$(nix build .#nixConfigFragment --print-out-paths)
-
-        cat "$CONFIG_PATH" | sudo tee -a /etc/nix/nix.conf
-
-        sudo systemctl restart nix-daemon
     - name: Build desktop Nix config
       run: |
         nix build \

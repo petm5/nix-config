@@ -33,7 +33,7 @@
 
   nixConfig = {
     extra-substituters = [
-      "http://binarycache.petermarshall.ca"
+      "https://binarycache.petermarshall.ca"
     ];
     extra-trusted-public-keys = [
       "binarycache.petermarshall.ca:xmkaNcypcMm5i/8WxvNUtnuMND2bOoJYu1aUii9Eyao="

@@ -31,9 +31,20 @@
     };
   };
 
+  nixConfig = {
+    extra-substituters = [
+      "http://binarycache.petermarshall.ca"
+    ];
+    extra-trusted-public-keys = [
+      "binarycache.petermarshall.ca:xmkaNcypcMm5i/8WxvNUtnuMND2bOoJYu1aUii9Eyao="
+      "binarycache.petermarshall.ca-gh:5A6yxY0hRi/qNxygl6IU+1z6NkmLZfdykUTWLciNj/g="
+    ];
+  };
+
   outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, niri, surface-audio, ... }: {
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
+        (import ./modules/nixos/cache.nix self.nixConfig)
         ./hosts/peter-pc/configuration.nix
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
@@ -52,7 +63,10 @@
     };
     nixOnDroidConfigurations."a15" = nix-on-droid.lib.nixOnDroidConfiguration {
       pkgs = import nixpkgs { system = "aarch64-linux"; };
-      modules = [ ./hosts/a15/nix-on-droid.nix ];
+      modules = [
+        (import ./modules/nixos/cache.nix self.nixConfig)
+        ./hosts/a15/nix-on-droid.nix
+      ];
       bootstrapSystem = "x86_64-linux";
     };
     packages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system: let

@@ -39,8 +39,6 @@
   # Use the latest available kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-  } // (import ../binary-cache.nix);
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 }

@@ -6,8 +6,6 @@
   home.homeDirectory = "/home/petms";
 
   programs.git.settings = {
-    user.signingKey = "~/.ssh/id_ed25519.pub";
-    gpg.format = "ssh";
     commit.gpgsign = true;
   };
 

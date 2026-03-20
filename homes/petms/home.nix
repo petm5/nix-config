@@ -52,7 +52,9 @@
     user = {
       email = "petms@proton.me";
       name = "Peter Marshall";
+      signingKey = "~/.ssh/id_ed25519.pub";
     };
+    gpg.format = "ssh";
     gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
   };
 

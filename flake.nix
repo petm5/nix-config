@@ -44,7 +44,7 @@
   outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, niri, surface-audio, ... }: {
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
-        (import ./modules/nixos/cache.nix self.nixConfig)
+        (import ./modules/nixos/cache.nix self)
         ./hosts/peter-pc/configuration.nix
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
@@ -64,7 +64,7 @@
     nixOnDroidConfigurations."a15" = nix-on-droid.lib.nixOnDroidConfiguration {
       pkgs = import nixpkgs { system = "aarch64-linux"; };
       modules = [
-        (import ./modules/nixos/cache.nix self.nixConfig)
+        (import ./modules/nixos/cache.nix self)
         ./hosts/a15/nix-on-droid.nix
       ];
       bootstrapSystem = "x86_64-linux";

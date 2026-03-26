@@ -97,43 +97,6 @@ $env.color_config = {
 
 $env.config.show_banner = false;
 
-def system_info [] {
-
-    let primary_color = (ansi blue_bold);
-    let secondary_color = (ansi cyan_bold);
-
-    let host = (sys host);
-    let mem = (sys mem)
-
-    let info = {
-        OS: $"($host.name) ($host.os_version)"
-        Kernel: ($host.kernel_version)
-        Uptime: ($host.uptime)
-        Memory: $"($mem.used) / ($mem.total)"
-        Shell: $"nu ($env.NU_VERSION)"
-    };
-
-    let first_line = ([
-        $primary_color
-        ($env.USER)
-        (ansi reset)
-        "@"
-        $primary_color
-        ($host.hostname)
-        (ansi reset)
-    ] | str join);
-
-    let separator_length = ($env.USER | str length) + ($host | get hostname | str length)
-
-    let info_lines = ([
-        $first_line
-        (0..$separator_length | each {|_| "-"} | str join)
-    ] ++ ($info | | transpose key value | each {|e| $"($secondary_color)($e.key)(ansi reset): ($e.value)"}));
-
-    echo $info_lines | str join (char nl)
-
-}
-
 $env.config.hooks.env_change.PWD = [
     { ||
         if (which direnv | is-empty) {

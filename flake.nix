@@ -66,6 +66,7 @@
       modules = [
         (import ./modules/nod/cache.nix self)
         ./hosts/a15/nix-on-droid.nix
+        { nix.registry.nixpkgs.flake = nixpkgs; }
       ];
       bootstrapSystem = "x86_64-linux";
     };

@@ -14,6 +14,8 @@
   home-manager.useUserPackages = true;
   home-manager.config = ../../homes/petms/home.nix;
 
+  environment.motd = null;
+
   nix.extraOptions = ''
     experimental-features = nix-command flakes
   '';

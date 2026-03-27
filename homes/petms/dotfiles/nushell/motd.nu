@@ -47,12 +47,22 @@ def sysinfo [] {
 
     let separator_length = ($env.USER | str length) + ($host | get hostname | str length)
 
-    let info_lines = ([
+    let info_lines = ($info | transpose key value | each {|e|
+        [
+            ($secondary_color)
+            ($e.key)
+            (ansi reset)
+            ": "
+            ($e.value)
+        ] | str join
+    })
+
+    let out_lines = ([
         $first_line
         (0..$separator_length | each {|_| "-"} | str join)
-    ] ++ ($info | | transpose key value | each {|e| $"($secondary_color)($e.key)(ansi reset): ($e.value)"}))
+    ] | append $info_lines)
 
-    $info_lines
+    $out_lines
 
 }
 
@@ -61,21 +71,22 @@ export def show_motd [] {
     let logo = (logo)
     let sysinfo = (sysinfo)
 
-    let table = [ $logo $sysinfo ]
-
-    let max_length = ($table | each { length } | math max)
-
     let gap = 3
 
-    let padded = $table | drop 1
-        | each { |x| append (0..<($max_length - ($x | length)) | each { |x| '' }) }
-        | each { |section|
-            let max_width = $section | ansi strip | str length | math max
-            $section | each { |line| $line | fill -c (char sp) -a left -w ($max_width + $gap) }
-        }
-        | append [($table | last)]
+    let sections = [ $logo $sysinfo ] | wrap lines | insert width { get lines | ansi strip | str length | math max }
 
-    $padded.0 | zip $padded.1 | each { str join } | str join (char nl)
+    let max_len = $sections | get lines | each { length } | math max
+
+    let zipped = 0..<$max_len | each { |i|
+        $sections | each { |s| $s.lines | get -o $i | default '' | fill -c (char sp) -w ($s.width + $gap) }
+    }
+
+    [
+        "\e[?7l"
+        ($zipped | each { str join } | str join (char nl))
+        "\e[?7h"
+        (ansi reset)
+    ] | str join
 
 }
 

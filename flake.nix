@@ -61,6 +61,17 @@
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       modules = [ ./homes/petms/peter-pc.nix ];
     };
+    homeConfigurations.vscode = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      modules = [
+        ./homes/petms/base.nix
+        {
+          home.username = "vscode";
+          home.homeDirectory = "/home/vscode";
+          home.stateVersion = "23.11";
+        }
+      ];
+    };
     nixOnDroidConfigurations."a15" = nix-on-droid.lib.nixOnDroidConfiguration {
       pkgs = import nixpkgs { system = "aarch64-linux"; };
       modules = [

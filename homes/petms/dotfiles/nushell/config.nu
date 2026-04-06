@@ -9,14 +9,29 @@ def create_left_prompt [] {
         $relative_pwd => ([~ $relative_pwd] | path join)
     }
 
+    let user_color = (ansi cyan_bold)
+
+    let session_part = if ($env.CODESPACES? | default "false" | into bool) {
+        ([
+            ($user_color)
+            "@"
+            ($env.GITHUB_USER? | default "git")
+        ] | str join)
+    }
+
     let path_color = (ansi green_bold)
     let separator_color = (ansi light_green_bold)
 
-    ([
+    let path_part = ([
         $path_color
         ($dir | str replace --all (char path_sep) $"($separator_color)(char path_sep)($path_color)")
-        (char nl)
     ] | str join)
+
+    ([
+        $session_part
+        $path_part
+        (char nl)
+    ] | compact | str join (char sp))
 }
 
 def create_right_prompt [] {

@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+[ -d /nix ] || sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon
 
 nix run github:petm5/nix-config#homeConfigurations."vscode".activationPackage
 

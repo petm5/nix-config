@@ -66,7 +66,7 @@ def sysinfo [] {
 
 }
 
-export def show_motd [] {
+def motd [] {
 
     let logo = (logo)
     let sysinfo = (sysinfo)
@@ -88,6 +88,10 @@ export def show_motd [] {
         (ansi reset)
     ] | str join
 
+}
+
+export def show_motd [] {
+    motd | print
 }
 
 export def main [] {

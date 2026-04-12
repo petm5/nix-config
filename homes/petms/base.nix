@@ -37,6 +37,7 @@
     btop
     gh
     direnv
+    ripgrep
   ];
 
 }

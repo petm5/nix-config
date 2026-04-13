@@ -6,7 +6,7 @@ set -e
 
 . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 
-nix run github:petm5/nix-config#homeConfigurations."vscode".activationPackage
+nix run github:petm5/nix-config#homeConfigurations."vscode".activationPackage --extra-experimental-features "nix-command flakes"
 
 cat <<EOF >> ~/.bashrc
 . "$HOME/.nix-profile/etc/profile.d/nix.sh"

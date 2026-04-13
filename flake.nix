@@ -66,8 +66,8 @@
       modules = [
         ./homes/petms/base.nix
         {
-          home.username = "vscode";
-          home.homeDirectory = "/home/vscode";
+          home.username = "nix-profile";
+          home.homeDirectory = "/home/nix-profile";
           home.stateVersion = "23.11";
         }
       ];

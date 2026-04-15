@@ -6,6 +6,7 @@ TARGET_USER="nix-profile"
 TARGET_HOME="/home/$TARGET_USER"
 LOCKFILE="$HOME/.nix-setup-in-progress"
 UID=$(id -u)
+GID=$(id -g)
 
 [ "$UID" = 0 ] && echo "This script does not support running as root." && exit 1
 
@@ -26,7 +27,7 @@ sudo chmod +x /bin/enter-nix
 
 # Create a fresh login name with the same UID
 if ! id -u "$TARGET_USER" 2>/dev/null; then
-  sudo useradd -p "!" -o -u "$UID" -m -d "$TARGET_HOME" "$TARGET_USER"
+  sudo useradd -p "!" -o -u "$UID" -g "$GID" -m -d "$TARGET_HOME" "$TARGET_USER"
 fi
 
 # Switch to the new login name

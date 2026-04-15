@@ -38,4 +38,9 @@
   services.gpg-agent.enable = true;
   services.gpg-agent.pinentry.package = pkgs.pinentry-tty;
 
+  programs.nushell.extraConfig = ''
+    use ${./dotfiles/nushell/motd.nu} show_motd
+    show_motd
+  '';
+
 }

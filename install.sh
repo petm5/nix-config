@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
 TARGET_USER="nix-profile"
 TARGET_HOME="/home/$TARGET_USER"
 LOCKFILE="$HOME/.nix-setup-in-progress"
+UID=$(id -u)
 
-[ $UID == 0 ] && echo "This script does not support running as root." && exit 1
+[ "$UID" = 0 ] && echo "This script does not support running as root." && exit 1
 
 touch "$LOCKFILE"
 
@@ -34,7 +35,7 @@ export HOME=$TARGET_HOME
 
 # Install Nix
 if [ ! -d /nix ]; then
-  sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon
+  curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh --no-daemon
   . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
 

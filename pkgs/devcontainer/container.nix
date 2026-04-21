@@ -59,9 +59,13 @@ let
       };
     } ];
   });
+
+  nixConfig = pkgs.writeTextDir "/etc/nix/nix.conf" ''
+    experimental-features = nix-command flakes
+  '';
 in pkgs.dockerTools.streamLayeredImage {
   name = "devshell";
-  contents = [ home flakeRegistry pkgs.nix pkgs.coreutils pkgs.vim pkgs.git ] ++ shadow;
+  contents = [ home nixConfig flakeRegistry pkgs.nix pkgs.coreutils pkgs.vim pkgs.git ] ++ shadow;
   includeNixDB = true;
   inherit uid gid;
   uname = userName;

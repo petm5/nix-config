@@ -61,7 +61,7 @@ let
   });
 in pkgs.dockerTools.streamLayeredImage {
   name = "devshell";
-  contents = [ shadow flakeRegistry pkgs.nix pkgs.coreutils pkgs.vim pkgs.git ];
+  contents = [ flakeRegistry pkgs.nix pkgs.coreutils pkgs.vim pkgs.git ] ++ shadow;
   includeNixDB = true;
   inherit uid gid;
   uname = userName;

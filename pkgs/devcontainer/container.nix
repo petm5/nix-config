@@ -18,13 +18,7 @@ let
 
   home = homeConfig.activationPackage;
 
-  closureInfo = pkgs.closureInfo {
-    rootPaths = [ home ];
-  };
-
   activationScript = pkgs.writeShellScript "activate-nix-env.sh" ''
-    ${pkgs.nix}/bin/nix-store --init
-    ${pkgs.nix}/bin/nix-store --load-db < ${closureInfo}/registration
     [ -e "$HOME/.nix-profile" ] || "${home}/activate"
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
     export COLORTERM=truecolor
@@ -68,6 +62,7 @@ let
 in pkgs.dockerTools.streamLayeredImage {
   name = "devshell";
   contents = [ shadow flakeRegistry pkgs.nix pkgs.coreutils pkgs.vim pkgs.git ];
+  includeNixDB = true;
   inherit uid gid;
   uname = userName;
   gname = userName;

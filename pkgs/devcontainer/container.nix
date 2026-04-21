@@ -1,4 +1,4 @@
-{ pkgs, home-manager, nixpkgs }:
+{ pkgs, home-manager }:
 let
   userName = "nix";
   uid = "1000";
@@ -59,9 +59,9 @@ let
         id = "nixpkgs";
       };
       to = {
-        type = "path";
-        path = nixpkgs.outPath;
-        inherit (nixpkgs) rev narHash lastModified;
+        type = "github";
+        owner = "NixOS";
+        repo = "nixpkgs";
       };
     } ];
   });

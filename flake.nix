@@ -72,7 +72,7 @@
         }
       ];
     };
-    packages.x86_64-linux.devcontainer = nixpkgs.legacyPackages.x86_64-linux.callPackage ./pkgs/devcontainer/container.nix { inherit home-manager nixpkgs; };
+    packages.x86_64-linux.devcontainer = nixpkgs.legacyPackages.x86_64-linux.callPackage ./pkgs/devcontainer/container.nix { inherit home-manager; };
     nixOnDroidConfigurations."a15" = nix-on-droid.lib.nixOnDroidConfiguration {
       pkgs = import nixpkgs { system = "aarch64-linux"; };
       modules = [

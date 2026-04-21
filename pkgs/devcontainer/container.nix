@@ -1,4 +1,4 @@
-{ pkgs, home-manager }:
+{ pkgs, home-manager, nixpkgs }:
 let
   userName = "nix";
   uid = "1000";
@@ -50,9 +50,24 @@ let
       ${userName}:x::
     '')
   ];
+
+  flakeRegistry = pkgs.writeTextDir "etc/nix/registry.json" (builtins.toJSON {
+    version = 2;
+    flakes = [ {
+      from = {
+        type = "indirect";
+        id = "nixpkgs";
+      };
+      to = {
+        type = "path";
+        path = nixpkgs.outPath;
+        inherit (nixpkgs) rev narHash lastModified;
+      };
+    } ];
+  });
 in pkgs.dockerTools.streamLayeredImage {
   name = "devshell";
-  contents = [ shadow pkgs.nix pkgs.coreutils pkgs.vim ];
+  contents = [ shadow flakeRegistry pkgs.nix pkgs.coreutils pkgs.vim ];
   inherit uid gid;
   uname = userName;
   gname = userName;

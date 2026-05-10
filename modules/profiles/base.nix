@@ -16,6 +16,7 @@
   services.resolved.settings.Resolve = {
     DNSOverTLS = true;
     DNSSEC = true;
+    Domains = "~.";
   };
 
   # We don't need to support legacy BIOS systems by default

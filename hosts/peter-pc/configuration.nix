@@ -41,6 +41,13 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
+  nix.settings = {
+    max-jobs = 2;
+    cores = 4;
+    min-free = 128 * 1024 * 1024;
+    max-free = 1 * 1024 * 1024 * 1024;
+  };
+
   system.stateVersion = "24.05";
 
 }

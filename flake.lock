@@ -439,11 +439,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771128012,
-        "narHash": "sha256-MzlU+69qmET0ok034JpB3F2hCA6l06wVrO0njhAdo90=",
+        "lastModified": 1778542695,
+        "narHash": "sha256-KKPy1k3inFmk449m7U2JbOU40CdKm7quqskR482mcwU=",
         "owner": "petm5",
         "repo": "surface-audio",
-        "rev": "0cba191e672976f775e36740712c9bd50cd62b82",
+        "rev": "40c7048c236cde089708fe7c2da9b62515e05613",
         "type": "github"
       },
       "original": {

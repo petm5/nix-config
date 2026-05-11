@@ -48,7 +48,7 @@
         ./hosts/peter-pc/configuration.nix
         lanzaboote.nixosModules.lanzaboote
         home-manager.nixosModules.home-manager
-        # surface-audio.nixosModules.surface-audio
+        surface-audio.nixosModules.surface-audio
         {
           home-manager.extraSpecialArgs.flake-inputs = inputs;
           nixpkgs.overlays = [ (self: super: {

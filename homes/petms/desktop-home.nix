@@ -22,9 +22,6 @@
 
   xdg.userDirs.enable = true;
 
-  programs.password-store.enable = true;
-  programs.password-store.package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
-
   home.sessionVariables = {
     TERMINAL = "${pkgs.foot}/bin/footclient";
   };

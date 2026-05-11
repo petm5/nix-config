@@ -22,8 +22,6 @@
 
   boot.initrd.includeDefaultModules = false;
 
-  boot.initrd.availableKernelModules = [ "thunderbolt" "usb_storage" "sd_mod" ];
-
   boot.kernelParams = [ "pcie_aspm=force" "workqueue.power_efficient=true" "pci=hpiosize=0" ];
 
   boot.extraModprobeConfig = ''

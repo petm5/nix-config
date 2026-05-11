@@ -6,10 +6,14 @@
     ./tlp.nix
   ];
 
-  boot.extraModulePackages = [
-    (pkgs.callPackage ../../../pkgs/ithc-linux/latest.nix { inherit (config.boot.kernelPackages) kernel kernelModuleMakeFlags; })
-    (lib.hiPrio (config.boot.kernelPackages.callPackage ../../../pkgs/surface-gpe {}))
-    (lib.hiPrio (config.boot.kernelPackages.callPackage ../../../pkgs/surface-ipu6-camera-modules {}))
+  nixpkgs.overlays = [
+    (import ../../../overlays/kernel.nix)
+  ];
+
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    ithc-linux
+    (lib.hiPrio surface-gpe)
+    (lib.hiPrio surface-cameras)
   ];
 
   boot.initrd.kernelModules = [ "nvme" "xhci_pci" "hid_generic" "atkbd" "surface_aggregator" "surface_aggregator_registry" "surface_aggregator_hub" "surface_hid_core" "8250_dw" "surface_hid" "intel_lpss" "intel_lpss_pci" "pinctrl_tigerlake" "usbhid" "ithc" ];

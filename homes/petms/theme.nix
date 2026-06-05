@@ -116,6 +116,4 @@ in {
     };
   };
 
-  home.file.".wallpaper".source = pkgs.nixos-artwork.wallpapers.nineish-catppuccin-frappe.gnomeFilePath;
-
 }

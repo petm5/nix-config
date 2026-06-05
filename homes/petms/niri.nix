@@ -40,21 +40,7 @@
     };
   };
 
-  systemd.user.services."swaybg" = {
-    Unit = {
-      PartOf = "graphical-session.target";
-      After = "graphical-session.target";
-      Requisite = "graphical-session.target";
-      ConditionFileNotEmpty = "%h/.wallpaper";
-    };
-    Service = {
-      ExecStart = "${pkgs.swaybg}/bin/swaybg -m fill -i \"%h/.wallpaper\"";
-      Restart = "on-failure";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
+  services.awww.enable = true;
 
   programs.bash.enable = true;
   programs.bash.bashrcExtra = ''

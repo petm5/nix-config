@@ -13,10 +13,9 @@
     enable = true;
     settings = {
       show-failed-attempts = true;
-      image = ".wallpaper";
-      scaling = "fill";
       indicator-radius = 100;
       indicator-idle-visible = false;
+      color = "54708e";
     };
   };
 

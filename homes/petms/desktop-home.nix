@@ -21,7 +21,7 @@
   };
 
   xdg.userDirs.enable = true;
-  xdg.userDirs.setSessionVariables = true;
+  xdg.userDirs.setSessionVariables = false;
 
   home.sessionVariables = {
     TERMINAL = "${pkgs.foot}/bin/footclient";

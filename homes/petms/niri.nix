@@ -48,9 +48,6 @@
       if systemctl --user -q is-active niri.service; then
         exit 1
       fi
-      systemctl --user reset-failed
-      systemctl --user import-environment
-      dbus-update-activation-environment --all
       systemctl --user --wait start niri.service
       systemctl --user start --job-mode=replace-irreversibly niri-shutdown.target
       systemctl --user unset-environment WAYLAND_DISPLAY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP NIRI_SOCKET

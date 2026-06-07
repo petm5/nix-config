@@ -1,0 +1,21 @@
+{ pkgs, ...}: {
+
+  systemd.user.services.wluma = {
+    Unit = {
+      Description = "Adjusting screen brightness based on screen contents and amount of ambient light";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.wluma}/bin/wluma";
+      Restart = "always";
+      EnvironmentFile = "-%E/wluma/service.conf";
+      PrivateNetwork = true;
+      PrivateMounts = false;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
+}

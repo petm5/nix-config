@@ -39,9 +39,5 @@
   services.gpg-agent.pinentry.package = pkgs.pinentry-tty;
 
   programs.nushell.environmentVariables = config.home.sessionVariables;
-  programs.nushell.extraConfig = ''
-    use ${./dotfiles/nushell/motd.nu} show_motd
-    show_motd
-  '';
 
 }

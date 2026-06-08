@@ -1,5 +1,5 @@
 diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index 162b490469..45f99220af 100644
+index 162b49046..45f99220a 100644
 --- a/drivers/media/i2c/ov13858.c
 +++ b/drivers/media/i2c/ov13858.c
 @@ -3,6 +3,7 @@
@@ -363,7 +363,7 @@ index 162b490469..45f99220af 100644
  	.probe = ov13858_probe,
  	.remove = ov13858_remove,
 diff --git a/drivers/media/i2c/ov5693.c b/drivers/media/i2c/ov5693.c
-index 4cc796bbee..6107c51cc7 100644
+index 4cc796bbe..6107c51cc 100644
 --- a/drivers/media/i2c/ov5693.c
 +++ b/drivers/media/i2c/ov5693.c
 @@ -88,7 +88,7 @@
@@ -487,7 +487,7 @@ index 4cc796bbee..6107c51cc7 100644
  };
  MODULE_DEVICE_TABLE(acpi, ov5693_acpi_match);
 diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
-index b2b7100949..984aca6596 100644
+index 3028293ee..b2ed86501 100644
 --- a/drivers/media/pci/intel/ipu-bridge.c
 +++ b/drivers/media/pci/intel/ipu-bridge.c
 @@ -59,6 +59,7 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
@@ -527,7 +527,7 @@ index b2b7100949..984aca6596 100644
  /*
   * DMI matches for laptops which have their sensor mounted upside-down
   * without reporting a rotation of 180° in neither the SSDB nor the _PLD.
-@@ -109,14 +125,21 @@ static const struct dmi_system_id upside_down_sensor_dmi_ids[] = {
+@@ -116,7 +132,7 @@ static const struct dmi_system_id upside_down_sensor_dmi_ids[] = {
  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "XPS 13 9350"),
  		},
@@ -536,6 +536,7 @@ index b2b7100949..984aca6596 100644
  	},
  	{
  		.matches = {
+@@ -130,7 +146,14 @@ static const struct dmi_system_id upside_down_sensor_dmi_ids[] = {
  			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
  			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "XPS 16 9640"),
  		},
@@ -551,7 +552,7 @@ index b2b7100949..984aca6596 100644
  	},
  	{} /* Terminating entry */
  };
-@@ -274,8 +297,14 @@ static u32 ipu_bridge_parse_rotation(struct acpi_device *adev,
+@@ -288,8 +311,14 @@ static u32 ipu_bridge_parse_rotation(struct acpi_device *adev,
  	const struct dmi_system_id *dmi_id;
  
  	dmi_id = dmi_first_match(upside_down_sensor_dmi_ids);
@@ -569,33 +570,30 @@ index b2b7100949..984aca6596 100644
  	switch (ssdb->degree) {
  	case IPU_SENSOR_ROTATION_NORMAL:
 diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 1505fc3ef7..514c1e8612 100644
+index 1c65ce87c..dfcc580f2 100644
 --- a/drivers/platform/x86/intel/int3472/discrete.c
 +++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -224,6 +224,8 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+@@ -228,6 +228,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
  		*gpio_flags = GPIO_ACTIVE_HIGH;
  		break;
  	case INT3472_GPIO_TYPE_HANDSHAKE:
 +	case 0x08:
-+	case 0x10:
  		*con_id = "dvdd";
  		*gpio_flags = GPIO_ACTIVE_HIGH;
  		/* Setups using a handshake pin need 25 ms enable delay */
-@@ -333,6 +335,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 	case INT3472_GPIO_TYPE_PRIVACY_LED:
+@@ -339,6 +340,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
  	case INT3472_GPIO_TYPE_POWER_ENABLE:
+ 	case INT3472_GPIO_TYPE_DOVDD:
  	case INT3472_GPIO_TYPE_HANDSHAKE:
 +	case 0x08:
-+	case 0x10:
  		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
  		if (IS_ERR(gpio)) {
  			ret = PTR_ERR(gpio);
-@@ -357,6 +361,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 			second_sensor = int3472->quirks.avdd_second_sensor;
+@@ -364,6 +366,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
  			fallthrough;
+ 		case INT3472_GPIO_TYPE_DOVDD:
  		case INT3472_GPIO_TYPE_HANDSHAKE:
 +		case 0x08:
-+		case 0x10:
  			ret = skl_int3472_register_regulator(int3472, gpio, enable_time_us,
  							     con_id, second_sensor);
  			if (ret)

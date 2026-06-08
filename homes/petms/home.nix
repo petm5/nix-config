@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
 
@@ -38,6 +38,7 @@
   services.gpg-agent.enable = true;
   services.gpg-agent.pinentry.package = pkgs.pinentry-tty;
 
+  programs.nushell.environmentVariables = config.home.sessionVariables;
   programs.nushell.extraConfig = ''
     use ${./dotfiles/nushell/motd.nu} show_motd
     show_motd

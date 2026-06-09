@@ -48,6 +48,7 @@
       if systemctl --user -q is-active niri.service; then
         exit 1
       fi
+      systemctl --user import-environment XDG_SEAT XDG_SESSION_ID XDG_VTNR PATH XDG_SESSION_CLASS XDG_SESSION_TYPE
       systemctl --user --wait start niri.service
       systemctl --user start --job-mode=replace-irreversibly niri-shutdown.target
       systemctl --user unset-environment WAYLAND_DISPLAY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP NIRI_SOCKET

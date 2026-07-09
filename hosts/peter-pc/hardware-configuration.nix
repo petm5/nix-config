@@ -16,6 +16,7 @@
     "/boot" = {
       label = "SYSTEM";
       fsType = "vfat";
+      options = [ "umask=0077" ];
     };
     "/home" = {
       fsType = "btrfs";

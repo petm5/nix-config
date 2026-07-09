@@ -21,7 +21,7 @@ in {
 
   services.tlp.enable = true;
   services.tlp.settings = {
-    PLATFORM_PROFILE_ON_AC = "balanced-performance";
+    PLATFORM_PROFILE_ON_AC = "balanced";
     PLATFORM_PROFILE_ON_BAT = "low-power";
     RUNTIME_PM_ON_AC = "auto";
     RUNTIME_PM_ON_BAT = "auto";

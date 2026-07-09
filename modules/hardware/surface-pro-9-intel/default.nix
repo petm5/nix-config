@@ -22,7 +22,7 @@
 
   boot.initrd.includeDefaultModules = false;
 
-  boot.kernelParams = [ "pcie_aspm=force" "workqueue.power_efficient=true" "pci=hpiosize=0" ];
+  boot.kernelParams = [ "pcie_aspm=force" "workqueue.power_efficient=true" ];
 
   boot.extraModprobeConfig = ''
     options iwlwifi power_level=5 uapsd_disable=0 power_save=Y

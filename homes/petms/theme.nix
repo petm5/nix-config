@@ -80,10 +80,7 @@ in {
       pad = "10x10";
       dpi-aware = "no";
     };
-    colors-dark = colors.foot // {
-      alpha = 0.9;
-      blur = true;
-    };
+    colors-dark = colors.foot;
   };
 
   services.mako.settings = {

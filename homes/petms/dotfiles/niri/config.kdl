@@ -605,9 +605,3 @@ binds {
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
 }
-
-blur {
-    passes 2
-    offset 12.0
-    noise 0.04
-}

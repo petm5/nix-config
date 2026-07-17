@@ -23,9 +23,9 @@
   programs.git.enable = true;
   programs.git.settings = {
     user = {
-      email = "petms@proton.me";
+      email = "pm@petermarshall.ca";
       name = "Peter Marshall";
-      signingKey = "~/.ssh/id_ed25519.pub";
+      signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOb7YI8lV66xYOyTCayNAz814Ny/ZLh3MTdFfCVSz6Lf";
     };
     gpg.format = "ssh";
     gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";

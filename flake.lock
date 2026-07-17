@@ -160,27 +160,6 @@
         "type": "github"
       }
     },
-    "niri": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-overlay": []
-      },
-      "locked": {
-        "lastModified": 1780637332,
-        "narHash": "sha256-FeKyLRxLZu2EUnhifijZPDZRl0sVnPVHMtizAINNiN4=",
-        "owner": "niri-wm",
-        "repo": "niri",
-        "rev": "f717ae030fe56fc52522ebef69f17f3f09064ac4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "niri-wm",
-        "repo": "niri",
-        "type": "github"
-      }
-    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1739444422,
@@ -386,7 +365,6 @@
       "inputs": {
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
-        "niri": "niri",
         "nix-flatpak": "nix-flatpak",
         "nix-on-droid": "nix-on-droid",
         "nixpak": "nixpak",

@@ -20,11 +20,6 @@
       url = "github:nixpak/nixpak";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    niri = {
-      url = "github:niri-wm/niri";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.rust-overlay.follows = "";
-    };
     surface-audio = {
       url = "github:petm5/surface-audio/custom-tune";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -41,7 +36,7 @@
     ];
   };
 
-  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, niri, surface-audio, ... }: {
+  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, nix-on-droid, surface-audio, ... }: {
     nixosConfigurations.peter-pc = nixpkgs.lib.nixosSystem {
       modules = [
         (import ./modules/nixos/cache.nix self)
@@ -51,9 +46,6 @@
         surface-audio.nixosModules.surface-audio
         {
           home-manager.extraSpecialArgs.flake-inputs = inputs;
-          nixpkgs.overlays = [ (self: super: {
-            niri = niri.packages.x86_64-linux.niri;
-          }) ];
         }
       ];
     };

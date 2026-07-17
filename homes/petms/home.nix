@@ -12,14 +12,16 @@
     enable = true;
     package = pkgs.openssh;
     enableDefaultConfig = false;
-    matchBlocks."*" = {
-      addKeysToAgent = "1h";
-    };
-    matchBlocks."origin.opcc.tk".user = "admin";
-    matchBlocks."services-1.logotherapy.ca" = {
-      proxyCommand = "${pkgs.websocat}/bin/websocat --binary wss://services-1.logotherapy.ca/";
-      serverAliveInterval = 30;
-      user = "ubuntu";
+    settings = {
+      "*" = {
+        addKeysToAgent = "1h";
+      };
+      "origin.opcc.tk".user = "admin";
+      "services-1.logotherapy.ca" = {
+        proxyCommand = "${pkgs.websocat}/bin/websocat --binary wss://services-1.logotherapy.ca/";
+        serverAliveInterval = 30;
+        user = "ubuntu";
+      };
     };
   };
 

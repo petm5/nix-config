@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import "./modules/"
 
 PanelWindow {
     id: root
@@ -31,24 +30,14 @@ PanelWindow {
 
             RowLayout {
                 Layout.alignment: Qt.AlignLeft
-                spacing: 8
+                spacing: 12
 
-                Text {
-                    text: "apps"
-                    font.family: "Material Symbols Outlined"
-                    color: root.colFg
-                    font.pixelSize: root.fontSize
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: Quickshell.execDetached(["fuzzel"])
-                    }
-                }
-
-                // Workspaces {}
+                Workspaces {}
             }
 
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
+                spacing: 12
 
                 Text {
                     text: ToplevelManager.activeToplevel?.title ?? ""

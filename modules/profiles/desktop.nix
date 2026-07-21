@@ -27,6 +27,22 @@
 
   systemd.network.wait-online.enable = false;
 
+  networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";
+
+  networking.wireless.iwd.settings = {
+    General = {
+      # Prevent tracking across networks
+      AddressRandomization = "network";
+    };
+    Rank = {
+      # Prefer faster bands
+      BandModifier2_4GHz = 1.0;
+      BandModifier5GHz = 2.0;
+      BandModifier6GHz = 15.0;
+    };
+  };
+
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

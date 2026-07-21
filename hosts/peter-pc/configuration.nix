@@ -4,7 +4,6 @@
     ./hardware-configuration.nix
     ../../modules/hardware/surface-pro-9-intel
     ../../modules/profiles/desktop.nix
-    ../../modules/profiles/wifi.nix
     ../../modules/profiles/secure-boot.nix
   ];
 

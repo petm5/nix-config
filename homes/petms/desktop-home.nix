@@ -4,7 +4,6 @@
     ./home.nix
     ./theme.nix
     ./niri.nix
-    ./waybar.nix
     ./firefox.nix
     flake-inputs.nix-flatpak.homeManagerModules.nix-flatpak
   ];

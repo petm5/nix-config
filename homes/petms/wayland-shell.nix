@@ -7,7 +7,7 @@
     settings.default-timeout = 15000;
   };
 
-  programs.waybar.enable = true;
+  # programs.waybar.enable = true;
   programs.waybar.systemd.enable = true;
 
   programs.waybar.package = pkgs.waybar.overrideAttrs {
@@ -16,6 +16,11 @@
 
   xdg.configFile."waybar/config".source = ./dotfiles/waybar/config;
   xdg.configFile."waybar/style.css".source = ./dotfiles/waybar/style.css;
+
+  programs.quickshell.enable = true;
+  programs.quickshell.systemd.enable = true;
+
+  xdg.configFile."quickshell".source = ./dotfiles/quickshell;
 
   programs.swaylock = {
     enable = true;

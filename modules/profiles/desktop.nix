@@ -26,6 +26,7 @@
   services.avahi.nssmdns4 = true;
 
   systemd.network.enable = false;
+  services.resolved.enable = true;
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
 

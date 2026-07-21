@@ -4,7 +4,7 @@
 
   documentation.enable = false;
 
-  networking.useNetworkd = true;
+  systemd.network.enable = lib.mkDefault true;
 
   networking.nameservers = [
     "1.1.1.1"

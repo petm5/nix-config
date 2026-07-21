@@ -70,8 +70,9 @@ in {
     };
   };
 
-  qt.platformTheme = "gtk";
-  qt.style.name = "breeze";
+  qt.platformTheme.name = "gtk";
+  qt.style.name = "adwaita-dark";
+  qt.style.package = pkgs.adwaita-qt;
 
   programs.foot.settings = {
     main = {

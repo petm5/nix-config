@@ -24,6 +24,12 @@
         max-indent-retain = 20;
       };
     };
+    languages.language = [
+      {
+        name = "c";
+        indent = { tab-width = 8; unit = "\t"; };
+      }
+    ];
   };
 
   home.packages = with pkgs; [

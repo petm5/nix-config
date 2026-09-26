@@ -30,10 +30,10 @@
   hardware.block.defaultScheduler = "kyber";
   hardware.block.defaultSchedulerRotational = "bfq";
 
-  services.journald.storage = "volatile";
-  services.journald.extraConfig = ''
-    RuntimeMaxUse=32M
-  '';
+  services.journald.settings.Journal = {
+    Storage = "volatile";
+    RuntimeMaxUse = "32M";
+  };
 
   # Use the latest available kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;

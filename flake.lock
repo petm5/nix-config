@@ -53,22 +53,6 @@
         "type": "github"
       }
     },
-    "flake-compat_2": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1767039857,
-        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
-        "owner": "NixOS",
-        "repo": "flake-compat",
-        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "flake-compat",
-        "type": "github"
-      }
-    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
@@ -239,7 +223,6 @@
     "nix-on-droid": {
       "inputs": {
         "droidctl": "droidctl",
-        "flake-compat": "flake-compat_2",
         "home-manager": [
           "home-manager"
         ],
@@ -252,17 +235,17 @@
         "nmd": "nmd"
       },
       "locked": {
-        "lastModified": 1787511325,
-        "narHash": "sha256-0LMCPJcm/H21X9pjUlmLTSPRJtdaW1E34tq/lI+zdqY=",
+        "lastModified": 1785295995,
+        "narHash": "sha256-wBKz4Sg5nXcJ4w8WQmTDrj5T5esIK0ER5bU+HeLU9ps=",
         "owner": "petm5",
         "repo": "nix-on-droid",
-        "rev": "7643ab9612b471d796e0faf1892bfdbdfdb4d479",
+        "rev": "7faa873ae83c34cf5a770c21f8dcc749a068ee95",
         "type": "github"
       },
       "original": {
         "owner": "petm5",
-        "ref": "idiomatic",
         "repo": "nix-on-droid",
+        "rev": "7faa873ae83c34cf5a770c21f8dcc749a068ee95",
         "type": "github"
       }
     },

@@ -8,7 +8,7 @@
   user.shell = lib.getExe pkgs.nushell;
 
   terminal.font = "${pkgs.cascadia-code}/share/fonts/truetype/CascadiaCode.ttf";
-  terminal.colors = (pkgs.callPackage ../../modules/colors {}).termux;
+  terminal.colors = (pkgs.callPackage ../../modules/colors { darkTheme = false; }).termux;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;

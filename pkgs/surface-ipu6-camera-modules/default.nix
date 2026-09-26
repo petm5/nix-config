@@ -10,7 +10,7 @@ moduleTargets = [
   "drivers/media/i2c/ov5693"
   "drivers/media/i2c/ov13858"
   "drivers/media/i2c/dw9719"
-  "drivers/media/i2c/vd55g"
+  "drivers/media/i2c/vd55g1"
 ];
 
 modulesOrder = writeText "modules.order" (
@@ -19,14 +19,15 @@ modulesOrder = writeText "modules.order" (
 
 in stdenv.mkDerivation {
   pname = "surface-ipu6-camera-modules";
-  version = "0.1";
 
-  src = kernel.src;
+  inherit (kernel) src version nativeBuildInputs;
 
   patches = [
-    ./surface-cameras.patch
+    ./int3472-reg-08.patch
+    ./ov13858-support.patch
+    ./ov5693-support.patch
     ./vd55g0-support.patch
-    ./surface-ipu-fix.patch
+    ./ipu-quirks.patch
   ];
 
   makeFlags = [
@@ -37,8 +38,6 @@ in stdenv.mkDerivation {
   ];
 
   buildFlags = map (t: t + ".ko") moduleTargets;
-
-  nativeBuildInputs = kernel.nativeBuildInputs;
 
   configurePhase = ''
     runHook preConfigure
@@ -63,5 +62,6 @@ in stdenv.mkDerivation {
   meta = {
     description = "Patched Linux drivers for Microsoft Surface IPU6 cameras";
     inherit (kernel.meta) license platforms;
+    broken = lib.versionOlder kernel.version "7.2.7";
   };
 }

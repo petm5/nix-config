@@ -1,5 +1,5 @@
 diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys.c b/drivers/media/pci/intel/ipu6/ipu6-isys.c
-index c9cdeb705..81eaa1d13 100644
+index c9cdeb7054d7..81eaa1d1316f 100644
 --- a/drivers/media/pci/intel/ipu6/ipu6-isys.c
 +++ b/drivers/media/pci/intel/ipu6/ipu6-isys.c
 @@ -98,7 +98,7 @@ enum ltr_did_type {
@@ -12,7 +12,7 @@ index c9cdeb705..81eaa1d13 100644
  static int isys_isr_one(struct ipu6_bus_device *adev);
  
 diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys.h b/drivers/media/pci/intel/ipu6/ipu6-isys.h
-index 7fb8cb820..ba616d1a9 100644
+index 7fb8cb820912..ba616d1a905d 100644
 --- a/drivers/media/pci/intel/ipu6/ipu6-isys.h
 +++ b/drivers/media/pci/intel/ipu6/ipu6-isys.h
 @@ -39,7 +39,8 @@ struct ipu6_bus_device;

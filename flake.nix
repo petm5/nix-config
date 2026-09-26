@@ -10,8 +10,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-on-droid = {
-      url = "github:petm5/nix-on-droid/7faa873ae83c34cf5a770c21f8dcc749a068ee95";
-      # url = "git+file:///home/petms/nix-on-droid/";
+      url = "github:petm5/nix-on-droid/proot-optimization";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };

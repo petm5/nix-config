@@ -15,28 +15,6 @@
         "type": "github"
       }
     },
-    "droidctl": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nix-on-droid",
-          "nixpkgs-docs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1747334366,
-        "narHash": "sha256-MU8GGPLPsSXoJpRe3NkfbaNbf6v1Y6tbvBMuqUtItdQ=",
-        "owner": "t184256",
-        "repo": "droidctl",
-        "rev": "9df8762b434f2a20d15b5b8fa91e0f10c8e2fad7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "t184256",
-        "repo": "droidctl",
-        "type": "github"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -77,24 +55,6 @@
     "flake-utils": {
       "inputs": {
         "systems": "systems"
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "flake-utils_2": {
-      "inputs": {
-        "systems": "systems_2"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -222,7 +182,6 @@
     },
     "nix-on-droid": {
       "inputs": {
-        "droidctl": "droidctl",
         "home-manager": [
           "home-manager"
         ],
@@ -235,17 +194,17 @@
         "nmd": "nmd"
       },
       "locked": {
-        "lastModified": 1785295995,
-        "narHash": "sha256-wBKz4Sg5nXcJ4w8WQmTDrj5T5esIK0ER5bU+HeLU9ps=",
+        "lastModified": 1785176423,
+        "narHash": "sha256-OAwsFtNYB08NybGR8tg9Vjt6Tw8xZMElNllhAJw78ys=",
         "owner": "petm5",
         "repo": "nix-on-droid",
-        "rev": "7faa873ae83c34cf5a770c21f8dcc749a068ee95",
+        "rev": "d5a877a268e1d3ddeb97ab300d41f474645ea2d5",
         "type": "github"
       },
       "original": {
         "owner": "petm5",
+        "ref": "proot-optimization",
         "repo": "nix-on-droid",
-        "rev": "7faa873ae83c34cf5a770c21f8dcc749a068ee95",
         "type": "github"
       }
     },
@@ -429,7 +388,7 @@
     },
     "surface-audio": {
       "inputs": {
-        "flake-utils": "flake-utils_2",
+        "flake-utils": "flake-utils",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -450,21 +409,6 @@
       }
     },
     "systems": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_2": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

@@ -1,66 +1,17 @@
-{ config, lib, pkgs, flake-inputs, ... }: {
+{ flake-inputs, ... }: {
 
   imports = [
     ./home.nix
-    (import ./theme.nix { darkTheme = false; })
+    ./fonts.nix
+    ./theme.nix
+    ./apps.nix
     ./niri.nix
-    ./firefox.nix
     flake-inputs.nix-flatpak.homeManagerModules.nix-flatpak
   ];
-
-  programs.foot = {
-    enable = true;
-    server.enable = true;
-    settings = {
-      main = {
-        shell = lib.getExe pkgs.nushell;
-        term = "xterm-256color";
-      };
-    };
-  };
 
   xdg.userDirs.enable = true;
   xdg.userDirs.setSessionVariables = false;
 
-  home.sessionVariables = {
-    TERMINAL = "${pkgs.foot}/bin/footclient";
-  };
-
-  home.packages = with pkgs; [
-    keepassxc
-  ];
-
-  programs.mpv = {
-    enable = true;
-    config.hwdec = "auto";
-    scripts = with pkgs.mpvScripts; [ mpris ];
-  };
-
-  services.flatpak.enable = true;
-  services.flatpak.packages = [
-    "org.gnome.Calculator"
-    "org.gnome.Loupe"
-    "org.gnome.SimpleScan"
-    "org.gnome.FileRoller"
-    "org.gnome.font-viewer"
-  ];
-
-  services.flatpak.overrides = {
-    global.Context = {
-      sockets = [
-        "wayland" "!x11" "!fallback-x11"
-        "!system-bus" "!session-bus"
-        "!ssh-auth"
-      ];
-      devices = ["!all" "!input" "dri"];
-      filesystems = [
-        "!host" "!home"
-      ];
-    };
-  };
-
   services.ssh-agent.enable = true;
-
-  xdg.systemDirs.data = [ "$HOME/.local/share/flatpak/exports/share" "/var/lib/flatpak/exports/share" ];
 
 }

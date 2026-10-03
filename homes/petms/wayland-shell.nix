@@ -1,10 +1,35 @@
-{ config, pkgs, ...}: {
+{ config, pkgs, ...}:
+let
+  inherit (config.theme) colors;
+in
+{
 
-  programs.fuzzel.enable = true;
+  programs.fuzzel = {
+    enable = true;
+    settings = {
+      main = {
+        icon-theme = config.gtk.iconTheme.name;
+        font = "DejaVu Sans Mono";
+        use-bold = true;
+      };
+      colors = colors.fuzzel;
+    };
+  };
 
   services.mako = {
     enable = true;
-    settings.default-timeout = 15000;
+    settings = {
+      default-timeout = 15000;
+      text-color = "${colors.alacritty.primary.foreground}";
+      border-color = "${colors.alacritty.primary.foreground}";
+      background-color = "${colors.alacritty.primary.background}";
+      border-size = 2;
+      border-radius = 4;
+      width = 400;
+      height = 200;
+      padding = "20";
+      margin = "20";
+    };
   };
 
   programs.quickshell.enable = true;
@@ -44,5 +69,12 @@
   };
 
   services.awww.enable = true;
+
+  gtk.gtk3.extraCss = ''
+    window, .titlebar, headerbar, decoration {
+      border-radius: 0;
+      box-shadow: none;
+    }
+  '';
 
 }

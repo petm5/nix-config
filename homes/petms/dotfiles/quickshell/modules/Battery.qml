@@ -4,10 +4,8 @@ import Quickshell.Services.UPower
 import "IconUtils.js" as IconUtils
 import "../components/"
 
-Text {
+Icon {
     id: batteryIcon
-    font.family: "Material Symbols Outlined"
-    font.pixelSize: root.iconSize
 
     visible: UPower.displayDevice.isLaptopBattery
 

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import "../components/"
 
 Rectangle {
     anchors.fill: parent
@@ -28,7 +29,6 @@ Rectangle {
                 text: ToplevelManager.activeToplevel?.title ?? ""
                 elide: Text.ElideMiddle
                 color: root.colFg
-                font.pixelSize: root.fontSize
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
             }
@@ -65,7 +65,6 @@ Rectangle {
                 }
 
                 Text {
-                    font.pixelSize: root.fontSize
                     font.bold: true
                     color: root.colFg
                     text: Qt.formatDateTime(clock.date, "hh:mm AP")

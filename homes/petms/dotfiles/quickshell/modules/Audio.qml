@@ -4,10 +4,7 @@ import Quickshell.Services.Pipewire
 import "IconUtils.js" as IconUtils
 import "../components/"
 
-Text {
-    font.family: "Material Symbols Outlined"
-    font.pixelSize: root.iconSize
-
+Icon {
     property var audioIcons: [
         "volume_mute",
         "volume_down",

@@ -4,7 +4,7 @@ import Quickshell.Networking
 import "IconUtils.js" as IconUtils
 import "../components/"
 
-Text {
+Icon {
 	id: networkIcon
 
 	property var net: Networking
@@ -75,9 +75,6 @@ Text {
     	networkIcon.connected = false;
         return "signal_wifi_off";
     }
-
-    font.family: "Material Symbols Outlined"
-    font.pixelSize: root.iconSize
 
     text: getNetworkStatus()
 

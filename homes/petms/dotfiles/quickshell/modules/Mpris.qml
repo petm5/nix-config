@@ -1,8 +1,9 @@
 import QtQuick
 import Quickshell
 import Quickshell.Services.Mpris
+import "../components/"
 
-Text {
+Icon {
 	id: mpris
 
 	function getPlayerStatus() {
@@ -26,9 +27,6 @@ Text {
 
 		return "pause";
 	}
-
-    font.family: "Material Symbols Outlined"
-    font.pixelSize: root.iconSize
 
     text: getPlayerStatus()
 }

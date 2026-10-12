@@ -26,8 +26,6 @@ RowLayout {
                 anchors.centerIn: parent
                 text: modelData.title ? modelData.title.substring(0, 2) : "?"
                 visible: parent.status === Image.Error || parent.status === Image.Null
-                font.pixelSize: root.fontSize
-                color: "white"
             }
 
             QsMenuAnchor {

@@ -22,7 +22,6 @@ Rectangle {
         }
 
         RowLayout {
-            Layout.alignment: Qt.AlignHCenter
             spacing: 12
 
             Text {
@@ -38,10 +37,10 @@ Rectangle {
             Layout.alignment: Qt.AlignRight
             spacing: 12
 
-            SystemTray {}
-
             RowLayout {
                 spacing: 10
+
+                SystemTray {}
 
                 Audio {
                     color: root.colFg

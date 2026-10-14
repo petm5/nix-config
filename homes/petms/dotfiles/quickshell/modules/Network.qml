@@ -5,32 +5,31 @@ import "IconUtils.js" as IconUtils
 import "../components/"
 
 Icon {
-	id: networkIcon
+    id: networkIcon
 
-	property var net: Networking
-	property bool connected: false
-	property string networkName: ""
+    property var net: Networking
+    property bool connected: false
+    property string networkName: ""
 
-	property var wifiIcons: [
-		"network_wifi_0_bar",
-		"network_wifi_1_bar",
-		"network_wifi_2_bar",
-		"network_wifi_3_bar",
-        "signal_wifi_4_bar"
+    property var wifiIcons: [
+        "network_wifi_1_bar",
+        "network_wifi_2_bar",
+        "network_wifi_3_bar",
+        "network_wifi"
     ]
 
-    function getNetworkStatus() {
+    text: {
         let hasWiredConnection = false;
         let hasWifiHardware = false;
         let activeWiredDevice = null;
         let activeWifiDevice = null;
 
         if (net.devices.values.length == 0) {
-    		networkIcon.visible = false;
-    		return "";
-    	}
+            networkIcon.visible = false;
+            return "";
+        }
 
-		networkIcon.visible = true;
+        networkIcon.visible = true;
 
         for (let i = 0; i < net.devices.values.length; i++) {
             let device = net.devices.values[i];
@@ -38,9 +37,9 @@ Icon {
             if (device.type === DeviceType.Wired) {
                 if (device.connected || (device.hasLink !== undefined && device.hasLink)) {
                     hasWiredConnection = true;
-					activeWiredDevice = device;
-				}
-			}
+                    activeWiredDevice = device;
+                }
+            }
 
             if (device.type === DeviceType.Wifi && !hasWifiHardware) {
                 hasWifiHardware = true;
@@ -49,34 +48,36 @@ Icon {
         }
 
         if (hasWiredConnection) {
-        	networkIcon.connected = true;
-        	let network = activeWiredDevice.networks.values.find((network) => network.connected);
-        	networkIcon.networkName = network?.name || "";
+            networkIcon.connected = true;
+            let network = activeWiredDevice.networks.values.find((network) => network.connected);
+            networkIcon.networkName = network?.name || "";
             return "settings_ethernet";
         }
 
         if (!hasWifiHardware) {
-        	networkIcon.connected = false;
+            networkIcon.connected = false;
             return "globe_2_question";
         }
 
-        if (activeWifiDevice?.connected) {
-        	networkIcon.connected = true;
-        	let network = activeWifiDevice.networks.values.find((network) => network.connected);
-        	networkIcon.networkName = network?.name || "";
-        	if (network) {
-            	let strength = network.signalStrength;
-            	return IconUtils.getIcon(wifiIcons, strength);
-            } else {
-            	return "wifi_find"
+        if (activeWifiDevice.connected) {
+            let network = activeWifiDevice.networks.values.find((network) => network.connected);
+            networkIcon.networkName = network?.name || "";
+            if (network) {
+                networkIcon.connected = true;
+                let strength = network.signalStrength;
+                return IconUtils.getIcon(wifiIcons, strength);
             }
         }
 
-    	networkIcon.connected = false;
-        return "signal_wifi_off";
-    }
+        networkIcon.connected = false;
 
-    text: getNetworkStatus()
+        switch (activeWifiDevice.state) {
+            case ConnectionState.Unknown:
+                return "signal_wifi_off";
+            default:
+                return "wifi_find";
+        }
+    }
 
     MouseArea {
         id: hoverArea

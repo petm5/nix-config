@@ -31,10 +31,8 @@ InlineIcon {
         return IconUtils.getIcon(audioIcons, activeAudio.volume);
     }
 
-    MouseArea {
+    HoverHandler {
         id: hoverArea
-        anchors.fill: parent
-        hoverEnabled: true
     }
 
     StyledToolTip {
@@ -46,6 +44,6 @@ InlineIcon {
 
             return node.nickname || node.description || node.name;
         }
-        visible: hoverArea.containsMouse && tooltip.text.length > 0
+        visible: hoverArea.hovered && tooltip.text.length > 0
     }
 }

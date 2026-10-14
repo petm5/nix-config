@@ -32,25 +32,24 @@ Repeater {
             anchor.gravity: Edges.Top
         }
 
-        MouseArea {
-            id: hoverArea
-            anchors.fill: parent
-            hoverEnabled: true
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
+        TapHandler {
+            onTapped: modelData.activate()
+        }
 
-            onClicked: (mouse) => {
-                if (mouse.button === Qt.LeftButton) {
-                    modelData.activate();
-                } else if (mouse.button === Qt.RightButton) {
-                    if (modelData.hasMenu) menuAnchor.open();
-                }
-            }
+        TapHandler {
+            acceptedButtons: Qt.RightButton
+            onTapped: if (modelData.hasMenu) menuAnchor.open()
+        }
+
+        HoverHandler {
+            id: hoverArea
+            cursorShape: Qt.PointingHandCursor
         }
 
         StyledToolTip {
             id: tooltip
             text: modelData.tooltipTitle || modelData.title || ""
-            visible: hoverArea.containsMouse && tooltip.text.length > 0
+            visible: hoverArea.hovered && tooltip.text.length > 0
         }
     }
 }

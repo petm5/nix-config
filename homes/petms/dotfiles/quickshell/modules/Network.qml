@@ -79,15 +79,14 @@ InlineIcon {
         }
     }
 
-    MouseArea {
+    HoverHandler {
         id: hoverArea
-        anchors.fill: parent
-        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
     }
 
     StyledToolTip {
         id: tooltip
         text: connected ? `Connected (${networkName})` : "Disconnected";
-        visible: hoverArea.containsMouse
+        visible: hoverArea.hovered
     }
 }

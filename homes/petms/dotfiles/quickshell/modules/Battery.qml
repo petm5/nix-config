@@ -51,12 +51,6 @@ InlineIcon {
         }
     }
 
-    MouseArea {
-        id: hoverArea
-        anchors.fill: parent
-        hoverEnabled: true
-    }
-
     function formatTime(seconds) {
         let hrs = Math.floor(seconds / 3600);
         let mins = Math.floor((seconds % 3600) / 60);
@@ -69,6 +63,10 @@ InlineIcon {
         } else {
             return `${mins} min`;
         }
+    }
+
+    HoverHandler {
+        id: hoverArea
     }
 
     StyledToolTip {
@@ -86,6 +84,6 @@ InlineIcon {
                 return `Full in ${formatTime(UPower.displayDevice.timeToFull)}`
             }
         }
-        visible: hoverArea.containsMouse && tooltip.text.length > 0
+        visible: hoverArea.hovered && tooltip.text.length > 0
     }
 }

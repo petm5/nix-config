@@ -25,16 +25,12 @@ RowLayout {
                 color: active && "#9ca0b0" || urgent && "#df8e1d" || "#ccd0da"
             }
 
-            MouseArea {
-                id: hoverArea
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton
+            HoverHandler {
+                cursorShape: Qt.PointingHandCursor
+            }
 
-                onClicked: (mouse) => {
-                    if (mouse.button === Qt.LeftButton) {
-                        modelData.activate();
-                    }
-                }
+            TapHandler {
+                onTapped: modelData.activate()
             }
         }
     }

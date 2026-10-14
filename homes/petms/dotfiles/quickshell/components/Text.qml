@@ -1,6 +1,9 @@
 import QtQuick
 
 Text {
-    font.pixelSize: root.fontSize
+    id: text
+    property real fontSize: 1
+
+    font.pixelSize: root.fontSize * fontSize
     color: root.colFg
 }

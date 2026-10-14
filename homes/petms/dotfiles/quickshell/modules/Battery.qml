@@ -4,7 +4,7 @@ import Quickshell.Services.UPower
 import "IconUtils.js" as IconUtils
 import "../components/"
 
-Icon {
+InlineIcon {
     id: batteryIcon
 
     visible: UPower.displayDevice.isLaptopBattery

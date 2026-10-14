@@ -4,7 +4,7 @@ import Quickshell.Networking
 import "IconUtils.js" as IconUtils
 import "../components/"
 
-Icon {
+InlineIcon {
     id: networkIcon
 
     property var net: Networking

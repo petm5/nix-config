@@ -2,9 +2,9 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.Pipewire
 import "IconUtils.js" as IconUtils
-import "../components/"
+import "../components"
 
-Icon {
+InlineIcon {
     property var audioIcons: [
         "volume_mute",
         "volume_down",

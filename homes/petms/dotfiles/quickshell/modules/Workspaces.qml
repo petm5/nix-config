@@ -10,8 +10,9 @@ RowLayout {
         model: [...WindowManager.windowsets].sort((a, b) => a.name.localeCompare(b.name))
 
         delegate: Item {
-            implicitWidth: root.iconSize
-            implicitHeight: root.iconSize
+            property real size: root.fontSize * 1.2
+            implicitWidth: size
+            implicitHeight: size
 
             property bool active: modelData.active
             property bool urgent: modelData.urgent

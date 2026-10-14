@@ -10,7 +10,6 @@ ShellRoot{
     property color colBg: "#eff1f5"
     property color colFg: "#4c4f69"
     property color colBorder: "#ccd0da"
-    property int iconSize: 16
     property int fontSize: 14
 
     Variants {

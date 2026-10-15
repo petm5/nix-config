@@ -79,6 +79,10 @@ InlineIcon {
         }
     }
 
+    TapHandler {
+        onTapped: { popup.visible = true }
+    }
+
     HoverHandler {
         id: hoverArea
         cursorShape: Qt.PointingHandCursor
@@ -88,5 +92,15 @@ InlineIcon {
         id: tooltip
         text: connected ? `Connected (${networkName})` : "Disconnected";
         visible: hoverArea.hovered
+    }
+
+    Popup {
+        id: popup
+        anchor {
+            item: networkIcon
+            gravity: Edges.Top
+        }
+
+        WifiMenu {}
     }
 }

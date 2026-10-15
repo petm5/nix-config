@@ -54,6 +54,8 @@ Rectangle {
                     color: root.colFg
                 }
 
+                Bluetooth { }
+
                 Battery {
                     color: root.colFg
                 }

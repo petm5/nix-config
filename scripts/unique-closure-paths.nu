@@ -1,5 +1,5 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i nu -p nushell
+#! /usr/bin/env nix
+#! nix shell nixpkgs#nushell --command nu
 
 let cache_domain = "cache.nixos.org"
 

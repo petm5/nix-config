@@ -51,7 +51,7 @@ jobs:
         chmod 600 cache-priv-key.pem
 
         nix store sign -k cache-priv-key.pem --stdin < unique-paths.txt
-      if: ${{ env.NIX_SIGNING_KEY != '' }}
+      if: ${{ env.NIX_SIGNING_KEY != '' && vars.NIX_REMOTE_HOST != '' }}
     - name: Copy Nix paths to binary cache
       env:
         NIX_REMOTE_HOST: ${{ vars.NIX_REMOTE_HOST }}

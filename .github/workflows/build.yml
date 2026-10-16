@@ -1,9 +1,8 @@
 name: "Build and Cache Outputs"
-on:
-  pull_request:
-  push:
+on: [push]
 jobs:
-  tests:
+  production-cache:
+    if: ${{ github.repository == 'petm5/nix-config' && github.ref_name == 'main' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -34,14 +33,9 @@ jobs:
         nix build \
           .#nixOnDroidConfigurations.a15.activationPackage \
           --out-link result-nod
-    - name: Setup SSH Agent
-      uses: webfactory/ssh-agent@v0.10.0
-      with:
-        ssh-private-key: ${{ secrets.NIX_SSH_PRIVATE_KEY }}
     - name: Find which Nix paths are unique to the closure
       run: |
         ./scripts/unique-closure-paths.nu ./result* > unique-paths.txt
-      if: vars.NIX_REMOTE_HOST != ''
     - name: Sign Nix paths
       env:
         NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
@@ -51,10 +45,12 @@ jobs:
         chmod 600 cache-priv-key.pem
 
         nix store sign -k cache-priv-key.pem --stdin < unique-paths.txt
-      if: ${{ env.NIX_SIGNING_KEY != '' && vars.NIX_REMOTE_HOST != '' }}
+    - name: Setup SSH Agent
+      uses: webfactory/ssh-agent@v0.10.0
+      with:
+        ssh-private-key: ${{ secrets.NIX_SSH_PRIVATE_KEY }}
     - name: Copy Nix paths to binary cache
       env:
         NIX_REMOTE_HOST: ${{ vars.NIX_REMOTE_HOST }}
       run: |
         nix copy --to "$NIX_REMOTE_HOST" --stdin < unique-paths.txt
-      if: vars.NIX_REMOTE_HOST != ''

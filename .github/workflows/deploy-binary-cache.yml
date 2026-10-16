@@ -17,10 +17,11 @@ jobs:
       env:
         NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
       run: |
-        mkdir -p -m 0600 /var/secrets
-        printenv NIX_SIGNING_KEY > /var/secrets/nix-cache-priv-key
-        chmod 600 /var/secrets/nix-cache-priv-key
-        echo "secret-key-files = /var/secrets/nix-cache-priv-key" >> /etc/nix.conf
+        sudo mkdir -p -m 0600 /var/secrets
+        sudo touch /var/secrets/nix-cache-priv-key
+        sudo chmod 600 /var/secrets/nix-cache-priv-key
+        printenv NIX_SIGNING_KEY | sudo tee /var/secrets/nix-cache-priv-key >/dev/null
+        echo "secret-key-files = /var/secrets/nix-cache-priv-key" | sudo tee -a /etc/nix.conf
     - name: Set up QEMU ARM64
       uses: docker/setup-qemu-action@v4.4.0
       with:

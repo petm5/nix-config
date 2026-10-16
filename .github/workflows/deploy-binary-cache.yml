@@ -13,6 +13,14 @@ jobs:
           experimental-features = nix-command flakes
           extra-platforms = aarch64-linux
           accept-flake-config = 1
+    - name: Set up CI secrets
+      env:
+        NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
+      run: |
+        mkdir -p -m 0600 /var/secrets
+        printenv NIX_SIGNING_KEY > /var/secrets/nix-cache-priv-key
+        chmod 600 /var/secrets/nix-cache-priv-key
+        echo "secret-key-files = /var/secrets/nix-cache-priv-key" >> /etc/nix.conf
     - name: Set up QEMU ARM64
       uses: docker/setup-qemu-action@v4.4.0
       with:
@@ -36,15 +44,6 @@ jobs:
     - name: Find which Nix paths are unique to the closure
       run: |
         ./scripts/unique-closure-paths.nu ./result* > unique-paths.txt
-    - name: Sign Nix paths
-      env:
-        NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
-      run: |
-        trap 'rm -f cache-priv-key.pem' EXIT
-        echo "$NIX_SIGNING_KEY" > cache-priv-key.pem
-        chmod 600 cache-priv-key.pem
-
-        nix store sign -k cache-priv-key.pem --stdin < unique-paths.txt
     - name: Setup SSH Agent
       uses: webfactory/ssh-agent@v0.10.0
       with:

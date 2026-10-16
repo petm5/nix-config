@@ -49,6 +49,6 @@ jobs:
 
         ./scripts/unique-closure-paths.nu ./result* > unique-paths.txt
 
-        nix store sign -k cache-priv-key.pem --stdin <(unique-paths.txt)
-        nix copy --to "$NIX_REMOTE_HOST" --stdin <(unique-paths.txt)
+        nix store sign -k cache-priv-key.pem --stdin < unique-paths.txt
+        nix copy --to "$NIX_REMOTE_HOST" --stdin < unique-paths.txt
       if: vars.NIX_REMOTE_HOST != ''

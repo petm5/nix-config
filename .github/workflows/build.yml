@@ -38,17 +38,23 @@ jobs:
       uses: webfactory/ssh-agent@v0.10.0
       with:
         ssh-private-key: ${{ secrets.NIX_SSH_PRIVATE_KEY }}
-    - name: Copy Nix paths to remote server
+    - name: Find which Nix paths are unique to the closure
+      run: |
+        ./scripts/unique-closure-paths.nu ./result* > unique-paths.txt
+      if: vars.NIX_REMOTE_HOST != ''
+    - name: Sign Nix paths
       env:
         NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
-        NIX_REMOTE_HOST: ${{ vars.NIX_REMOTE_HOST }}
       run: |
         trap 'rm -f cache-priv-key.pem' EXIT
         echo "$NIX_SIGNING_KEY" > cache-priv-key.pem
         chmod 600 cache-priv-key.pem
 
-        ./scripts/unique-closure-paths.nu ./result* > unique-paths.txt
-
         nix store sign -k cache-priv-key.pem --stdin < unique-paths.txt
+      if: secrets.NIX_SIGNING_KEY != ''
+    - name: Copy Nix paths to binary cache
+      env:
+        NIX_REMOTE_HOST: ${{ vars.NIX_REMOTE_HOST }}
+      run: |
         nix copy --to "$NIX_REMOTE_HOST" --stdin < unique-paths.txt
       if: vars.NIX_REMOTE_HOST != ''

@@ -1,4 +1,4 @@
-name: "Build and Cache Outputs"
+name: "Deploy to Binary Cache"
 on: [push]
 jobs:
   production-cache:

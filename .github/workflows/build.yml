@@ -7,14 +7,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install Nix
-      uses: cachix/install-nix-action@v31.10.1
+      uses: cachix/install-nix-action@v31.11.2
       with:
         extra_nix_config: |
           experimental-features = nix-command flakes
           extra-platforms = aarch64-linux
           accept-flake-config = 1
     - name: Set up QEMU ARM64
-      uses: docker/setup-qemu-action@v4.0.0
+      uses: docker/setup-qemu-action@v4.4.0
       with:
         platforms: arm64
     - name: Restore and save Nix Store

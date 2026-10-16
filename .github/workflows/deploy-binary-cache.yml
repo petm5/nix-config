@@ -22,6 +22,10 @@ jobs:
         sudo chmod 600 /var/secrets/nix-cache-priv-key
         printenv NIX_SIGNING_KEY | sudo tee /var/secrets/nix-cache-priv-key >/dev/null
         echo "secret-key-files = /var/secrets/nix-cache-priv-key" | sudo tee -a /etc/nix.conf
+    - name: Setup SSH Agent
+      uses: webfactory/ssh-agent@v0.10.0
+      with:
+        ssh-private-key: ${{ secrets.NIX_SSH_PRIVATE_KEY }}
     - name: Set up QEMU ARM64
       uses: docker/setup-qemu-action@v4.4.0
       with:
@@ -42,15 +46,10 @@ jobs:
         nix build \
           .#nixOnDroidConfigurations.a15.activationPackage \
           --out-link result-nod
-    - name: Find which Nix paths are unique to the closure
-      run: |
-        ./scripts/unique-closure-paths.nu ./result* > unique-paths.txt
-    - name: Setup SSH Agent
-      uses: webfactory/ssh-agent@v0.10.0
-      with:
-        ssh-private-key: ${{ secrets.NIX_SSH_PRIVATE_KEY }}
-    - name: Copy Nix paths to binary cache
+    - name: Deploy binary cache to the remote server
       env:
         NIX_REMOTE_HOST: ${{ vars.NIX_REMOTE_HOST }}
       run: |
-        nix copy --to "$NIX_REMOTE_HOST" --stdin < unique-paths.txt
+        mkdir cache-closure
+        ./scripts/unique-closure-paths.nu ./result* | xargs ln -s -t cache-closure
+        nix-store --add cache-closure | nix copy --to "$NIX_REMOTE_HOST" --stdin

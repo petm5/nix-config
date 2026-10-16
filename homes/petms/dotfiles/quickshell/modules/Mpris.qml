@@ -3,7 +3,7 @@ import Quickshell
 import Quickshell.Services.Mpris
 import "../components/"
 
-Icon {
+InlineIcon {
 	id: mpris
 
 	function getPlayerStatus() {

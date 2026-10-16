@@ -41,10 +41,14 @@ jobs:
     - name: Copy Nix paths to remote server
       env:
         NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
+        NIX_REMOTE_HOST: ${{ vars.NIX_REMOTE_HOST }}
       run: |
         trap 'rm -f cache-priv-key.pem' EXIT
         echo "$NIX_SIGNING_KEY" > cache-priv-key.pem
         chmod 600 cache-priv-key.pem
-        nix store sign -k cache-priv-key.pem -r ./result*
-        nix copy --substitute-on-destination --to "${{ vars.NIX_REMOTE_HOST }}" ./result*
+
+        ./scripts/unique-closure-paths.nu ./result* > unique-paths.txt
+
+        nix store sign -k cache-priv-key.pem --stdin <(unique-paths.txt)
+        nix copy --to "$NIX_REMOTE_HOST" --stdin <(unique-paths.txt)
       if: vars.NIX_REMOTE_HOST != ''

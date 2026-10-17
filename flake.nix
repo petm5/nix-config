@@ -72,5 +72,16 @@
       ];
       bootstrapSystem = "x86_64-linux";
     };
+    packages.x86_64-linux = let
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    in {
+      binary-cache-paths = pkgs.symlinkJoin {
+        name = "binary-cache-paths";
+        paths = with self.outputs; [
+          nixosConfigurations.peter-pc.config.system.build.toplevel
+          nixOnDroidConfigurations."a15".config.build.activationPackage
+        ];
+      };
+    };
   };
 }

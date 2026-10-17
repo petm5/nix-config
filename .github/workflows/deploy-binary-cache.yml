@@ -36,20 +36,15 @@ jobs:
         primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
         restore-prefixes-first-match: nix-${{ runner.os }}-
         gc-max-store-size-linux: 1G
-    - name: Build desktop Nix config
+    - name: Build packages marked for caching
       run: |
         nix build \
-          .#nixosConfigurations.peter-pc.config.system.build.toplevel \
-          --out-link result-nixos
-    - name: Build nix-on-droid config
-      run: |
-        nix build \
-          .#nixOnDroidConfigurations.a15.activationPackage \
-          --out-link result-nod
+          .#packages.x86_64-linux.binary-cache-paths \
+          --out-link result-cache-paths
     - name: Deploy binary cache to the remote server
       env:
         NIX_REMOTE_HOST: ${{ vars.NIX_REMOTE_HOST }}
       run: |
         mkdir cache-closure
-        ./scripts/unique-closure-paths.nu ./result* | xargs ln -s -t cache-closure
+        ./scripts/unique-closure-paths.nu result-cache-paths | xargs ln -s -t cache-closure
         nix-store --add cache-closure | nix copy --to "$NIX_REMOTE_HOST" --stdin

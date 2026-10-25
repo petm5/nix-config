@@ -1,7 +1,5 @@
 { lib, pkgs, ... }: {
 
-  boot.initrd.systemd.enable = true;
-
   systemd.network.enable = lib.mkDefault true;
 
   networking.nameservers = [

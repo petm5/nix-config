@@ -1,0 +1,120 @@
+From 3d1d4651cc374f8c62714d0cd08e336f8028713d Mon Sep 17 00:00:00 2001
+From: Peter Marshall <petms@proton.me>
+Date: Tue, 7 Jul 2026 15:12:38 -0400
+Subject: [PATCH 02/15] power: supply: surface_battery: Report battery
+ authentication status
+
+Authentic batteries in Surface devices are verified and paired with the
+motherboard during manufacturing or repair for quality assurance. Read
+the authentication status from the SAM and report it.
+---
+ drivers/power/supply/surface_battery.c | 44 ++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/supply/surface_battery.c
+index 1273b6082311..4ed6bb2c7774 100644
+--- a/drivers/power/supply/surface_battery.c
++++ b/drivers/power/supply/surface_battery.c
+@@ -45,6 +45,12 @@ enum sam_battery_power_unit {
+ 	SAM_BATTERY_POWER_UNIT_mA     = 1,
+ };
+ 
++enum sam_battery_auth_status {
++	SAM_BATTERY_AUTH_STATUS_GENUINE = 0,
++	SAM_BATTERY_AUTH_STATUS_UNAUTHORIZED = 1,
++	SAM_BATTERY_AUTH_STATUS_ERROR = 2,
++};
++
+ /* Equivalent to data returned in ACPI _BIX method, revision 0. */
+ struct spwr_bix {
+ 	u8  revision;
+@@ -108,6 +114,12 @@ SSAM_DEFINE_SYNC_REQUEST_CL_W(ssam_bat_set_btp, __le32, {
+ 	.command_id      = 0x04,
+ });
+ 
++/* Get battery authentication status */
++SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_auth, __le32, {
++	.target_category = SSAM_SSH_TC_SAM,
++	.command_id      = 0x1b,
++});
++
+ 
+ /* -- Device structures. ---------------------------------------------------- */
+ 
+@@ -134,6 +146,8 @@ struct spwr_battery_device {
+ 	struct spwr_bix bix;
+ 	struct spwr_bst bst;
+ 	u32 alarm;
++
++	bool authentic;
+ };
+ 
+ 
+@@ -186,6 +200,25 @@ static int spwr_battery_load_bix(struct spwr_battery_device *bat)
+ 	return status;
+ }
+ 
++static int spwr_battery_load_auth(struct spwr_battery_device *bat)
++{
++	__le32 auth;
++	int status;
++
++	lockdep_assert_held(&bat->lock);
++
++	if (!spwr_battery_present(bat))
++		return 0;
++
++	status = ssam_retry(ssam_bat_get_auth, bat->sdev, &auth);
++	if (status)
++		return status;
++
++	bat->authentic = le32_to_cpu(auth) == SAM_BATTERY_AUTH_STATUS_GENUINE;
++
++	return 0;
++}
++
+ static int spwr_battery_load_bst(struct spwr_battery_device *bat)
+ {
+ 	lockdep_assert_held(&bat->lock);
+@@ -253,6 +286,10 @@ static int spwr_battery_update_bix_unlocked(struct spwr_battery_device *bat)
+ 	if (status)
+ 		return status;
+ 
++	status = spwr_battery_load_auth(bat);
++	if (status)
++		return status;
++
+ 	status = spwr_battery_load_bst(bat);
+ 	if (status)
+ 		return status;
+@@ -441,6 +478,7 @@ static const enum power_supply_property spwr_battery_props_chg[] = {
+ 	POWER_SUPPLY_PROP_MODEL_NAME,
+ 	POWER_SUPPLY_PROP_MANUFACTURER,
+ 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
++	POWER_SUPPLY_PROP_AUTHENTIC,
+ };
+ 
+ static const enum power_supply_property spwr_battery_props_eng[] = {
+@@ -459,6 +497,7 @@ static const enum power_supply_property spwr_battery_props_eng[] = {
+ 	POWER_SUPPLY_PROP_MODEL_NAME,
+ 	POWER_SUPPLY_PROP_MANUFACTURER,
+ 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
++	POWER_SUPPLY_PROP_AUTHENTIC,
+ };
+ 
+ static int spwr_battery_prop_status(struct spwr_battery_device *bat)
+@@ -652,6 +691,11 @@ static int spwr_battery_get_property(struct power_supply *psy, enum power_supply
+ 		val->strval = bat->bix.serial;
+ 		break;
+ 
++	case POWER_SUPPLY_PROP_AUTHENTIC:
++		val->intval = bat->authentic;
++		break;
++
++
+ 	default:
+ 		status = -EINVAL;
+ 		break;
+-- 
+2.55.0
+

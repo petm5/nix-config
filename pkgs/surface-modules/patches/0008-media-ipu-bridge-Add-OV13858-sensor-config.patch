@@ -1,0 +1,48 @@
+From 607886419db4937e2dfc63f0682c80a1c8ad5a7f Mon Sep 17 00:00:00 2001
+From: Sergey Lebedev <lsa.uz@pm.me>
+Date: Sat, 19 Sep 2026 07:08:42 +0000
+Subject: [PATCH 08/15] media: ipu-bridge: Add OV13858 sensor config
+
+The Microsoft Surface Pro 11 for Business (Intel Lunar Lake, IPU7) carries
+an OV13858 as its rear sensor, enumerated as ACPI device OVTID858. That HID
+is not in ipu_supported_sensors[], so ipu_bridge_connect_sensors() passes
+over it without logging anything and the IPU is left with an empty graph:
+
+  intel-ipu7 0000:00:05.0: no subdev found in graph
+
+Add the entry, with the two link frequencies ov13858 declares. The bridge
+then connects the sensor:
+
+  intel-ipu7 0000:00:05.0: Found supported sensor OVTID858:00
+  intel_ipu7_isys: bind ov13858 1-0010 nlanes is 4 port is 0
+
+This machine needs two further fixes before the sensor streams, neither of
+them a prerequisite for this entry to be correct: "platform/x86: int3472:
+support the POWER1 GPIO type" from Jakob Berg Jespersen, and power
+sequencing the in-tree ov13858 driver does not do on this platform. With
+all three, libcamera streams SGRBG10 at 4224x3136, 29.95 fps.
+
+Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+Tested-by: Fernando Rimoli <fernandorimoli11@gmail.com> # Surface Pro 9, IPU6 Alder Lake-P (8086:465d)
+Tested-by: German Pablo Lindo <germanpapulindez@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu-bridge.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index 511e68b64f6a..88ff69d6ecbb 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -88,6 +88,8 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
+ 	IPU_SENSOR_CONFIG("OVTI08A1", 1, 500000000),
+ 	/* Omnivision OV08x40 */
+ 	IPU_SENSOR_CONFIG("OVTI08F4", 3, 400000000, 749000000, 800000000),
++	/* Omnivision OV13858 */
++	IPU_SENSOR_CONFIG("OVTID858", 2, 540000000, 270000000),
+ 	/* Omnivision OV13B10 */
+ 	IPU_SENSOR_CONFIG("OVTI13B1", 1, 560000000),
+ 	IPU_SENSOR_CONFIG("OVTIDB10", 1, 560000000),
+-- 
+2.55.0
+

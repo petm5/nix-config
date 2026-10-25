@@ -1,0 +1,41 @@
+From 1867c127aad98f65c3a4b98a7fe8baae2943d81d Mon Sep 17 00:00:00 2001
+From: Fernando Rimoli <fernandorimoli11@gmail.com>
+Date: Wed, 2 Sep 2026 16:23:16 +0200
+Subject: [PATCH 05/15] media: ipu-bridge: Add OVTI5693 to the list of
+ supported sensors
+
+The IPU bridge builds the firmware node graph only for sensors listed in
+ipu_supported_sensors[]. The OV5693 is currently listed only under its
+legacy "INT33BE" HID, so on Intel IPU6 Surface devices that enumerate it
+as "OVTI5693" (e.g. Microsoft Surface Pro 9) the bridge never wires up
+the sensor and the front camera is unusable.
+
+Add an "OVTI5693" entry. The link frequency (419200000) matches the
+existing INT33BE entry, as it is the same sensor.
+
+Tested on Surface Pro 9 (IPU6).
+
+Link: https://github.com/linux-surface/linux-surface/pull/2171
+Signed-off-by: Fernando Rimoli <fernandorimoli11@gmail.com>
+Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu-bridge.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index bd64c0400c0d..511e68b64f6a 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -95,6 +95,8 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
+ 	IPU_SENSOR_CONFIG("OVTI2680", 1, 331200000),
+ 	/* Omnivision OV5675 */
+ 	IPU_SENSOR_CONFIG("OVTI5675", 1, 450000000),
++	/* Omnivision OV5693 */
++	IPU_SENSOR_CONFIG("OVTI5693", 1, 419200000),
+ 	/* Omnivision OV8856 */
+ 	IPU_SENSOR_CONFIG("OVTI8856", 3, 180000000, 360000000, 720000000),
+ 	/* Sony IMX471 */
+-- 
+2.55.0
+

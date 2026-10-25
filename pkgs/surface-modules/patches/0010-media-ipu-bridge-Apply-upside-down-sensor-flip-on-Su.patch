@@ -1,0 +1,38 @@
+From 0cd42d4aa9e654dd577c3d755513b6c5a47b060d Mon Sep 17 00:00:00 2001
+From: Peter Marshall <petms@proton.me>
+Date: Fri, 20 Feb 2026 16:52:44 -0500
+Subject: [PATCH 10/15] media: ipu-bridge: Apply upside-down sensor flip on
+ Surface Pro 9
+
+---
+ drivers/media/pci/intel/ipu-bridge.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index 88ff69d6ecbb..3a0346522c83 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -196,6 +196,20 @@ static const struct dmi_system_id upside_down_sensor_dmi_ids[] = {
+ 		},
+ 		.driver_data = "OVTI02E1",
+ 	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, " Microsoft Corporation"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 9"),
++		},
++		.driver_data = "OVTID858",
++	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, " Microsoft Corporation"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 9"),
++		},
++		.driver_data = "OVTI5693",
++	},
+ 	{} /* Terminating entry */
+ };
+ 
+-- 
+2.55.0
+

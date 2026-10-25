@@ -1,0 +1,39 @@
+From 4b3c94911067da349fc02f2d772235f7e9869205 Mon Sep 17 00:00:00 2001
+From: Sergey Lebedev <lsa.uz@pm.me>
+Date: Mon, 19 Oct 2026 16:28:00 +0000
+Subject: [PATCH 13/15] media: ipu-bridge: Add ST VD55G0
+
+The infrared camera of the Surface Pro 11 with Intel is an ST VD55G0,
+enumerated by ACPI as SMO55F0 and wired to the IPU7 over one CSI-2 data
+lane.
+
+The vd55g0 driver takes only a link frequency whose MIPI rate, twice it,
+is an integer multiple of the input clock. 396 MHz gives 792 Mbps, 33
+times the 24 MHz the sensor's SSDB lists on the Surface Pro 8, 9, 10 and
+11, and within the sensor's 750 to 1200 Mbps. Peter Marshall's earlier
+patch for the Surface Pro 9 used 380 MHz, 760 Mbps, which is not a
+multiple of 24 MHz, so the driver would refuse it:
+https://lore.kernel.org/all/20260918221705.323510-4-pm@petermarshall.ca/
+
+Assisted-by: Claude:claude-opus-5-5 sparse
+Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+---
+ drivers/media/pci/intel/ipu-bridge.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index 3a0346522c83..fceb7dff9c72 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -101,6 +101,8 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
+ 	IPU_SENSOR_CONFIG("OVTI5693", 1, 419200000),
+ 	/* Omnivision OV8856 */
+ 	IPU_SENSOR_CONFIG("OVTI8856", 3, 180000000, 360000000, 720000000),
++	/* STMicroelectronics VD55G0 */
++	IPU_SENSOR_CONFIG("SMO55F0", 1, 396000000),
+ 	/* Sony IMX471 */
+ 	IPU_SENSOR_CONFIG("SONY471A", 1, 200000000),
+ 	/* Sony IMX471 (found on Lenovo X1 Carbon G14) */
+-- 
+2.55.0
+

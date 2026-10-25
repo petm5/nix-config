@@ -1,0 +1,124 @@
+From 1c24331ad5c8a59427bfd8de0489db14e1c8ace6 Mon Sep 17 00:00:00 2001
+From: Sergey Lebedev <lsa.uz@pm.me>
+Date: Wed, 30 Sep 2026 07:33:12 +0000
+Subject: [PATCH 09/15] media: i2c: ov13858: add horizontal and vertical flip
+ controls
+
+The Microsoft Surface Pro 11 for Business (Intel) mounts this sensor
+upside down, as commit b238116ccd4b ("media: ipu-bridge: Add upside-down
+quirk for Surface Pro 11") records, and the driver has no flip controls
+to compensate.
+
+Add V4L2_CID_HFLIP and V4L2_CID_VFLIP on bits 3 and 4 of register 0x3820.
+The mirror bit is active low, as in Intel's out-of-tree ov13858 driver.
+The Bayer order does not change with either flip, so the controls do not
+set V4L2_CTRL_FLAG_MODIFY_LAYOUT. They are clustered, and grabbed while
+streaming.
+
+Assisted-by: Claude:claude-opus-5-5
+Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+Tested-by: German Pablo Lindo <germanpapulindez@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/i2c/ov13858.c | 50 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+
+diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
+index 09d58e8b1c7f..9d51d5fb36c1 100644
+--- a/drivers/media/i2c/ov13858.c
++++ b/drivers/media/i2c/ov13858.c
+@@ -76,6 +76,12 @@
+ #define OV13858_DGTL_GAIN_DEFAULT	1024	/* Default gain = 1 X */
+ #define OV13858_DGTL_GAIN_STEP		1	/* Each step = 1/1024 */
+ 
++/* Readout direction */
++#define OV13858_REG_FORMAT1		0x3820
++#define OV13858_FORMAT1_VFLIP		BIT(4)
++/* Horizontal flip, active low: every mode table sets this bit */
++#define OV13858_FORMAT1_HFLIP_N		BIT(3)
++
+ /* Test Pattern Control */
+ #define OV13858_REG_TEST_PATTERN	0x4503
+ #define OV13858_TEST_PATTERN_ENABLE	BIT(7)
+@@ -1042,6 +1048,8 @@ struct ov13858 {
+ 	struct v4l2_ctrl *vblank;
+ 	struct v4l2_ctrl *hblank;
+ 	struct v4l2_ctrl *exposure;
++	struct v4l2_ctrl *hflip;
++	struct v4l2_ctrl *vflip;
+ 
+ 	/* Current mode */
+ 	const struct ov13858_mode *cur_mode;
+@@ -1208,6 +1216,31 @@ static int ov13858_enable_test_pattern(struct ov13858 *ov13858, u32 pattern)
+ 				 OV13858_REG_VALUE_08BIT, val);
+ }
+ 
++static int ov13858_update_flips(struct ov13858 *ov13858)
++{
++	u32 val;
++	int ret;
++
++	ret = ov13858_read_reg(ov13858, OV13858_REG_FORMAT1,
++			       OV13858_REG_VALUE_08BIT, &val);
++	if (ret)
++		return ret;
++
++	if (ov13858->vflip->val)
++		val |= OV13858_FORMAT1_VFLIP;
++	else
++		val &= ~OV13858_FORMAT1_VFLIP;
++
++	/* The mirror bit is active low, as it is on ov13b10. */
++	if (ov13858->hflip->val)
++		val &= ~OV13858_FORMAT1_HFLIP_N;
++	else
++		val |= OV13858_FORMAT1_HFLIP_N;
++
++	return ov13858_write_reg(ov13858, OV13858_REG_FORMAT1,
++				 OV13858_REG_VALUE_08BIT, val);
++}
++
+ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct ov13858 *ov13858 = container_of(ctrl->handler,
+@@ -1254,6 +1287,10 @@ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
+ 					ov13858->cur_mode->height
+ 					  + ctrl->val);
+ 		break;
++	case V4L2_CID_HFLIP:
++	case V4L2_CID_VFLIP:
++		ret = ov13858_update_flips(ov13858);
++		break;
+ 	case V4L2_CID_TEST_PATTERN:
+ 		ret = ov13858_enable_test_pattern(ov13858, ctrl->val);
+ 		break;
+@@ -1480,6 +1517,13 @@ static int ov13858_set_stream(struct v4l2_subdev *sd, int enable)
+ 		pm_runtime_put(ov13858->dev);
+ 	}
+ 
++	/*
++	 * Do not let the flips change while streaming. ov13858->mutex is the
++	 * control handler's own lock and is held here, hence the __ form.
++	 */
++	__v4l2_ctrl_grab(ov13858->hflip, enable);
++	__v4l2_ctrl_grab(ov13858->vflip, enable);
++
+ 	mutex_unlock(&ov13858->mutex);
+ 
+ 	return ret;
+@@ -1618,6 +1662,12 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
+ 			  OV13858_DGTL_GAIN_MIN, OV13858_DGTL_GAIN_MAX,
+ 			  OV13858_DGTL_GAIN_STEP, OV13858_DGTL_GAIN_DEFAULT);
+ 
++	ov13858->hflip = v4l2_ctrl_new_std(ctrl_hdlr, &ov13858_ctrl_ops,
++					   V4L2_CID_HFLIP, 0, 1, 1, 0);
++	ov13858->vflip = v4l2_ctrl_new_std(ctrl_hdlr, &ov13858_ctrl_ops,
++					   V4L2_CID_VFLIP, 0, 1, 1, 0);
++	v4l2_ctrl_cluster(2, &ov13858->hflip);
++
+ 	v4l2_ctrl_new_std_menu_items(ctrl_hdlr, &ov13858_ctrl_ops,
+ 				     V4L2_CID_TEST_PATTERN,
+ 				     ARRAY_SIZE(ov13858_test_pattern_menu) - 1,
+-- 
+2.55.0
+

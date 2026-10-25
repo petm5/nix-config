@@ -1,7 +1,7 @@
 From 213d67a1d5ef5aa44f7804afd15d86c71475aef4 Mon Sep 17 00:00:00 2001
 From: Peter Marshall <petms@proton.me>
 Date: Tue, 7 Jul 2026 15:15:38 -0400
-Subject: [PATCH 03/15] power: supply: surface_battery: Support smart charging
+Subject: [PATCH 03/16] power: supply: surface_battery: Support smart charging
 
 Newer Surface devices limit the battery charge to 80% based on usage
 patterns. Report the charge limit status and disengage it if requested.
@@ -292,5 +292,5 @@ index 4ed6bb2c7774..4daf5fec74db 100644
  	psy_cfg.attr_grp = spwr_battery_groups;
  
 -- 
-2.55.0
+2.56.0
 

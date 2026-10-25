@@ -1,7 +1,7 @@
 From 1c24331ad5c8a59427bfd8de0489db14e1c8ace6 Mon Sep 17 00:00:00 2001
 From: Sergey Lebedev <lsa.uz@pm.me>
 Date: Wed, 30 Sep 2026 07:33:12 +0000
-Subject: [PATCH 09/15] media: i2c: ov13858: add horizontal and vertical flip
+Subject: [PATCH 09/16] media: i2c: ov13858: add horizontal and vertical flip
  controls
 
 The Microsoft Surface Pro 11 for Business (Intel) mounts this sensor
@@ -120,5 +120,5 @@ index 09d58e8b1c7f..9d51d5fb36c1 100644
  				     V4L2_CID_TEST_PATTERN,
  				     ARRAY_SIZE(ov13858_test_pattern_menu) - 1,
 -- 
-2.55.0
+2.56.0
 

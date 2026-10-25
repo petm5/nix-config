@@ -1,7 +1,7 @@
 From aec807c79110d1d8d47cab54204f2895050ba812 Mon Sep 17 00:00:00 2001
 From: Lois Breant <185382558+loisBreant@users.noreply.github.com>
 Date: Fri, 23 Oct 2026 03:03:32 +0300
-Subject: [PATCH 06/15] media: i2c: ov5693: Gate the MIPI clock lane for IPU6
+Subject: [PATCH 06/16] media: i2c: ov5693: Gate the MIPI clock lane for IPU6
  Surface front cameras
 
 On the IPU6 Surface devices (Pro 8, Pro 9, Go 4) the front ov5693 starts
@@ -104,5 +104,5 @@ index 02236f3db19d..5f25412b555b 100644
  	v4l2_fwnode_endpoint_free(&bus_cfg);
  
 -- 
-2.55.0
+2.56.0
 

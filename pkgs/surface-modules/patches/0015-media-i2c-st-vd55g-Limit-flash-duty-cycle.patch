@@ -1,7 +1,7 @@
 From 89fcc179f917bfdf56dc7883cd90136e47a106e0 Mon Sep 17 00:00:00 2001
 From: Peter Marshall <pm@petermarshall.ca>
 Date: Sun, 25 Oct 2026 13:15:14 -0400
-Subject: [PATCH 15/15]  media: i2c: st-vd55g: Limit flash duty cycle
+Subject: [PATCH 15/16]  media: i2c: st-vd55g: Limit flash duty cycle
 
 Limit the exposure to 50% duty cycle when the flash is active to avoid
 tripping its overcurrent protection.
@@ -24,5 +24,5 @@ index 9df8292affe5..8dd762feb705 100644
  				       VD55G0_EXPO_DEF);
  	if (ret)
 -- 
-2.55.0
+2.56.0
 

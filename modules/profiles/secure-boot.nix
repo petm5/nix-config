@@ -29,7 +29,7 @@
            '';
          };
       };
-      configurationLimit = 8;
+      configurationLimit = 4;
     };
 
 }

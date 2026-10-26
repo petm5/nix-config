@@ -1,7 +1,7 @@
 From 1044e710b738654648406f18549cfb83d7563a3f Mon Sep 17 00:00:00 2001
 From: Peter Marshall <petms@proton.me>
 Date: Mon, 22 Jun 2026 11:26:33 -0400
-Subject: [PATCH 01/16] platform/surface: platform_profile: add fan power state
+Subject: [PATCH 01/20] platform/surface: platform_profile: add fan power state
  handling
 
 Add functionality that switches the fan off if a fan is present when

@@ -1,0 +1,27 @@
+From 806f9797d86942db28ed071ab8557eb190d10951 Mon Sep 17 00:00:00 2001
+From: Danila Tikhonov <danila@mainlining.org>
+Date: Sat, 1 Aug 2026 21:04:14 +0300
+Subject: [PATCH 19/20] dt-bindings: media: i2c: dw9719: Document DW9800W
+
+Document the Dongwoon Anatech DW9800W.
+
+Signed-off-by: Danila Tikhonov <danila@mainlining.org>
+---
+ Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml
+index 8e8d62436e0d..63d4092ef290 100644
+--- a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml
+@@ -22,6 +22,7 @@ properties:
+       - dongwoon,dw9719
+       - dongwoon,dw9761
+       - dongwoon,dw9800k
++      - dongwoon,dw9800w
+ 
+   reg:
+     maxItems: 1
+-- 
+2.56.0
+

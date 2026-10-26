@@ -1,7 +1,7 @@
 From 703aa9953120d92db92aec888a54eb04b92a0373 Mon Sep 17 00:00:00 2001
 From: Daniel Scally <dan.scally@ideasonboard.com>
 Date: Tue, 21 Jul 2026 23:07:51 +0100
-Subject: [PATCH 07/16] media: i2c: Expand gain values for ov5693
+Subject: [PATCH 07/20] media: i2c: Expand gain values for ov5693
 
 The ov5693 driver currently allows values for the
 V4L2_CID_ANALOGUE_GAIN control in the range 1-127. The input values

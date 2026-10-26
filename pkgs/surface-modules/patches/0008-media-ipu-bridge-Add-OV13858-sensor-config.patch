@@ -1,7 +1,7 @@
 From 607886419db4937e2dfc63f0682c80a1c8ad5a7f Mon Sep 17 00:00:00 2001
 From: Sergey Lebedev <lsa.uz@pm.me>
 Date: Sat, 19 Sep 2026 07:08:42 +0000
-Subject: [PATCH 08/16] media: ipu-bridge: Add OV13858 sensor config
+Subject: [PATCH 08/20] media: ipu-bridge: Add OV13858 sensor config
 
 The Microsoft Surface Pro 11 for Business (Intel Lunar Lake, IPU7) carries
 an OV13858 as its rear sensor, enumerated as ACPI device OVTID858. That HID

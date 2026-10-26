@@ -1,0 +1,100 @@
+From cf01bf42f9b4ee51fb5f6e1dee412f6fdcb4e6d5 Mon Sep 17 00:00:00 2001
+From: Danila Tikhonov <danila@mainlining.org>
+Date: Sat, 1 Aug 2026 21:04:15 +0300
+Subject: [PATCH 18/20] media: i2c: dw9719: Add DW9800W support
+
+The DW9800W uses the same chip ID and register layout as the DW9800K,
+but requires different default VCM frequency value.
+
+Add a separate device match entry for the DW9800W and validate the
+common chip ID. Use the matched variant to select the appropriate
+default values.
+
+Tested on the Nothing Phone (1) smartphone.
+
+Signed-off-by: Danila Tikhonov <danila@mainlining.org>
+---
+ drivers/media/i2c/dw9719.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/i2c/dw9719.c b/drivers/media/i2c/dw9719.c
+index 3b7ba88fd67c..bb9319fc350b 100644
+--- a/drivers/media/i2c/dw9719.c
++++ b/drivers/media/i2c/dw9719.c
+@@ -44,6 +44,7 @@
+ 
+ #define DW9719_INFO			CCI_REG8(0)
+ #define DW9719_ID			0xF1
++#define DW9800_ID			0xF2
+ #define DW9761_ID			0xF4
+ 
+ #define DW9719_CONTROL			CCI_REG8(2)
+@@ -72,6 +73,8 @@
+ #define DW9800K_MODE_SAC_SHIFT		6
+ #define DW9800K_DEFAULT_VCM_FREQ		0x10
+ 
++#define DW9800W_DEFAULT_VCM_FREQ	0x60
++
+ #define to_dw9719_device(x) container_of(x, struct dw9719_device, sd)
+ 
+ enum dw9719_model {
+@@ -79,6 +82,7 @@ enum dw9719_model {
+ 	DW9719,
+ 	DW9761,
+ 	DW9800K,
++	DW9800W,
+ };
+ 
+ struct dw9719_device {
+@@ -140,10 +144,6 @@ static int dw9719_power_up(struct dw9719_device *dw9719, bool detect)
+ 			dw9719->sac_mode = DW9718S_DEFAULT_SAC;
+ 			dw9719->vcm_freq = DW9718S_DEFAULT_VCM_FREQ;
+ 			goto props;
+-		case DW9800K:
+-			dw9719->sac_mode = DW9800K_DEFAULT_SAC;
+-			dw9719->vcm_freq = DW9800K_DEFAULT_VCM_FREQ;
+-			goto props;
+ 		default:
+ 			break;
+ 		}
+@@ -159,6 +159,21 @@ static int dw9719_power_up(struct dw9719_device *dw9719, bool detect)
+ 			dw9719->sac_mode = DW9719_DEFAULT_SAC;
+ 			dw9719->vcm_freq = DW9719_DEFAULT_VCM_FREQ;
+ 			break;
++		case DW9800_ID:
++			dw9719->sac_mode = DW9800K_DEFAULT_SAC;
++			switch (dw9719->model) {
++			case DW9800K:
++				dw9719->model = DW9800K;
++				dw9719->vcm_freq = DW9800K_DEFAULT_VCM_FREQ;
++				break;
++			case DW9800W:
++				dw9719->model = DW9800W;
++				dw9719->vcm_freq = DW9800W_DEFAULT_VCM_FREQ;
++				break;
++			default:
++				return -ENODEV;
++			}
++			break;
+ 		case DW9761_ID:
+ 			dw9719->model = DW9761;
+ 			dw9719->mode_low_bits = 0x01;
+@@ -189,6 +204,7 @@ static int dw9719_power_up(struct dw9719_device *dw9719, bool detect)
+ 
+ 	switch (dw9719->model) {
+ 	case DW9800K:
++	case DW9800W:
+ 		cci_write(dw9719->regmap, DW9719_CONTROL, DW9719_ENABLE_RINGING, &ret);
+ 		cci_write(dw9719->regmap, DW9719_MODE,
+ 			  dw9719->sac_mode << DW9800K_MODE_SAC_SHIFT, &ret);
+@@ -453,6 +469,7 @@ static const struct of_device_id dw9719_of_table[] = {
+ 	{ .compatible = "dongwoon,dw9719", .data = (const void *)DW9719 },
+ 	{ .compatible = "dongwoon,dw9761", .data = (const void *)DW9761 },
+ 	{ .compatible = "dongwoon,dw9800k", .data = (const void *)DW9800K },
++	{ .compatible = "dongwoon,dw9800w", .data = (const void *)DW9800W },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, dw9719_of_table);
+-- 
+2.56.0
+

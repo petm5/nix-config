@@ -1,0 +1,24 @@
+From 5d7d936770e5e893202bc7420785958f5fd098a6 Mon Sep 17 00:00:00 2001
+From: Peter Marshall <pm@petermarshall.ca>
+Date: Sun, 25 Oct 2026 20:09:50 -0400
+Subject: [PATCH 20/20] media: i2c: dw9719: Add DW9800W i2c device model name
+
+---
+ drivers/media/i2c/dw9719.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/media/i2c/dw9719.c b/drivers/media/i2c/dw9719.c
+index bb9319fc350b..ab0ebbe1b173 100644
+--- a/drivers/media/i2c/dw9719.c
++++ b/drivers/media/i2c/dw9719.c
+@@ -460,6 +460,7 @@ static const struct i2c_device_id dw9719_id_table[] = {
+ 	{ .name = "dw9719", .driver_data = (kernel_ulong_t)DW9719 },
+ 	{ .name = "dw9761", .driver_data = (kernel_ulong_t)DW9761 },
+ 	{ .name = "dw9800k", .driver_data = (kernel_ulong_t)DW9800K },
++	{ .name = "dw9800w", .driver_data = (kernel_ulong_t)DW9800W },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, dw9719_id_table);
+-- 
+2.56.0
+

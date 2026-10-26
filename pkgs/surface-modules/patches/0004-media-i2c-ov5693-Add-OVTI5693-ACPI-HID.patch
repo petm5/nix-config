@@ -1,7 +1,7 @@
 From 6b5ead786f62fe8fc5d7d20e733f54131b80af2c Mon Sep 17 00:00:00 2001
 From: Fernando Rimoli <fernandorimoli11@gmail.com>
 Date: Wed, 2 Sep 2026 16:23:15 +0200
-Subject: [PATCH 04/16] media: i2c: ov5693: Add OVTI5693 ACPI HID
+Subject: [PATCH 04/20] media: i2c: ov5693: Add OVTI5693 ACPI HID
 
 The ov5693 driver only matches the "INT33BE" ACPI HID. Some Intel IPU6
 Surface devices (e.g. Microsoft Surface Pro 9) enumerate the OV5693

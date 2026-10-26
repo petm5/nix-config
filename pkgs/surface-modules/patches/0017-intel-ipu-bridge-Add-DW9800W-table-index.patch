@@ -1,0 +1,31 @@
+From 801161c22bb1d44fa401275c306908683700303a Mon Sep 17 00:00:00 2001
+From: Peter Marshall <petms@proton.me>
+Date: Wed, 15 Oct 2025 13:04:05 -0400
+Subject: [PATCH 17/20] intel/ipu-bridge: Add DW9800W table index
+
+---
+ drivers/media/pci/intel/ipu-bridge.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index fceb7dff9c72..5c2b361f7765 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -235,6 +235,14 @@ static const char * const ipu_vcm_types[] = {
+ 	"wv517s",
+ 	"lc898122xa",
+ 	"lc898212axb",
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	"dw9800w",
+ };
+ 
+ /*
+-- 
+2.56.0
+

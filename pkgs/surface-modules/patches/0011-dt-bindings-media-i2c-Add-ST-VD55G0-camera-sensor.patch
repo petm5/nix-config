@@ -1,7 +1,7 @@
 From 2d0ae4c5ffb40a762d5047b01397d137ff6af4da Mon Sep 17 00:00:00 2001
 From: Sergey Lebedev <lsa.uz@pm.me>
 Date: Mon, 19 Oct 2026 16:27:38 +0000
-Subject: [PATCH 11/16] dt-bindings: media: i2c: Add ST VD55G0 camera sensor
+Subject: [PATCH 11/20] dt-bindings: media: i2c: Add ST VD55G0 camera sensor
 
 The VD55G0 is a monochrome global shutter sensor with a 644x604 active
 array, sending over a single MIPI CSI-2 lane.

@@ -1,7 +1,7 @@
 From 3d1d4651cc374f8c62714d0cd08e336f8028713d Mon Sep 17 00:00:00 2001
 From: Peter Marshall <petms@proton.me>
 Date: Tue, 7 Jul 2026 15:12:38 -0400
-Subject: [PATCH 02/16] power: supply: surface_battery: Report battery
+Subject: [PATCH 02/20] power: supply: surface_battery: Report battery
  authentication status
 
 Authentic batteries in Surface devices are verified and paired with the

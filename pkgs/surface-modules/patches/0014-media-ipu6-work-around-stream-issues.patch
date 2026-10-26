@@ -1,7 +1,7 @@
 From 671419bde09d83aa51fa5068aaaa9fbeac183d6b Mon Sep 17 00:00:00 2001
 From: Peter Marshall <pm@petermarshall.ca>
 Date: Thu, 30 Jul 2026 13:16:34 -0400
-Subject: [PATCH 14/16] media: ipu6: work around stream issues
+Subject: [PATCH 14/20] media: ipu6: work around stream issues
 
 The system's ring bus / RAM is clocked down during low power states,
 causing flickering and FIFO timeut errors with some sensors when the CPU

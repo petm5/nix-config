@@ -1,7 +1,7 @@
 From 1867c127aad98f65c3a4b98a7fe8baae2943d81d Mon Sep 17 00:00:00 2001
 From: Fernando Rimoli <fernandorimoli11@gmail.com>
 Date: Wed, 2 Sep 2026 16:23:16 +0200
-Subject: [PATCH 05/16] media: ipu-bridge: Add OVTI5693 to the list of
+Subject: [PATCH 05/20] media: ipu-bridge: Add OVTI5693 to the list of
  supported sensors
 
 The IPU bridge builds the firmware node graph only for sensors listed in

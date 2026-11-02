@@ -27,7 +27,7 @@
 
   nixConfig = {
     extra-substituters = [
-      "https://binarycache.petermarshall.ca"
+      "http://opcc.petermarshall.ca:9000/nix-cache"
     ];
     extra-trusted-public-keys = [
       "binarycache.petermarshall.ca:xmkaNcypcMm5i/8WxvNUtnuMND2bOoJYu1aUii9Eyao="

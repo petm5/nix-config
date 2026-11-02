@@ -39,12 +39,9 @@ jobs:
     - name: Build packages marked for caching
       run: |
         nix build \
-          .#packages.x86_64-linux.binary-cache-paths \
-          --out-link result-cache-paths
+          .#packages.x86_64-linux.deployBinaryCache \
+          --out-link deploy-binary-cache
     - name: Deploy binary cache to the remote server
       env:
         NIX_REMOTE_HOST: ${{ vars.NIX_REMOTE_HOST }}
-      run: |
-        mkdir cache-closure
-        ./scripts/unique-closure-paths.nu result-cache-paths | xargs ln -s -t cache-closure
-        nix-store --add cache-closure | nix copy --to "$NIX_REMOTE_HOST" --stdin
+      run: deploy-binary-cache/bin/deploy-binary-cache

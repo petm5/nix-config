@@ -22,10 +22,6 @@ writeShellApplication {
       exit 1
     fi
 
-    unique_closure_dir=$(mktemp -d)
-    trap 'rm -r -- "$unique_closure_dir"' EXIT
-
-    ${./unique-closure-paths.nu} "$NIX_CLOSURE_PATH" | xargs ln -s -t "$unique_closure_dir"
-    nix-store --add "$unique_closure_dir" | nix copy --to "$NIX_REMOTE_HOST" --stdin
+    ${./unique-closure-paths.nu} "$NIX_CLOSURE_PATH" | nix copy --to "$NIX_REMOTE_HOST" --stdin
   '';
 }

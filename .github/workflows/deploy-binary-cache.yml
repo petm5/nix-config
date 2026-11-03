@@ -32,6 +32,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
+        sts-endpoint: ${{ vars.STS_ENDPOINT }}
     - name: Set up QEMU ARM64
       uses: docker/setup-qemu-action@v4.4.0
       with:

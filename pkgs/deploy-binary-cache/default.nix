@@ -22,6 +22,6 @@ writeShellApplication {
       exit 1
     fi
 
-    ${./unique-closure-paths.nu} "$NIX_CLOSURE_PATH" | nix copy --to "$NIX_REMOTE_HOST" --stdin
+    nix copy --to "$NIX_REMOTE_HOST" "$NIX_CLOSURE_PATH"
   '';
 }
